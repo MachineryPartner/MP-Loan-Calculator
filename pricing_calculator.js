@@ -1,10 +1,4 @@
-
-window.onload = function() {
-    var price = parseInt(document.getElementById('price').innerHTML);
-    document.getElementById('full-price').placeholder = price;
-  };
-  
-  
+alert("hello");
   
 function calculate_price(){
     AMOUNT =  document.getElementById("full-price").value;
@@ -34,10 +28,3 @@ function calculate_price(){
     }
   };
   
-  
-    /*
-    document.getElementById("Payment").attributes.onchange = 'console.log("hello")';
-    document.getElementById("Term").attributes.onchange = 'console.log("hello")';
-    document.getElementById("Interest-rate").attributes.onchange = "calculate_price";
-    document.getElementById("Salex-tax").attributes.onchange = "calculate_price"; 
-    */
