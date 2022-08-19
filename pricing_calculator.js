@@ -5,7 +5,7 @@ $(document).ready(function() {
   });
 
 $("#Payment").change(function() {
-    console.log($("#Payment").value);
+    console.log(document.getElementById('Payment').value);
 });
   
   
