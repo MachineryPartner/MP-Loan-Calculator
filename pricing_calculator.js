@@ -5,27 +5,22 @@ $(document).ready(function() {
   });
 
 $("#Payment").change(function() {
-    document.getElementById('Payment').value = document.getElementById('Payment').value.toLocaleString();
     calculate_price();
 });
 
 $("#full-price").change(function() {
-    document.getElementById('full-price').value = document.getElementById('full-price').value.toLocaleString();
     calculate_price();
 });
 
 $("#Term").change(function() {
-    document.getElementById('Term').value = document.getElementById('Term').value.toLocaleString();
     calculate_price();
 });
 
 $("#Interest-rate").change(function() {
-    document.getElementById('Interest-rate').value = document.getElementById('Interest-rate').value.toLocaleString();
     calculate_price();
 });
 
 $("#Salex-tax").change(function() {
-    document.getElementById('Salex-tax').value = document.getElementById('Salex-tax').value.toLocaleString();
     calculate_price();
 });
   
