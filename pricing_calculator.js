@@ -5,9 +5,24 @@ $(document).ready(function() {
   });
 
 $("#Payment").change(function() {
-    console.log(document.getElementById('Payment').value);
+    calculate_price();
 });
-  
+
+$("#full-price").change(function() {
+    calculate_price();
+});
+
+$("#Term").change(function() {
+    calculate_price();
+});
+
+$("#Interest-rate").change(function() {
+    calculate_price();
+});
+
+$("#Salex-tax").change(function() {
+    calculate_price();
+});
   
   
 function calculate_price(){
