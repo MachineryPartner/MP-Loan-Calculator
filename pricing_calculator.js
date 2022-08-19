@@ -1,4 +1,10 @@
-alert("hello");
+
+document.onload = function() {
+    var price = parseInt(document.getElementById('price').innerHTML);
+    document.getElementById('full-price').placeholder = price;
+  };
+  
+  
   
 function calculate_price(){
     AMOUNT =  document.getElementById("full-price").value;
