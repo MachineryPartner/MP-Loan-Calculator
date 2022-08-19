@@ -4,28 +4,27 @@ $(document).ready(function() {
     document.getElementById('full-price').placeholder = price;
   });
 
+$("#price").change(function() {
+    calculate_price();
+});
+
 $("#Payment").change(function() {
-    document.getElementById("Payment").value = document.getElementById("Payment").value.toLocaleString();
     calculate_price();
 });
 
 $("#full-price").change(function() {
-    document.getElementById("full-price").value = document.getElementById("full-price").value.toLocaleString();
     calculate_price();
 });
 
 $("#Term").change(function() {
-    document.getElementById("Term").value = document.getElementById("Term").value.toLocaleString();
     calculate_price();
 });
 
 $("#Interest-rate").change(function() {
-    document.getElementById("Interest-rate").value = document.getElementById("Interest-rate").value.toLocaleString();
     calculate_price();
 });
 
 $("#Salex-tax").change(function() {
-    document.getElementById("Salex-tax").value = document.getElementById("Salex-tax").value.toLocaleString();
     calculate_price();
 });
   
@@ -33,7 +32,7 @@ $("#Salex-tax").change(function() {
 function calculate_price(){
     AMOUNT =  parseFloat(document.getElementById("full-price").value);
     if (AMOUNT == 0){
-        AMOUNT =  parseFloat(document.getElementById("full-price").placeholder);
+        AMOUNT = document.getElementById("full-price").placeholder;
     }
     down_payment = parseFloat(document.getElementById("Payment").value);
     term = parseFloat(document.getElementById('Term').value);
