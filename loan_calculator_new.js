@@ -1,7 +1,7 @@
 
 $(document).ready(function() {
     const price = parseInt(document.getElementById('price').innerHTML);
-    document.getElementById('full-price').value = price;
+    document.getElementById('full-price').value = currency(price).value;
     formatCurrency($(this));
   });
 
