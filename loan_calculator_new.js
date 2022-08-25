@@ -3,13 +3,7 @@ $(document).ready(function() {
     const price = parseInt(document.getElementById('price').innerHTML);
     document.getElementById('full-price').value = price;
     formatCurrency($(this));
-    calculate_price();
   });
-
-$("#price").change(function() {
-    formatCurrency($(this));
-    calculate_price();
-});
 
 $("#Term").change(function() {
     calculate_price();
@@ -26,11 +20,9 @@ $("#Salex-tax").change(function() {
 $("input[data-type='currency']").on({
     keyup: function() {
       formatCurrency($(this));
-      calculate_price();
     },
     blur: function() { 
       formatCurrency($(this), "blur");
-      calculate_price();
     }
 });
   
@@ -68,6 +60,7 @@ function formatNumber(n) {
 }
 
 function formatCurrency(input, blur) {
+  calculate_price();
   // appends $ to value, validates decimal side
   // and puts cursor back in right position.
   
