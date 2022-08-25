@@ -3,8 +3,9 @@ $(document).ready(function() {
     const price = parseInt(document.getElementById('price').innerHTML);
     if (price == 0) {
       document.getElementById("full-price").value = document.getElementById("full-price").placeholder
+    } else if (!isNaN(price)){
+      document.getElementById('full-price').value = currency(price).format();
     }
-    document.getElementById('full-price').value = currency(price).format();
     formatCurrency($(this));
   });
 
