@@ -2,18 +2,12 @@
 $(document).ready(function() {
     const price = parseInt(document.getElementById('price').innerHTML);
     document.getElementById('full-price').value = price;
+    formatCurrency($(this));
     calculate_price();
   });
 
 $("#price").change(function() {
-    calculate_price();
-});
-
-$("#Payment").change(function() {
-    calculate_price();
-});
-
-$("#full-price").change(function() {
+    formatCurrency($(this));
     calculate_price();
 });
 
@@ -32,21 +26,23 @@ $("#Salex-tax").change(function() {
 $("input[data-type='currency']").on({
     keyup: function() {
       formatCurrency($(this));
+      calculate_price();
     },
     blur: function() { 
       formatCurrency($(this), "blur");
+      calculate_price();
     }
 });
   
 function calculate_price(){
-    AMOUNT =  parseFloat(document.getElementById("full-price").value);
+    AMOUNT =  currency(document.getElementById("full-price").value);
     if (AMOUNT == 0){
         AMOUNT = document.getElementById("full-price").placeholder;
     }
-    down_payment = parseFloat(document.getElementById("Payment").value);
-    term = parseFloat(document.getElementById('Term').value);
-    interest_rate = parseFloat(document.getElementById("Interest-rate").value / 100);
-    sales_tax = parseFloat(document.getElementById("Salex-tax").value / 100);
+    down_payment = currency(document.getElementById("Payment").value);
+    term = currency(document.getElementById('Term').value);
+    interest_rate = currency(document.getElementById("Interest-rate").value / 100);
+    sales_tax = currency(document.getElementById("Salex-tax").value / 100);
   
     console.log(AMOUNT, down_payment, term, interest_rate, sales_tax)
       
