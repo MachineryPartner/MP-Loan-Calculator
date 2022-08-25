@@ -29,7 +29,7 @@ $("input[data-type='currency']").on({
 function calculate_price(){
     AMOUNT =  currency(document.getElementById("full-price").value).value;
     if (AMOUNT == 0){
-        AMOUNT = document.getElementById("full-price").placeholder;
+        AMOUNT = currency(document.getElementById("full-price").placeholder).value;
     }
     down_payment = currency(document.getElementById("Payment").value).value;
     term = currency(document.getElementById('Term').value).value;
