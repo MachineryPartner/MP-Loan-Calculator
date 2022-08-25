@@ -39,11 +39,11 @@ function calculate_price(){
     sales_tax = currency(document.getElementById("Salex-tax").value).value / 100;
 
     if (interest_rate !== 0) {
-      document.getElementById("Interest-rate").value = `${interest_rate}%`;
+      document.getElementById("Interest-rate").value = `${currency(document.getElementById("Interest-rate").value).value}%`;
     }
 
     if (sales_tax !== 0) {
-      document.getElementById("Salex-tax").value = `${sales_tax}%`;
+      document.getElementById("Salex-tax").value = `${currency(document.getElementById("Salex-tax").value).value}%`;
     }
   
     console.log(AMOUNT, down_payment, term, interest_rate, sales_tax)
