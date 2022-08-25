@@ -1,7 +1,7 @@
 
 $(document).ready(function() {
     const price = parseInt(document.getElementById('price').innerHTML);
-    document.getElementById('full-price').value = currency(price).value;
+    document.getElementById('full-price').value = currency(price).format();
     formatCurrency($(this));
   });
 
@@ -37,6 +37,14 @@ function calculate_price(){
     term = currency(document.getElementById('Term').value).value;
     interest_rate = currency(document.getElementById("Interest-rate").value).value / 100;
     sales_tax = currency(document.getElementById("Salex-tax").value).value / 100;
+
+    if (interest_rate !== 0) {
+      document.getElementById("Interest-rate").value = `${interest_rate}%`;
+    }
+
+    if (sales_tax !== 0) {
+      document.getElementById("Salex-tax").value = `${sales_tax}%`;
+    }
   
     console.log(AMOUNT, down_payment, term, interest_rate, sales_tax)
       
