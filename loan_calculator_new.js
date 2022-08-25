@@ -67,7 +67,7 @@ function calculate_price(){
       document.getElementById("Salex-tax").value = `${currency(document.getElementById("Salex-tax").value).value}%`;
     }
   
-    console.log(AMOUNT, down_payment, term, interest_rate, sales_tax)
+    // console.log(AMOUNT, down_payment, term, interest_rate, sales_tax)
       
     principal = (1 + sales_tax) * AMOUNT - down_payment;
       
