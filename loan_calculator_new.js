@@ -1,6 +1,9 @@
 
 $(document).ready(function() {
     const price = parseInt(document.getElementById('price').innerHTML);
+    if (price == 0) {
+      document.getElementById("full-price").value = document.getElementById("full-price").placeholder
+    }
     document.getElementById('full-price').value = currency(price).format();
     formatCurrency($(this));
   });
@@ -13,8 +16,26 @@ $("#Interest-rate").change(function() {
     calculate_price();
 });
 
+$("#Interest-rate").on({
+    focus: function() {
+      document.getElementById("Interest-rate").value = currency(document.getElementById("Interest-rate").value).value;
+    },
+    blur: function() { 
+      document.getElementById("Interest-rate").value = `${currency(document.getElementById("Interest-rate").value).value}%`;
+    }
+});
+
 $("#Salex-tax").change(function() {
     calculate_price();
+});
+
+$("#Salex-tax").on({
+    focus: function() {
+      document.getElementById("#Salex-tax").value = currency(document.getElementById("#Salex-tax").value).value;
+    },
+    blur: function() { 
+      document.getElementById("#Salex-tax").value = `${currency(document.getElementById("#Salex-tax").value).value}%`;
+    }
 });
 
 $("input[data-type='currency']").on({
@@ -29,7 +50,6 @@ $("input[data-type='currency']").on({
 function calculate_price(){
     AMOUNT =  currency(document.getElementById("full-price").value).value;
     if (AMOUNT == 0){
-        document.getElementById("full-price").value = document.getElementById("full-price").placeholder
         AMOUNT = currency(document.getElementById("full-price").value).value;
         
     }
