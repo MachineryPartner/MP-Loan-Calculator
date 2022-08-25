@@ -31,10 +31,10 @@ $("#Salex-tax").change(function() {
 
 $("#Salex-tax").on({
     focus: function() {
-      document.getElementById("#Salex-tax").value = currency(document.getElementById("#Salex-tax").value).value;
+      document.getElementById("Salex-tax").value = currency(document.getElementById("Salex-tax").value).value;
     },
     blur: function() { 
-      document.getElementById("#Salex-tax").value = `${currency(document.getElementById("#Salex-tax").value).value}%`;
+      document.getElementById("Salex-tax").value = `${currency(document.getElementById("Salex-tax").value).value}%`;
     }
 });
 
