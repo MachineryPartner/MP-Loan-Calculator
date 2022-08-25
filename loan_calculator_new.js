@@ -27,14 +27,14 @@ $("input[data-type='currency']").on({
 });
   
 function calculate_price(){
-    AMOUNT =  currency(document.getElementById("full-price").value);
+    AMOUNT =  currency(document.getElementById("full-price").value).value;
     if (AMOUNT == 0){
         AMOUNT = document.getElementById("full-price").placeholder;
     }
-    down_payment = currency(document.getElementById("Payment").value);
-    term = currency(document.getElementById('Term').value);
-    interest_rate = currency(document.getElementById("Interest-rate").value / 100);
-    sales_tax = currency(document.getElementById("Salex-tax").value / 100);
+    down_payment = currency(document.getElementById("Payment").value).value;
+    term = currency(document.getElementById('Term').value).value;
+    interest_rate = currency(document.getElementById("Interest-rate").value).value / 100;
+    sales_tax = currency(document.getElementById("Salex-tax").value).value / 100;
   
     console.log(AMOUNT, down_payment, term, interest_rate, sales_tax)
       
