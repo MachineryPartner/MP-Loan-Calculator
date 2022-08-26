@@ -18,6 +18,9 @@ $("#Interest-rate").change(function() {
 });
 
 $("#Interest-rate").on({
+    keyup: function() {
+      document.getElementById("Interest-rate").value = formatNumber(document.getElementById("Interest-rate").value)
+    },
     focus: function() {
       document.getElementById("Interest-rate").value = currency(document.getElementById("Interest-rate").value).value;
     },
@@ -31,6 +34,9 @@ $("#Salex-tax").change(function() {
 });
 
 $("#Salex-tax").on({
+    keyup: function() {
+      document.getElementById("#Salex-tax").value = formatNumber(document.getElementById("#Salex-tax").value)
+    },
     focus: function() {
       document.getElementById("Salex-tax").value = currency(document.getElementById("Salex-tax").value).value;
     },
@@ -105,7 +111,7 @@ function formatCurrency(input, blur) {
   const original_len = input_val.length;
 
   // initial caret position 
-  const caret_pos = input.prop("selectionStart");
+  let caret_pos = input.prop("selectionStart");
     
   // check for decimal
   if (input_val.indexOf(".") >= 0) {
