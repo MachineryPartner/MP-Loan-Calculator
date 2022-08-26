@@ -14,6 +14,7 @@ $("#Term").change(function() {
 });
 
 $("#Interest-rate").change(function() {
+    document.getElementById("Interest-rate").value = formatNumber(document.getElementById("Interest-rate").value)
     calculate_price();
 });
 
@@ -27,6 +28,7 @@ $("#Interest-rate").on({
 });
 
 $("#Salex-tax").change(function() {
+    document.getElementById("Salex-tax").value = formatNumber(document.getElementById("Salex-tax").value)
     calculate_price();
 });
 
@@ -105,7 +107,7 @@ function formatCurrency(input, blur) {
   const original_len = input_val.length;
 
   // initial caret position 
-  const caret_pos = input.prop("selectionStart");
+  let caret_pos = input.prop("selectionStart");
     
   // check for decimal
   if (input_val.indexOf(".") >= 0) {
