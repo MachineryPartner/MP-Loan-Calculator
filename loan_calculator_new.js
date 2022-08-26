@@ -14,11 +14,13 @@ $("#Term").change(function() {
 });
 
 $("#Interest-rate").change(function() {
-    document.getElementById("Interest-rate").value = formatNumber(document.getElementById("Interest-rate").value)
     calculate_price();
 });
 
 $("#Interest-rate").on({
+    keyup: function() {
+      document.getElementById("Interest-rate").value = formatNumber(document.getElementById("Interest-rate").value)
+    },
     focus: function() {
       document.getElementById("Interest-rate").value = currency(document.getElementById("Interest-rate").value).value;
     },
@@ -28,11 +30,13 @@ $("#Interest-rate").on({
 });
 
 $("#Salex-tax").change(function() {
-    document.getElementById("Salex-tax").value = formatNumber(document.getElementById("Salex-tax").value)
     calculate_price();
 });
 
 $("#Salex-tax").on({
+    keyup: function() {
+      document.getElementById("#Salex-tax").value = formatNumber(document.getElementById("#Salex-tax").value)
+    },
     focus: function() {
       document.getElementById("Salex-tax").value = currency(document.getElementById("Salex-tax").value).value;
     },
