@@ -90,7 +90,7 @@ $(document).ready(function () {
   // Reset form state
   for (const block of formBlocks) {
     block.style.display = "none";
-    // block.style.pointerEvents = "none"; TODO DEBUG MODE
+    block.style.pointerEvents = "none"; TODO DEBUG MODE
   }
   formBlocks[0].style.display = "block";
   formBlocks[0].style.pointerEvents = "auto";
