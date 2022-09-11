@@ -3,6 +3,12 @@ $(document).ready(function () {
   const checkBoxOwnerYes = document.getElementById("ownerYes");
   checkBoxOwnerYes.click();
   let dataPayload = {};
+  let statusPossibles = {
+    contact: "PERSONAL_INFORMATION",
+    owner: "OWNER_INFORMATION",
+    submited: "COMPLETED",
+  };
+  let currentStatus = statusPossibles.contact;
   var value = "";
 
   const inputOwner = document.getElementById("Primary-Owner");
@@ -64,7 +70,7 @@ $(document).ready(function () {
   function saveCreditApp(cb) {
     const payload = getData();
     $.ajax({
-      url: "localhost:3000/api/credit-app/create",
+      url: "https://mp-portal-git-develop-machinerypartner.vercel.app/api/credit-app/submit",
       type: "post",
       data: payload,
     })
@@ -126,7 +132,9 @@ $(document).ready(function () {
   let submitButtonOwner = document.getElementById("save-button-owner");
   submitButtonOwner.style.pointerEvents = "none";
   $("#save-button-owner").on("click", function (event) {
-    saveCreditApp(function () {});
+    saveCreditApp(function () {
+      currentStatus = statusPossibles.owner;
+    });
     nextBlock(4);
   });
 
@@ -134,7 +142,9 @@ $(document).ready(function () {
   submitButton.style.pointerEvents = "none";
   $("#credit-app-submit").on("click", function (event) {
     event.preventDefault();
-    saveCreditApp(function () {});
+    saveCreditApp(function () {
+      currentStatus = statusPossibles.submited;
+    });
     $(this).submit();
   });
 
@@ -715,6 +725,7 @@ $(document).ready(function () {
         dataPayload[property] = row.fields[property].value;
       }
     });
+    dataPayload["status"] = currentStatus;
     return dataPayload;
   }
 });
