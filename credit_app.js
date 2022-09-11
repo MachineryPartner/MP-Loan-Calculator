@@ -69,18 +69,17 @@ $(document).ready(function () {
 
   function saveCreditApp(cb) {
     const payload = getData();
-    $.ajax({
-      url: "https://mp-portal-git-develop-machinerypartner.vercel.app/api/credit-app/submit",
-      type: "post",
-      data: payload,
-    })
-      .done(function (msg) {
-        // console.log("response: ", msg);
-        cb(true);
-      })
-      .fail(function (jqXHR, textStatus, msg) {
-        cb(false);
-      });
+    var xhr = new XMLHttpRequest();
+    xhr.open(
+      "POST",
+      "https://mp-portal-git-develop-machinerypartner.vercel.app/api/credit-app/submit",
+      true
+    );
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(payload));
+    xhr.onload = function () {
+      cb(this.status);
+    };
   }
 
   function nextBlock(_currentState) {
