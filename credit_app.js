@@ -142,9 +142,8 @@ $(document).ready(function () {
   $("#credit-app-submit").on("click", function (event) {
     event.preventDefault();
     currentStatus = statusPossibles.submited;
-    saveCreditApp(function () {
-      $(this).submit();
-    });
+    saveCreditApp(function () {});
+    $(this).submit();
   });
 
   function validateInput(rule, event, value) {
