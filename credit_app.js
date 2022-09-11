@@ -544,13 +544,13 @@ $(document).ready(function () {
       submitButton.style.pointerEvents = "auto";
       submitButton.classList.remove("is-disable");
       getData();
-      // console.log("checkInfos: ", {
-      //   checkRelease,
-      //   checkShareInfo,
-      //   checkCreditNotice,
-      //   countRequiredFields,
-      //   dataPayload,
-      // });
+      console.log("checkInfos: ", {
+        checkRelease,
+        checkShareInfo,
+        checkCreditNotice,
+        countRequiredFields,
+        dataPayload,
+      });
     } else {
       submitButton.style.pointerEvents = "none";
       submitButton.classList.add("is-disable");
