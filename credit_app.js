@@ -131,20 +131,20 @@ $(document).ready(function () {
   let submitButtonOwner = document.getElementById("save-button-owner");
   submitButtonOwner.style.pointerEvents = "none";
   $("#save-button-owner").on("click", function (event) {
+    currentStatus = statusPossibles.owner;
     saveCreditApp(function () {
-      currentStatus = statusPossibles.owner;
+      nextBlock(4);
     });
-    nextBlock(4);
   });
 
   let submitButton = document.getElementById("credit-app-submit");
   submitButton.style.pointerEvents = "none";
   $("#credit-app-submit").on("click", function (event) {
     event.preventDefault();
+    currentStatus = statusPossibles.submited;
     saveCreditApp(function () {
-      currentStatus = statusPossibles.submited;
+      $(this).submit();
     });
-    $(this).submit();
   });
 
   function validateInput(rule, event, value) {
