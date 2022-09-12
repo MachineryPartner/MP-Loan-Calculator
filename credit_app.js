@@ -87,13 +87,6 @@ $(document).ready(function () {
   //finance_form_status
   const formStatus = document.getElementsByClassName("finance_form_status");
   const formBlocks = document.getElementsByClassName("finance_form_content");
-  // Reset form state
-  for (const block of formBlocks) {
-    block.style.display = "none";
-    block.style.pointerEvents = "none";
-  }
-  formBlocks[0].style.display = "block";
-  formBlocks[0].style.pointerEvents = "auto";
 
   // Set handler for display blocks
   $(".finance_form_header").on("click", function (event) {
@@ -105,26 +98,22 @@ $(document).ready(function () {
   });
 
   let submitButtonAmount = document.getElementById("save-button-amount");
-  submitButtonAmount.style.pointerEvents = "none";
   $("#save-button-amount").on("click", function (event) {
     nextBlock(1);
   });
 
   let submitButtonBusiness = document.getElementById("save-button-business");
-  submitButtonBusiness.style.pointerEvents = "none";
   $("#save-button-business").on("click", function (event) {
     nextBlock(2);
   });
 
   let submitButtonContact = document.getElementById("save-button-contact");
-  submitButtonContact.style.pointerEvents = "none";
   $("#save-button-contact").on("click", function (event) {
     saveCreditApp(function () {});
     nextBlock(3);
   });
 
   let submitButtonOwner = document.getElementById("save-button-owner");
-  submitButtonOwner.style.pointerEvents = "none";
   $("#save-button-owner").on("click", function (event) {
     currentStatus = statusPossibles.owner;
     saveCreditApp(function () {
@@ -133,7 +122,6 @@ $(document).ready(function () {
   });
 
   let submitButton = document.getElementById("credit-app-submit");
-  submitButton.style.pointerEvents = "none";
   $("#credit-app-submit").on("click", function (event) {
     event.preventDefault();
     currentStatus = statusPossibles.submited;
@@ -663,8 +651,6 @@ $(document).ready(function () {
               }
               const totalRequiredFields = checkRequirements(fields);
               if (totalRequiredFields === 0) {
-                button.style.pointerEvents = "auto";
-                button.classList.remove("is-disable");
                 setIconStatusOk(formStatus[currentStage]);
                 formBlocks[currentStage + 1].style.pointerEvents = "auto";
               }
@@ -673,8 +659,6 @@ $(document).ready(function () {
             if (inputData.state) {
               inputData.state = false;
             }
-            button.style.pointerEvents = "none";
-            button.classList.add("is-disable");
             setIconStatusError(formStatus[currentStage]);
             if (event.currentTarget.nextSibling) {
               event.currentTarget.nextSibling.innerHTML = isValid.message;
