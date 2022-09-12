@@ -87,6 +87,13 @@ $(document).ready(function () {
   //finance_form_status
   const formStatus = document.getElementsByClassName("finance_form_status");
   const formBlocks = document.getElementsByClassName("finance_form_content");
+  // Reset form state
+  for (const block of formBlocks) {
+    block.style.display = "none";
+    block.style.pointerEvents = "none";
+  }
+  formBlocks[0].style.display = "block";
+  formBlocks[0].style.pointerEvents = "auto";
 
   // Set handler for display blocks
   $(".finance_form_header").on("click", function (event) {
@@ -681,7 +688,7 @@ $(document).ready(function () {
   let checkRelease = false;
   let checkShareInfo = false;
   let checkCreditNotice = false;
-  //
+
   function getData() {
     creditAppState.forEach(function (row) {
       for (const property in row.fields) {
