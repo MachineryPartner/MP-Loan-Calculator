@@ -129,6 +129,7 @@ $(document).ready(function () {
   });
 
   let submitButton = document.getElementById("credit-app-submit");
+  submitButton.style.pointerEvents = "none";
   $("#credit-app-submit").on("click", function (event) {
     event.preventDefault();
     currentStatus = statusPossibles.submited;
