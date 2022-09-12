@@ -681,7 +681,7 @@ $(document).ready(function () {
   let checkRelease = false;
   let checkShareInfo = false;
   let checkCreditNotice = false;
-
+  //
   function getData() {
     creditAppState.forEach(function (row) {
       for (const property in row.fields) {
