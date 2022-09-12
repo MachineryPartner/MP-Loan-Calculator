@@ -1,7 +1,5 @@
 /*  */
 $(document).ready(function () {
-  const checkBoxOwnerYes = document.getElementById("ownerYes");
-  checkBoxOwnerYes.click();
   let dataPayload = {};
   let statusPossibles = {
     contact: "PERSONAL_INFORMATION",
@@ -393,7 +391,7 @@ $(document).ready(function () {
           value: "",
           tag: "Primary-Owner",
           state: false,
-          required: false,
+          required: true,
           validate: function (_input) {
             const fields = creditAppState[currentStage].fields;
             if (_input && _input.length >= 5) {
@@ -692,20 +690,6 @@ $(document).ready(function () {
       });
     }
   }
-
-  $("#ownerYes").change(function (event) {
-    inputOwner.parentElement.style.display = "none";
-    let inputSSN = document.getElementById("Security");
-    inputSSN.focus();
-    let inputPrimaryOwner = document.getElementById("Primary-Owner");
-    inputPrimaryOwner.value = "";
-  });
-
-  $("#ownerNo").change(function (event) {
-    inputOwner.parentElement.style.display = "block";
-    let inputPrimaryOwner = document.getElementById("Primary-Owner");
-    inputPrimaryOwner.focus();
-  });
 
   String.prototype.replaceAt = function (index, character) {
     return (
