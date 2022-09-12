@@ -81,7 +81,6 @@ $(document).ready(function () {
     currentState = _currentState;
     currentStage = _currentState;
     formBlocks[currentState - 1].style.display = "none";
-    formBlocks[currentState].style.display = "block";
   }
   // Get all Form Blocks
   //finance_form_status
@@ -90,10 +89,8 @@ $(document).ready(function () {
   // Reset form state
   for (const block of formBlocks) {
     block.style.display = "none";
-    block.style.pointerEvents = "none";
   }
   formBlocks[0].style.display = "block";
-  formBlocks[0].style.pointerEvents = "auto";
 
   // Set handler for display blocks
   $(".finance_form_header").on("click", function (event) {
@@ -660,7 +657,6 @@ $(document).ready(function () {
               const totalRequiredFields = checkRequirements(fields);
               if (totalRequiredFields === 0) {
                 setIconStatusOk(formStatus[currentStage]);
-                formBlocks[currentStage + 1].style.pointerEvents = "auto";
               }
             }
           } else {
