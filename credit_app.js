@@ -9,9 +9,6 @@ $(document).ready(function () {
   let currentStatus = statusPossibles.contact;
   var value = "";
 
-  const inputOwner = document.getElementById("Primary-Owner");
-  inputOwner.parentElement.style.display = "none";
-
   const phoneInputField = document.getElementById("Phone-number-3");
   const phoneInput = window.intlTelInput(phoneInputField, {
     separateDialCode: true,
