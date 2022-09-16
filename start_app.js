@@ -32,10 +32,10 @@ $(document).ready(function () {
     var xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      "https://mp-portal-git-develop-machinerypartner.vercel.app/api/credit-app/start",
+      "https://65d0-2804-1b0-1402-47a6-d5a4-2f05-72f8-e8b.ngrok.io/api/credit-app/start",
       true
     );
-    xhr.setRequestHeader("Content-Type", "application/json");
+    // xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
       cb(this.status);
@@ -44,12 +44,14 @@ $(document).ready(function () {
 
   let submitButton = document.getElementById("credit-app-start");
   submitButton.style.pointerEvents = "none";
-  $("#credit-app-submit").on("click", function (event) {
+  $("#credit-app-start").on("click", function (event) {
     event.preventDefault();
     currentStatus = statusPossibles.submited;
-    saveCreditApp(function () {});
-    $(this).submit();
-    // formConfirmation.style.display = "block";
+    const form = $(this);
+    saveCreditApp(function () {
+      form.submit();
+      sendConfirmationMessage.style.display = "block";
+    });
   });
 
   function checkInfos() {

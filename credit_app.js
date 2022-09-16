@@ -94,6 +94,7 @@ $(document).ready(function () {
       }
     });
     dataPayload["status"] = currentStatus;
+    dataPayload["hash"] = hash;
     return dataPayload;
   }
 
@@ -104,62 +105,60 @@ $(document).ready(function () {
     var xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      "https://mp-portal-git-develop-machinerypartner.vercel.app/api/credit-app/security",
+      "https://65d0-2804-1b0-1402-47a6-d5a4-2f05-72f8-e8b.ngrok.io/api/credit-app/security",
       true
     );
-    xhr.setRequestHeader("Content-Type", "application/json");
+    // xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
       cb(JSON.parse(this.responseText));
     };
   }
 
-  const mockResponse = {
-    "Majority Owner SSN": "1234567890",
-    "Loan Amount": "100000",
-    "Majority Owner Name": "Daniel Henrique",
-    "Business Street Address": "Av. Pedra Branca, 216",
-    "Business City": "Palhoca",
-    "Business Name": "Liglu Brasil",
-    "Contact Phone": "12345678900",
-    "Business Zip-Code": "12345",
-    "Business Street Complement": "apt 1001",
-    "Contact Name": "Daniel Henrique",
-    "Majority Owner Ownership": "60",
-    "Business State": "Florida",
-    "Hash Expire At": "2022-10-15T17:45:59.988Z",
-    "Updated At": "2022-09-15T17:46:26.629Z",
-    "Business No. of Employees": "1",
-    "Business Main Activity": "Landscaping",
-    "Business Founding Date": "2022-09-30",
-    "Business Monthly Revenue": "200k",
-    "Business EIN": "1234567890",
-    "Max Downpayment": "10000",
-    "Majority Owner Birth Date": "1985-03-30",
-    "Second Owner SSN": "1234567890",
-    "Second Owner Name": "Henrique Jr.",
-    "Second Owner Ownership": "40",
-    "Second Owner Birth Date": "1985-03-15",
-    "Second Owner Business List": "",
-    "Majority Owner Business List": "",
-    "Majority Owner Another Business": false,
-    "Single Owner": false,
-    "Second Owner Another Business": false,
-  };
-
-  getCreditApp(function (response) {
-    console.log("getCreditApp", response);
-  });
+  let mockResponse = {};
+  // let mockResponse = {
+  //   "Majority Owner SSN": "1234567890",
+  //   "Loan Amount": "100000",
+  //   "Majority Owner Name": "Daniel Henrique",
+  //   "Business Street Address": "Av. Pedra Branca, 216",
+  //   "Business City": "Palhoca",
+  //   "Business Name": "Liglu Brasil",
+  //   "Contact Phone": "12345678900",
+  //   "Business Zip-Code": "12345",
+  //   "Business Street Complement": "apt 1001",
+  //   "Contact Name": "Daniel Henrique",
+  //   "Majority Owner Ownership": "60",
+  //   "Business State": "Florida",
+  //   "Hash Expire At": "2022-10-15T17:45:59.988Z",
+  //   "Updated At": "2022-09-15T17:46:26.629Z",
+  //   "Business No. of Employees": "1",
+  //   "Business Main Activity": "Landscaping",
+  //   "Business Founding Date": "2022-09-30",
+  //   "Business Monthly Revenue": "200k",
+  //   "Business EIN": "1234567890",
+  //   "Max Downpayment": "10000",
+  //   "Majority Owner Birth Date": "1985-03-30",
+  //   "Second Owner SSN": "1234567890",
+  //   "Second Owner Name": "Henrique Jr.",
+  //   "Second Owner Ownership": "40",
+  //   "Second Owner Birth Date": "1985-03-15",
+  //   "Second Owner Business List": "",
+  //   "Majority Owner Business List": "",
+  //   "Majority Owner Another Business": false,
+  //   "Single Owner": false,
+  //   "Second Owner Another Business": false,
+  // };
 
   function saveCreditApp(cb) {
     const payload = getData();
+    console.log("saveCreditApp: ", payload);
     var xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      "https://mp-portal-git-develop-machinerypartner.vercel.app/api/credit-app/save",
+      "https://65d0-2804-1b0-1402-47a6-d5a4-2f05-72f8-e8b.ngrok.io/api/credit-app/save",
       true
     );
-    xhr.setRequestHeader("Content-Type", "application/json");
+    // xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
       cb(this.status);
@@ -226,28 +225,28 @@ $(document).ready(function () {
   $("#save-button-business").on("click", function (event) {
     currentStatus = statusPossibles.businessAddress;
     nextBlock(1);
-    // saveCreditApp(function () {});
+    saveCreditApp(function () {});
   });
 
   let submitButtonAmount = document.getElementById("save-button-amount");
   $("#save-button-amount").on("click", function (event) {
     currentStatus = statusPossibles.loanInfo;
     nextBlock(2);
-    // saveCreditApp(function () {});
+    saveCreditApp(function () {});
   });
 
   let submitButtonOwner = document.getElementById("save-button-owner");
   $("#save-button-owner").on("click", function (event) {
     currentStatus = statusPossibles.majorityInfo;
     nextBlock(3);
-    // saveCreditApp(function () {});
+    saveCreditApp(function () {});
   });
 
   let submitButton2Owner = document.getElementById("save-button-2owner");
   $("#save-button-2owner").on("click", function (event) {
     currentStatus = statusPossibles.secondOwnerInfo;
     nextBlock(4);
-    // saveCreditApp(function () {});
+    saveCreditApp(function () {});
   });
 
   let submitButton = document.getElementById("credit-app-submit");
@@ -255,8 +254,10 @@ $(document).ready(function () {
   $("#credit-app-submit").on("click", function (event) {
     event.preventDefault();
     currentStatus = statusPossibles.submited;
-    // saveCreditApp(function () {});
-    $(this).submit();
+    const form = $(this);
+    saveCreditApp(function () {
+      form.submit();
+    });
   });
 
   function validateInput(rule, event, value) {
@@ -999,106 +1000,114 @@ $(document).ready(function () {
     input2OwnerList.parentElement.style.display = "none";
   });
 
-  for (const step of creditAppState) {
-    const { fields } = step;
-    for (const name in fields) {
-      const inputData = fields[name];
-      // Pre-fill inputs from AirTable
-      // const dataSaved = mockResponse[inputData.airtable]
-      //   ? mockResponse[inputData.airtable]
-      //   : "";
+  function loadForms() {
+    for (const step of creditAppState) {
+      const { fields } = step;
+      for (const name in fields) {
+        const inputData = fields[name];
+        // Pre-fill inputs from AirTable
 
-      // if (typeof dataSaved === "boolean") {
-      //   const input = document.getElementById(inputData.tag);
-      //   if (input && dataSaved) {
-      //     input.checked = true;
-      //     input.value = "Yes";
-      //     inputData.value = true;
-      //   } else {
-      //     input.checked = false;
-      //     input.value = "No";
-      //     inputData.value = false;
-      //   }
-      //   console.log(
-      //     "typeof dataSaved: ",
-      //     inputData.tag,
-      //     typeof dataSaved,
-      //     dataSaved
-      //   );
-      // } else {
-      //   inputData.value = dataSaved;
-      //   $(`#${inputData.tag}`).val(inputData.value);
-      // }
+        const dataSaved = mockResponse[inputData.airtable]
+          ? mockResponse[inputData.airtable]
+          : "";
+        if (typeof dataSaved === "boolean") {
+          const input = document.getElementById(inputData.tag);
+          if (input && dataSaved) {
+            input.checked = true;
+            input.value = "Yes";
+            inputData.value = true;
+          } else {
+            input.checked = false;
+            input.value = "No";
+            inputData.value = false;
+          }
+          console.log(
+            "typeof dataSaved: ",
+            inputData.tag,
+            typeof dataSaved,
+            dataSaved
+          );
+        } else {
+          inputData.value = dataSaved;
+          $(`#${inputData.tag}`).val(inputData.value);
+        }
 
-      $(`#${inputData.tag}`).on({
-        change: function (event) {
-          if (inputData.change) {
-            const resp = inputData.change(event);
-            inputData.value = resp.status;
-            inputData.state = inputData.value;
-          }
-        },
-        keyup: function (event) {
-          if (inputData.keyup) inputData.keyup($(this));
-        },
-        focus: function (event) {
-          if (inputData.focus) inputData.focus($(this));
-        },
-        blur: function (event) {
-          const fields = creditAppState[currentState].fields;
-          validateBlockFields(fields, currentState);
-          if (inputData.blur) inputData.blur($(this));
-          let inputValue = event.currentTarget.value;
-          if (!inputData.validate) {
-            inputData.state = true;
-            return;
-          }
-
-          const isValid = inputData.validate(inputValue);
-
-          if (!isValid) {
-            return;
-          }
-          inputData.value = inputValue;
-          if (isValid.data) {
-            inputData.value = isValid.data;
-          }
-          if (isValid.status) {
-            let countRequiredFields = checkRequirements(fields);
-            if (countRequiredFields === 0) {
-              setIconStatusOk(formStatus[currentState]);
+        $(`#${inputData.tag}`).on({
+          change: function (event) {
+            if (inputData.change) {
+              const resp = inputData.change(event);
+              inputData.value = resp.status;
+              inputData.state = inputData.value;
             }
-            if (!inputData.state) {
+          },
+          keyup: function (event) {
+            if (inputData.keyup) inputData.keyup($(this));
+          },
+          focus: function (event) {
+            if (inputData.focus) inputData.focus($(this));
+          },
+          blur: function (event) {
+            const fields = creditAppState[currentState].fields;
+            validateBlockFields(fields, currentState);
+            if (inputData.blur) inputData.blur($(this));
+            let inputValue = event.currentTarget.value;
+            if (!inputData.validate) {
               inputData.state = true;
-              inputData.value = inputValue;
+              return;
+            }
+
+            const isValid = inputData.validate(inputValue);
+
+            if (!isValid) {
+              return;
+            }
+            inputData.value = inputValue;
+            if (isValid.data) {
+              inputData.value = isValid.data;
+            }
+            if (isValid.status) {
+              let countRequiredFields = checkRequirements(fields);
+              if (countRequiredFields === 0) {
+                setIconStatusOk(formStatus[currentState]);
+              }
+              if (!inputData.state) {
+                inputData.state = true;
+                inputData.value = inputValue;
+                if (event.currentTarget.nextSibling) {
+                  event.currentTarget.nextSibling.innerHTML = "";
+                } else if (
+                  event.currentTarget.offsetParent &&
+                  event.currentTarget.offsetParent.nextSibling
+                ) {
+                  event.currentTarget.offsetParent.nextSibling.innerHTML = "";
+                }
+              }
+            } else {
+              if (inputData.state) {
+                inputData.state = false;
+              }
+              setIconStatusError(formStatus[currentState]);
               if (event.currentTarget.nextSibling) {
-                event.currentTarget.nextSibling.innerHTML = "";
+                event.currentTarget.nextSibling.innerHTML = isValid.message;
               } else if (
                 event.currentTarget.offsetParent &&
                 event.currentTarget.offsetParent.nextSibling
               ) {
-                event.currentTarget.offsetParent.nextSibling.innerHTML = "";
+                event.currentTarget.offsetParent.nextSibling.innerHTML =
+                  isValid.message;
               }
             }
-          } else {
-            if (inputData.state) {
-              inputData.state = false;
-            }
-            setIconStatusError(formStatus[currentState]);
-            if (event.currentTarget.nextSibling) {
-              event.currentTarget.nextSibling.innerHTML = isValid.message;
-            } else if (
-              event.currentTarget.offsetParent &&
-              event.currentTarget.offsetParent.nextSibling
-            ) {
-              event.currentTarget.offsetParent.nextSibling.innerHTML =
-                isValid.message;
-            }
-          }
-        },
-      });
+          },
+        });
+      }
     }
   }
+
+  getCreditApp(function (response) {
+    console.log("getCreditApp", response.data);
+    mockResponse = response.data;
+    loadForms();
+  });
 
   console.log("creditAppState: ", {
     creditAppState,
