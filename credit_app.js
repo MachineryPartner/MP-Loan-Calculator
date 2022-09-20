@@ -28,6 +28,7 @@ $(document).ready(function () {
   let currentStatus = new Set([statusPossibles[0]]);
   let params = new URLSearchParams(document.location.search);
   let token = params.get("token");
+  const DEBUG_MODE = params.get("debug");
 
   const inputOwnerList = document.getElementById("Business-list");
   const secondOwnerBlock = document.getElementById("second-owner");
@@ -1112,13 +1113,16 @@ $(document).ready(function () {
     }
   }
 
-  getCreditApp(function (response) {
-    console.log("getCreditApp", response.data);
-    mockResponse = response.data;
-    // loadForms();
-  });
-
-  // console.log("creditAppState->Init State: ", {
-  //   creditAppState,
-  // });
+  if (DEBUG_MODE) {
+    loadForms();
+    console.log("creditAppState->Init State: ", {
+      creditAppState,
+    });
+  } else {
+    getCreditApp(function (response) {
+      console.log("getCreditApp", response.data);
+      mockResponse = response.data;
+      loadForms();
+    });
+  }
 });
