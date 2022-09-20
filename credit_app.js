@@ -38,9 +38,13 @@ if (DEBUG_MODE !== "0") {
 
     function getAPIBasePath() {
       const domain = window.location.hostname;
-      if (domain === "new-machinery-partner.webflow.io")
-        return "https://mp-loan-application-ffkv23ekw-machinerypartner.vercel.app";
-      return "https://mp-loan-application-ffkv23ekw-machinerypartner.vercel.app";
+      const isDev = "new-machinery-partner.webflow.io";
+      const baseUrlProd =
+        "https://mp-loan-application-809rqqbut-machinerypartner.vercel.app";
+      const baseUrlDev =
+        "https://mp-loan-application-809rqqbut-machinerypartner.vercel.app";
+      if (domain === isDev) return baseUrlDev;
+      return baseUrlProd;
     }
 
     function formatNumber(n) {
