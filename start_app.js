@@ -13,6 +13,13 @@ $(document).ready(function () {
       "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
   });
 
+  function getAPIBasePath() {
+    const domain = window.location.hostname;
+    if (domain === "new-machinery-partner.webflow.io")
+      return "https://mp-loan-application-pzvrwnztn-machinerypartner.vercel.app";
+    return "https://mp-loan-application-pzvrwnztn-machinerypartner.vercel.app";
+  }
+
   function formatPhone(n) {
     return n.replace(/\D/g, "");
   }
@@ -27,12 +34,11 @@ $(document).ready(function () {
   function saveCreditApp(cb) {
     const payload = getData();
     var xhr = new XMLHttpRequest();
-    xhr.open(
-      "POST",
-      "https://65d0-2804-1b0-1402-47a6-d5a4-2f05-72f8-e8b.ngrok.io/api/credit-app/start",
-      true
-    );
-    // xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.open("POST", `${getAPIBasePath()}/api/loan/start`, true);
+    xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+    // xhr.withCredentials = true;
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
       cb(this.status);

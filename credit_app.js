@@ -35,6 +35,13 @@ $(document).ready(function () {
 
   secondOwnerBlock.style.display = "none";
 
+  function getAPIBasePath() {
+    const domain = window.location.hostname;
+    if (domain === "new-machinery-partner.webflow.io")
+      return "https://mp-loan-application-pzvrwnztn-machinerypartner.vercel.app";
+    return "https://mp-loan-application-pzvrwnztn-machinerypartner.vercel.app";
+  }
+
   function formatNumber(n) {
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
@@ -88,19 +95,17 @@ $(document).ready(function () {
       token,
     };
     var xhr = new XMLHttpRequest();
-    xhr.open(
-      "POST",
-      "https://65d0-2804-1b0-1402-47a6-d5a4-2f05-72f8-e8b.ngrok.io/api/credit-app/security",
-      true
-    );
+    xhr.open("POST", `${getAPIBasePath()}/api/loan/security`);
+    xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
     xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+    // xhr.withCredentials = true;
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
       cb(JSON.parse(this.responseText));
     };
   }
 
-  // let mockResponse = {};
   let mockResponse = {
     "Majority Owner SSN": "123-45-6789",
     "Loan Amount": "100000",
@@ -139,12 +144,11 @@ $(document).ready(function () {
     const payload = getData();
     console.log("saveCreditApp: ", payload);
     var xhr = new XMLHttpRequest();
-    xhr.open(
-      "POST",
-      "https://65d0-2804-1b0-1402-47a6-d5a4-2f05-72f8-e8b.ngrok.io/api/credit-app/save",
-      true
-    );
+    xhr.open("POST", `${getAPIBasePath()}/api/loan/save`, true);
+    xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
     xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+    // xhr.withCredentials = true;
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
       cb(this.status);
@@ -310,11 +314,11 @@ $(document).ready(function () {
       submitButton.style.pointerEvents = "auto";
       submitButton.classList.remove("is-disable");
       getData();
-      console.log("checkFormRequirements: ", {
-        countRequiredFields,
-        dataPayload,
-        creditAppState,
-      });
+      // console.log("checkFormRequirements: ", {
+      //   countRequiredFields,
+      //   dataPayload,
+      //   creditAppState,
+      // });
     } else {
       submitButton.style.pointerEvents = "none";
       submitButton.classList.add("is-disable");
@@ -861,7 +865,7 @@ $(document).ready(function () {
         },
         secOwner: {
           value: "",
-          tag: "#Full-name-2",
+          tag: "#Sec-Owner-Name",
           airtable: "Second Owner Name",
           state: true,
           required: false,
@@ -1026,93 +1030,93 @@ $(document).ready(function () {
         const input = document.getElementById(inputData.tag.replace("#", ""));
         // Pre-fill inputs from AirTable
 
-        // const dataSaved = mockResponse[inputData.airtable]
-        //   ? mockResponse[inputData.airtable]
-        //   : "";
-        // if (typeof dataSaved === "boolean" && input) {
-        //   input.checked = dataSaved;
-        // } else {
-        //   inputData.value = dataSaved;
-        //   $(`${inputData.tag}`).val(inputData.value);
-        // }
+        const dataSaved = mockResponse[inputData.airtable]
+          ? mockResponse[inputData.airtable]
+          : "";
+        if (typeof dataSaved === "boolean" && input) {
+          input.checked = dataSaved;
+        } else {
+          inputData.value = dataSaved;
+          $(`${inputData.tag}`).val(inputData.value);
+        }
 
         // End Pre-fill
-        if (inputData.init) inputData.init(input, inputData);
 
-        $(`${inputData.tag}`).on({
-          change: function (event) {
-            if (inputData.change) inputData.change(event);
-          },
-          keyup: function (event) {
-            if (inputData.keyup) inputData.keyup($(this));
-          },
-          focus: function (event) {
-            if (inputData.focus) inputData.focus($(this));
-          },
-          blur: function (event) {
-            const fields = creditAppState[currentState].fields;
+        const domExist = $(`${inputData.tag}`);
 
-            if (inputData.blur) inputData.blur($(this));
-            let inputValue = event.currentTarget.value;
-            if (!inputData.validate) {
-              inputData.state = true;
-              checkFormRequirements();
-              return;
-            }
-
-            const isValid = inputData.validate(inputValue);
-            if (!isValid) {
-              checkFormRequirements();
-              return;
-            }
-
-            if (!inputData.isRadio) inputData.value = inputValue;
-            if (isValid.data) {
-              inputData.value = isValid.data;
-            }
-
-            if (isValid.status) {
-              if (!inputData.state) {
+        if (domExist.length > 0) {
+          if (inputData.init) inputData.init(input, inputData);
+          $(`${inputData.tag}`).on({
+            change: function (event) {
+              if (inputData.change) inputData.change(event);
+            },
+            keyup: function (event) {
+              if (inputData.keyup) inputData.keyup($(this));
+            },
+            focus: function (event) {
+              if (inputData.focus) inputData.focus($(this));
+            },
+            blur: function (event) {
+              if (inputData.blur) inputData.blur($(this));
+              let inputValue = event.currentTarget.value;
+              if (!inputData.validate) {
                 inputData.state = true;
-                if (!inputData.isRadio) inputData.value = inputValue;
+                checkFormRequirements();
+                return;
+              }
+
+              const isValid = inputData.validate(inputValue);
+              if (!isValid) {
+                checkFormRequirements();
+                return;
+              }
+
+              if (!inputData.isRadio) inputData.value = inputValue;
+              if (isValid.data) {
+                inputData.value = isValid.data;
+              }
+
+              if (isValid.status) {
+                if (!inputData.state) {
+                  inputData.state = true;
+                  if (!inputData.isRadio) inputData.value = inputValue;
+                  if (event.currentTarget.nextSibling) {
+                    event.currentTarget.nextSibling.innerHTML = "";
+                  } else if (
+                    event.currentTarget.offsetParent &&
+                    event.currentTarget.offsetParent.nextSibling
+                  ) {
+                    event.currentTarget.offsetParent.nextSibling.innerHTML = "";
+                  }
+                }
+              } else {
+                if (inputData.state) {
+                  inputData.state = false;
+                }
                 if (event.currentTarget.nextSibling) {
-                  event.currentTarget.nextSibling.innerHTML = "";
+                  event.currentTarget.nextSibling.innerHTML = isValid.message;
                 } else if (
                   event.currentTarget.offsetParent &&
                   event.currentTarget.offsetParent.nextSibling
                 ) {
-                  event.currentTarget.offsetParent.nextSibling.innerHTML = "";
+                  event.currentTarget.offsetParent.nextSibling.innerHTML =
+                    isValid.message;
                 }
               }
-            } else {
-              if (inputData.state) {
-                inputData.state = false;
-              }
-              if (event.currentTarget.nextSibling) {
-                event.currentTarget.nextSibling.innerHTML = isValid.message;
-              } else if (
-                event.currentTarget.offsetParent &&
-                event.currentTarget.offsetParent.nextSibling
-              ) {
-                event.currentTarget.offsetParent.nextSibling.innerHTML =
-                  isValid.message;
-              }
-            }
-            checkFormRequirements();
-          },
-        });
+              checkFormRequirements();
+            },
+          });
+        }
         forceFormFieldsBlur();
       }
     }
   }
 
-  // getCreditApp(function (response) {
-  //   console.log("getCreditApp", response.data);
-  //   mockResponse = response.data;
-  //   loadForms();
-  // });
-  // TODO
-  loadForms();
+  getCreditApp(function (response) {
+    console.log("getCreditApp", response.data);
+    mockResponse = response.data;
+    // loadForms();
+  });
 
   // console.log("creditAppState->Init State: ", {
   //   creditAppState,
