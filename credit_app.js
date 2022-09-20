@@ -16,18 +16,18 @@ $(document).ready(function () {
     block: "none",
     none: "block",
   };
-  let statusPossibles = {
-    contact: "PERSONAL_INFORMATION",
-    businessAddress: "BUSINESS_ADDRESS",
-    businessInfo: "BUSINESS_INFO",
-    loanInfo: "LOAN_INFO",
-    majorityInfo: "MAJORITY_OWNER_INFO",
-    secondOwnerInfo: "SECOND_OWNER_INFO",
-    submited: "COMPLETED",
-  };
-  let currentStatus = statusPossibles.businessAddress;
+  let statusPossibles = [
+    "BUSINESS_ADDRESS",
+    "BUSINESS_INFO",
+    "LOAN_INFO",
+    "MAJORITY_OWNER_INFO",
+    "SECOND_OWNER_INFO",
+    "COMPLETED",
+  ];
+
+  let currentStatus = new Set([statusPossibles[0]]);
   let params = new URLSearchParams(document.location.search);
-  let hash = params.get("hash");
+  let token = params.get("token");
 
   const inputOwnerList = document.getElementById("Business-list");
   const secondOwnerBlock = document.getElementById("second-owner");
@@ -75,14 +75,17 @@ $(document).ready(function () {
         dataPayload[property] = row.fields[property].value;
       }
     });
+    dataPayload["majorityAnotherBusiness"] = majorityAnotherBusiness;
+    dataPayload["singleOwner"] = singleOwner;
+    dataPayload["secAnotherBusiness"] = secAnotherBusiness;
     dataPayload["status"] = currentStatus;
-    dataPayload["hash"] = hash;
+    dataPayload["token"] = token;
     return dataPayload;
   }
 
   function getCreditApp(cb) {
     const payload = {
-      hash,
+      token,
     };
     var xhr = new XMLHttpRequest();
     xhr.open(
@@ -90,7 +93,7 @@ $(document).ready(function () {
       "https://65d0-2804-1b0-1402-47a6-d5a4-2f05-72f8-e8b.ngrok.io/api/credit-app/security",
       true
     );
-    // xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
       cb(JSON.parse(this.responseText));
@@ -99,7 +102,7 @@ $(document).ready(function () {
 
   // let mockResponse = {};
   let mockResponse = {
-    "Majority Owner SSN": "123456789",
+    "Majority Owner SSN": "123-45-6789",
     "Loan Amount": "100000",
     "Majority Owner Name": "Daniel Henrique",
     "Business Street Address": "Av. Pedra Branca, 216",
@@ -111,17 +114,17 @@ $(document).ready(function () {
     "Contact Name": "Daniel Henrique",
     "Majority Owner Ownership": "60",
     "Business State": "Florida",
-    "Hash Expire At": "2022-10-15T17:45:59.988Z",
+    "Token Expire At": "2022-10-15T17:45:59.988Z",
     "Updated At": "2022-09-15T17:46:26.629Z",
     "Business No. of Employees": "1",
     "Business Main Activity": "Landscaping",
     "Business Founding Date": "2022-09-30",
     "Business Monthly Revenue": "200k",
-    "Business EIN": "1234567890",
+    "Business EIN": "70707070",
     "Max Downpayment": "10000",
     "Majority Owner Birth Date": "1985-03-30",
-    "Second Owner SSN": "123456789",
-    "Second Owner Name": "Daniel Henrique",
+    "Second Owner SSN": "123-45-6789",
+    "Second Owner Name": "Henrique Junior",
     "Second Owner Ownership": "40",
     "Second Owner Birth Date": "1985-03-15",
     "Second Owner Business List": "",
@@ -141,18 +144,31 @@ $(document).ready(function () {
       "https://65d0-2804-1b0-1402-47a6-d5a4-2f05-72f8-e8b.ngrok.io/api/credit-app/save",
       true
     );
-    // xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
       cb(this.status);
     };
   }
 
-  function forceFieldsBlur(index) {
+  function forceFieldsBlur() {
     if (creditAppState[currentState]) {
       const fields = creditAppState[currentState].fields;
       for (const property in fields) {
         const field = fields[property];
+        $(`${field.tag}`).focus();
+        $(`${field.tag}`).keyup();
+        $(`${field.tag}`).blur();
+      }
+    }
+  }
+
+  function forceFormFieldsBlur() {
+    for (const block of creditAppState) {
+      const fields = block.fields;
+      for (const property in fields) {
+        const field = fields[property];
+        $(`${field.tag}`).focus();
         $(`${field.tag}`).keyup();
         $(`${field.tag}`).blur();
       }
@@ -170,6 +186,7 @@ $(document).ready(function () {
   }
   // Get all Form Blocks
   //finance_form_status
+  const formHeaders = document.getElementsByClassName("finance_form_header");
   const formStatus = document.getElementsByClassName("finance_form_status");
   const formBlocks = document.getElementsByClassName("finance_form_content");
   // Reset form state
@@ -198,7 +215,6 @@ $(document).ready(function () {
     "save-button-business-address"
   );
   $("#save-button-business-address").on("click", function (event) {
-    currentStatus = statusPossibles.businessAddress;
     nextBlock(1);
     saveCreditApp(function () {});
   });
@@ -207,28 +223,24 @@ $(document).ready(function () {
     "save-button-business-info"
   );
   $("#save-button-business-info").on("click", function (event) {
-    currentStatus = statusPossibles.businessInfo;
     nextBlock(2);
     saveCreditApp(function () {});
   });
 
   let submitButtonAmount = document.getElementById("save-button-amount");
   $("#save-button-amount").on("click", function (event) {
-    currentStatus = statusPossibles.loanInfo;
     nextBlock(3);
     saveCreditApp(function () {});
   });
 
   let submitButtonOwner = document.getElementById("save-button-owner");
   $("#save-button-owner").on("click", function (event) {
-    currentStatus = statusPossibles.majorityInfo;
     nextBlock(4);
     saveCreditApp(function () {});
   });
 
   let submitButton2Owner = document.getElementById("save-button-2owner");
   $("#save-button-2owner").on("click", function (event) {
-    currentStatus = statusPossibles.secondOwnerInfo;
     nextBlock(5);
     saveCreditApp(function () {});
   });
@@ -237,7 +249,7 @@ $(document).ready(function () {
   submitButton.style.pointerEvents = "none";
   $("#credit-app-submit").on("click", function (event) {
     event.preventDefault();
-    currentStatus = statusPossibles.submited;
+    currentStatus.add(statusPossibles[statusPossibles.length - 1]);
     const form = $(this);
     saveCreditApp(function () {
       form.submit();
@@ -284,40 +296,29 @@ $(document).ready(function () {
       const countCurrentRequiredFields = checkBlockRequirements(fields);
       if (countCurrentRequiredFields === 0) {
         setIconStatusOk(formStatus[blockIndex]);
+        formHeaders[blockIndex].classList.remove("is-error");
       } else {
         setIconStatusError(formStatus[blockIndex]);
+        formHeaders[blockIndex].classList.add("is-error");
       }
       countRequiredFields += countCurrentRequiredFields;
       validateBlockFields(fields, blockIndex);
       blockIndex += 1;
     }
-    // TODO
-    getData();
-    console.log("checkFormRequirements: ", {
-      countRequiredFields,
-      dataPayload,
-      creditAppState,
-      majorityAnotherBusiness,
-      singleOwner,
-      secAnotherBusiness,
-    });
+    // console.log("currentStatus: ", currentStatus);
     if (countRequiredFields === 0) {
       submitButton.style.pointerEvents = "auto";
       submitButton.classList.remove("is-disable");
       getData();
+      console.log("checkFormRequirements: ", {
+        countRequiredFields,
+        dataPayload,
+        creditAppState,
+      });
     } else {
       submitButton.style.pointerEvents = "none";
       submitButton.classList.add("is-disable");
     }
-  }
-
-  function validateSecury(value) {
-    if (value && value.length === 11) {
-      return { status: true, message: "", data: value };
-    } else if (value && value.length < 11) {
-      return { status: false, message: "Invalid SSN number!", data: value };
-    }
-    return { status: false, message: "Mandatory field", data: value };
   }
 
   String.prototype.replaceAt = function (index, character) {
@@ -373,6 +374,11 @@ $(document).ready(function () {
         const ret = field.validate(input.value);
         if (ret) {
           field.state = ret.status;
+          if (field.state === false) {
+            input.classList.add("is-error");
+          } else {
+            input.classList.remove("is-error");
+          }
           if (input.nextSibling)
             input.nextSibling.innerHTML = ret.message || "";
         }
@@ -385,7 +391,11 @@ $(document).ready(function () {
     // });
     if (countRequiredFields === 0) {
       setIconStatusOk(formStatus[index]);
+      formHeaders[index].classList.remove("is-error");
+      currentStatus.add(statusPossibles[index]);
     } else {
+      currentStatus.delete(statusPossibles[index]);
+      formHeaders[index].classList.add("is-error");
       setIconStatusError(formStatus[index]);
     }
   }
@@ -749,6 +759,7 @@ $(document).ready(function () {
             } else {
               majorityAnotherBusiness = false;
               document.getElementById("ownerAnotherNo").click();
+              inputOwnerList.value = "";
               inputOwnerList.parentElement.style.display = "none";
             }
           },
@@ -957,6 +968,7 @@ $(document).ready(function () {
               input2OwnerList.focus();
             } else {
               secAnotherBusiness = false;
+              input2OwnerList.value = "";
               document.getElementById("2ownerNo").click();
               input2OwnerList.parentElement.style.display = "none";
             }
@@ -1014,19 +1026,18 @@ $(document).ready(function () {
         const input = document.getElementById(inputData.tag.replace("#", ""));
         // Pre-fill inputs from AirTable
 
-        const dataSaved = mockResponse[inputData.airtable]
-          ? mockResponse[inputData.airtable]
-          : "";
-        if (typeof dataSaved === "boolean" && input) {
-          input.checked = dataSaved;
-        } else {
-          inputData.value = dataSaved;
-          $(`${inputData.tag}`).val(inputData.value);
-        }
+        // const dataSaved = mockResponse[inputData.airtable]
+        //   ? mockResponse[inputData.airtable]
+        //   : "";
+        // if (typeof dataSaved === "boolean" && input) {
+        //   input.checked = dataSaved;
+        // } else {
+        //   inputData.value = dataSaved;
+        //   $(`${inputData.tag}`).val(inputData.value);
+        // }
 
         // End Pre-fill
         if (inputData.init) inputData.init(input, inputData);
-        // // const initValid = inputData.validate(inputData.value);
 
         $(`${inputData.tag}`).on({
           change: function (event) {
@@ -1090,7 +1101,7 @@ $(document).ready(function () {
             checkFormRequirements();
           },
         });
-        forceFieldsBlur();
+        forceFormFieldsBlur();
       }
     }
   }
@@ -1103,7 +1114,7 @@ $(document).ready(function () {
   // TODO
   loadForms();
 
-  // console.log("creditAppState: ", {
+  // console.log("creditAppState->Init State: ", {
   //   creditAppState,
   // });
 });
