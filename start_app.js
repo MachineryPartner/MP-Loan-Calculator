@@ -16,8 +16,8 @@ $(document).ready(function () {
   function getAPIBasePath() {
     const domain = window.location.hostname;
     if (domain === "new-machinery-partner.webflow.io")
-      return "https://mp-loan-application-pzvrwnztn-machinerypartner.vercel.app";
-    return "https://mp-loan-application-pzvrwnztn-machinerypartner.vercel.app";
+      return "https://mp-loan-application-ffkv23ekw-machinerypartner.vercel.app";
+    return "https://mp-loan-application-ffkv23ekw-machinerypartner.vercel.app";
   }
 
   function formatPhone(n) {
@@ -35,9 +35,8 @@ $(document).ready(function () {
     const payload = getData();
     var xhr = new XMLHttpRequest();
     xhr.open("POST", `${getAPIBasePath()}/api/loan/start`, true);
-    // xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
+    xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
     xhr.setRequestHeader("Content-Type", "application/json");
-    // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
       cb(this.status);

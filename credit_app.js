@@ -2,7 +2,6 @@
 const params = new URLSearchParams(document.location.search);
 const token = params.get("token");
 const DEBUG_MODE = params.get("debug");
-console.log(DEBUG_MODE);
 if (DEBUG_MODE !== "0") {
   $(document).ready(function () {
     $.getScript(
@@ -40,8 +39,8 @@ if (DEBUG_MODE !== "0") {
     function getAPIBasePath() {
       const domain = window.location.hostname;
       if (domain === "new-machinery-partner.webflow.io")
-        return "https://mp-loan-application-pzvrwnztn-machinerypartner.vercel.app";
-      return "https://mp-loan-application-pzvrwnztn-machinerypartner.vercel.app";
+        return "https://mp-loan-application-ffkv23ekw-machinerypartner.vercel.app";
+      return "https://mp-loan-application-ffkv23ekw-machinerypartner.vercel.app";
     }
 
     function formatNumber(n) {
@@ -98,9 +97,8 @@ if (DEBUG_MODE !== "0") {
       };
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `${getAPIBasePath()}/api/loan/security`, true);
-      // xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
+      xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
       xhr.setRequestHeader("Content-Type", "application/json");
-      // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
         cb(JSON.parse(this.responseText));
@@ -146,10 +144,8 @@ if (DEBUG_MODE !== "0") {
       console.log("saveCreditApp: ", payload);
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `${getAPIBasePath()}/api/loan/save`, true);
-      // xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
+      xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
       xhr.setRequestHeader("Content-Type", "application/json");
-      // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-      // xhr.withCredentials = true;
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
         cb(this.status);
