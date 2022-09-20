@@ -6,9 +6,6 @@ $(document).ready(function () {
   };
   let currentStatus = statusPossibles.contact;
 
-  const sendConfirmationMessage = document.getElementById("send-confirmation");
-  sendConfirmationMessage.style.display = "none";
-
   const phoneInputField = document.getElementById("phone-number");
   const phoneInput = window.intlTelInput(phoneInputField, {
     separateDialCode: true,
@@ -48,10 +45,9 @@ $(document).ready(function () {
     event.preventDefault();
     currentStatus = statusPossibles.submited;
     const form = $(this);
-    saveCreditApp(function () {
-      form.submit();
-      sendConfirmationMessage.style.display = "block";
-    });
+    // saveCreditApp(function () {
+    // });
+    form.submit();
   });
 
   function checkInfos() {
@@ -153,12 +149,6 @@ $(document).ready(function () {
         }
       }
     }
-    let countRequiredFields = checkRequirements(fields);
-    if (countRequiredFields === 0) {
-      // setIconStatusOk(formStatus[index]);
-    } else {
-      // setIconStatusError(formStatus[index]);
-    }
   }
 
   for (const step of creditAppState) {
@@ -199,10 +189,6 @@ $(document).ready(function () {
             inputData.value = isValid.data;
           }
           if (isValid.status) {
-            let countRequiredFields = checkRequirements(fields);
-            if (countRequiredFields === 0) {
-              // setIconStatusOk(formStatus[currentState]);
-            }
             if (!inputData.state) {
               inputData.state = true;
               inputData.value = inputValue;
@@ -216,7 +202,6 @@ $(document).ready(function () {
             if (inputData.state) {
               inputData.state = false;
             }
-            // setIconStatusError(formStatus[currentState]);
             if (event.currentTarget.nextSibling) {
               event.currentTarget.nextSibling.innerHTML = isValid.message;
             } else if (event.currentTarget.offsetParent.nextSibling) {
@@ -224,7 +209,7 @@ $(document).ready(function () {
                 isValid.message;
             }
           }
-          checkInfos(); //
+          checkInfos();
         },
       });
     }

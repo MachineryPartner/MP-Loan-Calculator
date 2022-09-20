@@ -1,11 +1,17 @@
 /*  */
 $(document).ready(function () {
+  $.getScript(
+    "https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js",
+    function () {
+      $("#Security").mask("999-99-9999");
+      $("#Security-2").mask("999-99-9999");
+    }
+  );
   let dataPayload = {};
-  let checkRelease = false;
-  let checkShareInfo = false;
-  let checkCreditNotice = false;
-  let value = "";
   let currentState = 0;
+  let majorityAnotherBusiness = false;
+  let singleOwner = false;
+  let secAnotherBusiness = false;
   let blockStates = {
     block: "none",
     none: "block",
@@ -22,36 +28,12 @@ $(document).ready(function () {
   let currentStatus = statusPossibles.businessAddress;
   let params = new URLSearchParams(document.location.search);
   let hash = params.get("hash");
-  console.log("hash: ", hash);
 
-  // Force Date Input Types
-  const inputFoudingDate = document.getElementById("Founding-Date");
-  inputFoudingDate.type = "date";
-  const inputBirth = document.getElementById("Birth");
-  inputBirth.type = "date";
-
-  // Majority Owner
-  const checkBoxOwnerAnotherYes = document.getElementById("ownerAnotherYes");
-  const checkBoxOwnerAnotherNo = document.getElementById("ownerAnotherNo");
   const inputOwnerList = document.getElementById("Business-list");
-  inputOwnerList.parentElement.style.display = "none";
-
-  // Second Owner
-  const checkBoxSingleOwnerYes = document.getElementById("singleYes");
-  const checkBoxSingleOwnerNo = document.getElementById("singleNo");
   const secondOwnerBlock = document.getElementById("second-owner");
-  const checkBox2OwnerAnotherYes = document.getElementById("2ownerYes");
-  const checkBox2OwnerAnotherNo = document.getElementById("2ownerNo");
   const input2OwnerList = document.getElementById("Business-list-2");
 
-  $("#ownerAnotherYes").change(function (event) {
-    inputOwnerList.parentElement.style.display = "block";
-    inputOwnerList.focus();
-  });
-
-  $("#ownerAnotherNo").change(function (event) {
-    inputOwnerList.parentElement.style.display = "none";
-  });
+  secondOwnerBlock.style.display = "none";
 
   function formatNumber(n) {
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -115,39 +97,40 @@ $(document).ready(function () {
     };
   }
 
-  let mockResponse = {};
-  // let mockResponse = {
-  //   "Majority Owner SSN": "1234567890",
-  //   "Loan Amount": "100000",
-  //   "Majority Owner Name": "Daniel Henrique",
-  //   "Business Street Address": "Av. Pedra Branca, 216",
-  //   "Business City": "Palhoca",
-  //   "Business Name": "Liglu Brasil",
-  //   "Contact Phone": "12345678900",
-  //   "Business Zip-Code": "12345",
-  //   "Business Street Complement": "apt 1001",
-  //   "Contact Name": "Daniel Henrique",
-  //   "Majority Owner Ownership": "60",
-  //   "Business State": "Florida",
-  //   "Hash Expire At": "2022-10-15T17:45:59.988Z",
-  //   "Updated At": "2022-09-15T17:46:26.629Z",
-  //   "Business No. of Employees": "1",
-  //   "Business Main Activity": "Landscaping",
-  //   "Business Founding Date": "2022-09-30",
-  //   "Business Monthly Revenue": "200k",
-  //   "Business EIN": "1234567890",
-  //   "Max Downpayment": "10000",
-  //   "Majority Owner Birth Date": "1985-03-30",
-  //   "Second Owner SSN": "1234567890",
-  //   "Second Owner Name": "Henrique Jr.",
-  //   "Second Owner Ownership": "40",
-  //   "Second Owner Birth Date": "1985-03-15",
-  //   "Second Owner Business List": "",
-  //   "Majority Owner Business List": "",
-  //   "Majority Owner Another Business": false,
-  //   "Single Owner": false,
-  //   "Second Owner Another Business": false,
-  // };
+  // let mockResponse = {};
+  let mockResponse = {
+    "Majority Owner SSN": "123456789",
+    "Loan Amount": "100000",
+    "Majority Owner Name": "Daniel Henrique",
+    "Business Street Address": "Av. Pedra Branca, 216",
+    "Business City": "Palhoca",
+    "Business Name": "Liglu Brasil",
+    "Contact Phone": "12345678900",
+    "Business Zip-Code": "12345",
+    "Business Street Complement": "apt 1001",
+    "Contact Name": "Daniel Henrique",
+    "Majority Owner Ownership": "60",
+    "Business State": "Florida",
+    "Hash Expire At": "2022-10-15T17:45:59.988Z",
+    "Updated At": "2022-09-15T17:46:26.629Z",
+    "Business No. of Employees": "1",
+    "Business Main Activity": "Landscaping",
+    "Business Founding Date": "2022-09-30",
+    "Business Monthly Revenue": "200k",
+    "Business EIN": "1234567890",
+    "Max Downpayment": "10000",
+    "Majority Owner Birth Date": "1985-03-30",
+    "Second Owner SSN": "123456789",
+    "Second Owner Name": "Daniel Henrique",
+    "Second Owner Ownership": "40",
+    "Second Owner Birth Date": "1985-03-15",
+    "Second Owner Business List": "",
+    "Majority Owner Business List": "Some another company name",
+    "Majority Owner Another Business": true,
+    "Single Owner": false,
+    "Second Owner Another Business": false,
+    "Business Main Use": "Both",
+  };
 
   function saveCreditApp(cb) {
     const payload = getData();
@@ -165,24 +148,14 @@ $(document).ready(function () {
     };
   }
 
-  function verifyCheckBoxesState() {
-    const checkboxes = creditAppState[currentState].checkboxes;
-    if (checkboxes) {
-      for (const checkbox of checkboxes) {
-        const inputInstance = document.getElementById(checkbox.tag);
-        const index = inputInstance.value === "" ? "No" : inputInstance.value;
-        checkbox.input[index].click();
-        // console.log("verifyCheckBoxesState: ", checkbox.tag, index);
-      }
-    }
-  }
-
   function forceFieldsBlur(index) {
-    const fields = creditAppState[currentState].fields;
-    for (const property in fields) {
-      const field = fields[property];
-      $(`#${field.tag}`).keyup();
-      $(`#${field.tag}`).blur();
+    if (creditAppState[currentState]) {
+      const fields = creditAppState[currentState].fields;
+      for (const property in fields) {
+        const field = fields[property];
+        $(`${field.tag}`).keyup();
+        $(`${field.tag}`).blur();
+      }
     }
   }
 
@@ -193,7 +166,6 @@ $(document).ready(function () {
     formBlocks[currentState].style.display = "block";
     const fields = creditAppState[currentState - 1].fields;
     forceFieldsBlur();
-    verifyCheckBoxesState();
     validateBlockFields(fields, currentState - 1);
   }
   // Get all Form Blocks
@@ -213,39 +185,51 @@ $(document).ready(function () {
   $(".finance_form_header").on("click", function (event) {
     const targetIndex = Number(event.currentTarget.children[0].innerText) - 1;
     currentState = targetIndex;
-    forceFieldsBlur();
     resetBlocksState();
+    forceFieldsBlur();
+    const fields = creditAppState[currentState].fields;
+    validateBlockFields(fields, currentState);
     event.currentTarget.nextSibling.style.display = handleBlockVisibility(
       event.currentTarget.nextSibling.style.display
     );
-    verifyCheckBoxesState();
   });
 
-  let submitButtonBusiness = document.getElementById("save-button-business");
-  $("#save-button-business").on("click", function (event) {
+  let submitButtonBusinessAddress = document.getElementById(
+    "save-button-business-address"
+  );
+  $("#save-button-business-address").on("click", function (event) {
     currentStatus = statusPossibles.businessAddress;
     nextBlock(1);
+    saveCreditApp(function () {});
+  });
+
+  let submitButtonBusinessInfo = document.getElementById(
+    "save-button-business-info"
+  );
+  $("#save-button-business-info").on("click", function (event) {
+    currentStatus = statusPossibles.businessInfo;
+    nextBlock(2);
     saveCreditApp(function () {});
   });
 
   let submitButtonAmount = document.getElementById("save-button-amount");
   $("#save-button-amount").on("click", function (event) {
     currentStatus = statusPossibles.loanInfo;
-    nextBlock(2);
+    nextBlock(3);
     saveCreditApp(function () {});
   });
 
   let submitButtonOwner = document.getElementById("save-button-owner");
   $("#save-button-owner").on("click", function (event) {
     currentStatus = statusPossibles.majorityInfo;
-    nextBlock(3);
+    nextBlock(4);
     saveCreditApp(function () {});
   });
 
   let submitButton2Owner = document.getElementById("save-button-2owner");
   $("#save-button-2owner").on("click", function (event) {
     currentStatus = statusPossibles.secondOwnerInfo;
-    nextBlock(4);
+    nextBlock(5);
     saveCreditApp(function () {});
   });
 
@@ -259,15 +243,6 @@ $(document).ready(function () {
       form.submit();
     });
   });
-
-  function validateInput(rule, event, value) {
-    const isValid = rule(value);
-    if (isValid.status) {
-      event.currentTarget.nextSibling.innerHTML = "";
-    } else {
-      event.currentTarget.nextSibling.innerHTML = isValid.message;
-    }
-  }
 
   function setIconStatusOk(form) {
     form.children[1].style.display = "block";
@@ -301,27 +276,31 @@ $(document).ready(function () {
     }
   }
 
-  function checkInfos() {
+  function checkFormRequirements() {
     let countRequiredFields = 0;
+    let blockIndex = 0;
     for (const step of creditAppState) {
       const { fields } = step;
-      countRequiredFields += checkRequirements(fields);
-    }
-
-    if (checkRelease && checkShareInfo && checkCreditNotice) {
-      setIconStatusOk(formStatus[currentState]);
-    } else {
-      setIconStatusError(formStatus[currentState]);
+      const countCurrentRequiredFields = checkBlockRequirements(fields);
+      if (countCurrentRequiredFields === 0) {
+        setIconStatusOk(formStatus[blockIndex]);
+      } else {
+        setIconStatusError(formStatus[blockIndex]);
+      }
+      countRequiredFields += countCurrentRequiredFields;
+      validateBlockFields(fields, blockIndex);
+      blockIndex += 1;
     }
     // TODO
     getData();
-    // console.log("checkInfos: ", {
-    //   checkRelease,
-    //   checkShareInfo,
-    //   checkCreditNotice,
-    //   countRequiredFields,
-    //   dataPayload,
-    // });
+    console.log("checkFormRequirements: ", {
+      countRequiredFields,
+      dataPayload,
+      creditAppState,
+      majorityAnotherBusiness,
+      singleOwner,
+      secAnotherBusiness,
+    });
     if (countRequiredFields === 0) {
       submitButton.style.pointerEvents = "auto";
       submitButton.classList.remove("is-disable");
@@ -332,10 +311,10 @@ $(document).ready(function () {
     }
   }
 
-  function validateSecury(_input) {
-    if (value && value.length === 9) {
+  function validateSecury(value) {
+    if (value && value.length === 11) {
       return { status: true, message: "", data: value };
-    } else if (value && value.length < 9) {
+    } else if (value && value.length < 11) {
       return { status: false, message: "Invalid SSN number!", data: value };
     }
     return { status: false, message: "Mandatory field", data: value };
@@ -360,33 +339,26 @@ $(document).ready(function () {
     cb(displayVal);
   }
 
-  function transformValue(val) {
-    if (typeof value !== "string") {
-      value = "";
-    }
-
-    if (!val) {
-      value = null;
-      return;
-    }
-
-    var cleanVal = val.replace(/[^0-9|\\*]/g, "");
-    cleanVal = cleanVal.substr(0, 9);
-
-    for (i = 0, l = cleanVal.length; i < l; i++) {
-      if (/[0-9]/g.exec(cleanVal[i])) {
-        value = value.replaceAt(i, cleanVal[i]);
-      }
-    }
-
-    value = value.substr(0, cleanVal.length);
+  function showSSN(input, dataName) {
+    // Get ssn from jQuery object
+    var val = input.data(dataName);
+    if (val) input.val(val);
   }
 
-  function checkRequirements(fields) {
+  function hideSSN(input, dataName) {
+    // Save ssn to jQuery object
+    input.data(dataName, input.val());
+    transformDisplay(input.val(), function (displayVal) {
+      input.val(displayVal);
+    });
+  }
+
+  function checkBlockRequirements(fields) {
     let count = 0;
     for (const name in fields) {
       const inputData = fields[name];
-      if (inputData.required && inputData.value === "" && !inputData.state) {
+      if (inputData.required && inputData.state === false) {
+        // console.log("checkBlockRequirements->Field Name: ", name);
         count += 1;
       }
     }
@@ -396,7 +368,7 @@ $(document).ready(function () {
   function validateBlockFields(fields, index) {
     for (const property in fields) {
       const field = fields[property];
-      const input = document.getElementById(field.tag);
+      const input = document.getElementById(field.tag.replace("#", ""));
       if (input) {
         const ret = field.validate(input.value);
         if (ret) {
@@ -406,7 +378,7 @@ $(document).ready(function () {
         }
       }
     }
-    let countRequiredFields = checkRequirements(fields);
+    let countRequiredFields = checkBlockRequirements(fields);
     // console.log("validateBlockFields: ", {
     //   countRequiredFields,
     //   creditAppState,
@@ -418,13 +390,27 @@ $(document).ready(function () {
     }
   }
 
+  function removeRequeriments(fields) {
+    for (const property in fields) {
+      const field = fields[property];
+      field.required = false;
+    }
+  }
+
+  function addRequeriments(fields) {
+    for (const property in fields) {
+      const field = fields[property];
+      field.required = field.originalRequired || false;
+    }
+  }
+
   let creditAppState = [
     {
-      button: submitButtonBusiness,
+      button: submitButtonBusinessAddress,
       fields: {
         companyName: {
           value: "",
-          tag: "Company-name",
+          tag: "#Business-Name",
           airtable: "Business Name",
           state: false,
           required: true,
@@ -439,7 +425,7 @@ $(document).ready(function () {
         },
         address: {
           value: "",
-          tag: "Address-3",
+          tag: "#Address-3",
           airtable: "Business Street Address",
           state: false,
           required: true,
@@ -454,7 +440,7 @@ $(document).ready(function () {
         },
         addressComplement: {
           value: "",
-          tag: "Address-4",
+          tag: "#Address-4",
           airtable: "Business Street Complement",
           state: false,
           required: false,
@@ -464,7 +450,7 @@ $(document).ready(function () {
         },
         city: {
           value: "",
-          tag: "City",
+          tag: "#City",
           airtable: "Business City",
           state: false,
           required: true,
@@ -479,7 +465,7 @@ $(document).ready(function () {
         },
         zipCode: {
           value: "",
-          tag: "Zip-Code",
+          tag: "#Zip-Code",
           airtable: "Business Zip-Code",
           state: false,
           required: true,
@@ -495,7 +481,7 @@ $(document).ready(function () {
         },
         state: {
           value: "",
-          tag: "State",
+          tag: "#State",
           airtable: "Business State",
           state: false,
           required: true,
@@ -508,9 +494,14 @@ $(document).ready(function () {
             return { status: false, message: "Mandatory field" };
           },
         },
+      },
+    },
+    {
+      button: submitButtonBusinessInfo,
+      fields: {
         businessActivity: {
           value: "",
-          tag: "Business-activity",
+          tag: "#Business-activity",
           airtable: "Business Main Activity",
           state: false,
           required: false,
@@ -520,17 +511,20 @@ $(document).ready(function () {
         },
         foundingDate: {
           value: "",
-          tag: "Founding-Date",
+          tag: "#Founding-Date",
           airtable: "Business Founding Date",
           state: false,
           required: true,
+          init: function (_input) {
+            _input.type = "date";
+          },
           validate: function (_input) {
             return { status: true, message: "" };
           },
         },
         noEmployees: {
           value: "",
-          tag: "Employees",
+          tag: "#Employees",
           airtable: "Business No. of Employees",
           state: false,
           required: false,
@@ -540,7 +534,7 @@ $(document).ready(function () {
         },
         monthlyRevenue: {
           value: "",
-          tag: "Monthly-Revenue",
+          tag: "#Monthly-Revenue",
           airtable: "Business Monthly Revenue",
           state: false,
           required: false,
@@ -550,7 +544,7 @@ $(document).ready(function () {
         },
         ein: {
           value: "",
-          tag: "tax-id",
+          tag: "#tax-id-2",
           airtable: "Business EIN",
           state: false,
           required: false,
@@ -565,7 +559,7 @@ $(document).ready(function () {
       fields: {
         amount: {
           value: "",
-          tag: "Loan-Amount",
+          tag: "#Loan-Amount",
           airtable: "Loan Amount",
           state: false,
           required: false,
@@ -599,7 +593,7 @@ $(document).ready(function () {
         },
         maxDownpayment: {
           value: "",
-          tag: "Max-Downpayment",
+          tag: "#Max-Downpayment",
           airtable: "Max Downpayment",
           state: false,
           required: false,
@@ -631,20 +625,24 @@ $(document).ready(function () {
             return { status: true, message: "" };
           },
         },
+        materialUse: {
+          value: "",
+          tag: "#Main-Use",
+          airtable: "Business Main Use",
+          state: false,
+          required: false,
+          validate: function (_input) {
+            return { status: true, message: "" };
+          },
+        },
       },
     },
     {
       button: submitButtonOwner,
-      checkboxes: [
-        {
-          input: { Yes: checkBoxOwnerAnotherYes, No: checkBoxOwnerAnotherNo },
-          tag: "ownerAnotherYes",
-        },
-      ],
       fields: {
         majorityName: {
           value: "",
-          tag: "Full-name-3",
+          tag: "#Full-name-3",
           airtable: "Majority Owner Name",
           state: false,
           required: true,
@@ -659,7 +657,7 @@ $(document).ready(function () {
         },
         majorityOwnership: {
           value: "",
-          tag: "Ownership",
+          tag: "#Ownership",
           airtable: "Majority Owner Ownership",
           state: false,
           required: true,
@@ -690,10 +688,13 @@ $(document).ready(function () {
         },
         majorityBirth: {
           value: "",
-          tag: "Birth",
+          tag: "#Birth",
           airtable: "Majority Owner Birth Date",
           state: false,
           required: true,
+          init: function (_input) {
+            _input.type = "date";
+          },
           validate: function (_input) {
             if (_input && _input != "") {
               return { status: true, message: "" };
@@ -703,27 +704,77 @@ $(document).ready(function () {
         },
         majoritySsn: {
           value: "",
-          tag: "Security",
+          tag: "#Security",
           airtable: "Majority Owner SSN",
           state: false,
           required: true,
-          keyup: function (input) {
-            var val = input[0].value;
-            transformDisplay(val, function (displayVal) {
-              input.val(displayVal);
-            });
-            transformValue(val);
+          focus: function () {
+            showSSN($("#Security"), "majoritySsn");
           },
-          validate: validateSecury,
+          blur: function () {
+            hideSSN($("#Security"), "majoritySsn");
+          },
+          validate: function validateSecury(value) {
+            var val = $("#Security").data("majoritySsn");
+            if (val && val.length === 11) {
+              return { status: true, message: "", data: val };
+            } else if (val && val.length < 11) {
+              return {
+                status: false,
+                message: "Invalid SSN number!",
+                data: val,
+              };
+            }
+            return {
+              status: false,
+              message: "Mandatory field",
+              data: val,
+            };
+          },
         },
         majorityAnotherBusiness: {
           value: false,
-          tag: "ownerAnotherYes",
+          tag: "input[name=Owner-of-business]",
           airtable: "Majority Owner Another Business",
-          state: false,
-          required: false,
+          state: true,
+          required: true,
+          originalRequired: true,
+          isRadio: true,
           change: function (event) {
-            return { status: event.currentTarget.checked, message: "" };
+            if (event.currentTarget.value === "ownerAnotherYes") {
+              majorityAnotherBusiness = true;
+              document.getElementById("ownerAnotherYes").click();
+              inputOwnerList.parentElement.style.display = "block";
+              inputOwnerList.focus();
+            } else {
+              majorityAnotherBusiness = false;
+              document.getElementById("ownerAnotherNo").click();
+              inputOwnerList.parentElement.style.display = "none";
+            }
+          },
+          init: function (_input, field) {
+            if (field.value) {
+              majorityAnotherBusiness = true;
+              document.getElementById("ownerAnotherYes").click();
+              document.getElementById("ownerAnotherYes").value =
+                "ownerAnotherYes";
+              document.getElementById("ownerAnotherNo").value =
+                "ownerAnotherNo";
+              setTimeout(function () {
+                inputOwnerList.parentElement.style.display = "block";
+                inputOwnerList.focus();
+              }, 500);
+            } else {
+              majorityAnotherBusiness = false;
+              document.getElementById("ownerAnotherNo").click();
+              document.getElementById("ownerAnotherNo").value =
+                "ownerAnotherNo";
+              document.getElementById("ownerAnotherYes").value =
+                "ownerAnotherYes";
+              setTimeout(function () {
+                inputOwnerList.parentElement.style.display = "none";
+              }, 500);
+            }
           },
           validate: function (_input) {
             return undefined;
@@ -731,10 +782,14 @@ $(document).ready(function () {
         },
         majorityAnotherBusinessList: {
           value: "",
-          tag: "Business-list",
+          tag: "#Business-list",
           airtable: "Majority Owner Business List",
           state: false,
           required: false,
+          originalRequired: false,
+          init: function (_input) {
+            _input.parentElement.style.display = "none";
+          },
           validate: function (_input) {
             if (_input && _input != "") {
               return { status: true, message: "" };
@@ -746,26 +801,48 @@ $(document).ready(function () {
     },
     {
       button: submitButton2Owner,
-      checkboxes: [
-        {
-          input: { Yes: checkBoxSingleOwnerYes, No: checkBoxSingleOwnerNo },
-          tag: "singleNo",
-        },
-        {
-          input: { Yes: checkBox2OwnerAnotherYes, No: checkBox2OwnerAnotherNo },
-          tag: "2ownerNo",
-        },
-      ],
       fields: {
         singleOwner: {
-          value: false,
-          tag: "singleNo",
+          value: true,
+          tag: "input[name=Owned-by-single-person]", //Owner of business
           airtable: "Single Owner",
-          state: false,
-          required: false,
-          originalRequired: false,
+          state: true,
+          required: true,
+          originalRequired: true,
+          isRadio: true,
           change: function (event) {
-            return { status: event.currentTarget.checked, message: "" };
+            const fields = creditAppState[currentState].fields;
+            if (event.currentTarget.value === "singleYes") {
+              secondOwnerBlock.style.display = "none";
+              singleOwner = true;
+              removeRequeriments(fields);
+            } else {
+              secondOwnerBlock.style.display = "block";
+              singleOwner = false;
+              addRequeriments(fields);
+            }
+          },
+          init: function (_input, field) {
+            const fields = creditAppState[4].fields;
+            if (field.value) {
+              singleOwner = true;
+              document.getElementById("singleYes").click();
+              document.getElementById("singleYes").value = "singleYes";
+              document.getElementById("singleNo").value = "singleNo";
+              setTimeout(function () {
+                secondOwnerBlock.style.display = "none";
+              }, 500);
+              removeRequeriments(fields);
+            } else {
+              singleOwner = false;
+              document.getElementById("singleNo").click();
+              document.getElementById("singleNo").value = "singleNo";
+              document.getElementById("singleYes").value = "singleYes";
+              setTimeout(function () {
+                secondOwnerBlock.style.display = "block";
+              }, 500);
+              addRequeriments(fields);
+            }
           },
           validate: function (_input) {
             return undefined;
@@ -773,7 +850,7 @@ $(document).ready(function () {
         },
         secOwner: {
           value: "",
-          tag: "Full-name-4",
+          tag: "#Full-name-2",
           airtable: "Second Owner Name",
           state: true,
           required: false,
@@ -789,7 +866,7 @@ $(document).ready(function () {
         },
         secOwnership: {
           value: "",
-          tag: "Ownership-2",
+          tag: "#Ownership-2",
           airtable: "Second Owner Ownership",
           state: true,
           required: false,
@@ -821,10 +898,10 @@ $(document).ready(function () {
         },
         secBirth: {
           value: "",
-          tag: "Birth-2",
+          tag: "#Birth-2",
           airtable: "Second Owner Birth Date",
-          state: true,
-          required: false,
+          state: false,
+          required: true,
           originalRequired: true,
           validate: function (_input) {
             if (_input && _input != "") {
@@ -835,29 +912,74 @@ $(document).ready(function () {
         },
         secSsn: {
           value: "",
-          tag: "Security-2",
+          tag: "#Security-2",
           airtable: "Second Owner SSN",
-          state: true,
-          required: false,
+          state: false,
+          required: true,
           originalRequired: true,
-          keyup: function (input) {
-            var val = input[0].value;
-            transformDisplay(val, function (displayVal) {
-              input.val(displayVal);
-            });
-            transformValue(val);
+          focus: function () {
+            showSSN($("#Security-2"), "secSsn");
           },
-          validate: validateSecury,
+          blur: function () {
+            hideSSN($("#Security-2"), "secSsn");
+          },
+          validate: function validateSecury(value) {
+            var val = $("#Security-2").data("secSsn");
+            if (val && val.length === 11) {
+              return { status: true, message: "", data: val };
+            } else if (val && val.length < 11) {
+              return {
+                status: false,
+                message: "Invalid SSN number!",
+                data: val,
+              };
+            }
+            return {
+              status: false,
+              message: "Mandatory field",
+              data: val,
+            };
+          },
         },
         secAnotherBusiness: {
           value: false,
-          tag: "2ownerNo",
+          tag: "input[name=2Owner-of-business]",
           airtable: "Second Owner Another Business",
-          state: false,
-          required: false,
-          originalRequired: false,
+          state: true,
+          required: true,
+          originalRequired: true,
+          isRadio: true,
           change: function (event) {
-            return { status: event.currentTarget.checked, message: "" };
+            if (event.currentTarget.value === "2ownerYes") {
+              secAnotherBusiness = true;
+              document.getElementById("2ownerYes").click();
+              input2OwnerList.parentElement.style.display = "block";
+              input2OwnerList.focus();
+            } else {
+              secAnotherBusiness = false;
+              document.getElementById("2ownerNo").click();
+              input2OwnerList.parentElement.style.display = "none";
+            }
+          },
+          init: function (_input, field) {
+            if (field.value) {
+              secAnotherBusiness = true;
+              document.getElementById("2ownerYes").click();
+              document.getElementById("2ownerYes").value = "2ownerYes";
+              document.getElementById("2ownerNo").value = "2ownerNo";
+              setTimeout(function () {
+                input2OwnerList.parentElement.style.display = "block";
+                input2OwnerList.focus();
+              }, 500);
+            } else {
+              secAnotherBusiness = false;
+              document.getElementById("2ownerNo").click();
+              document.getElementById("2ownerNo").value = "2ownerNo";
+              document.getElementById("2ownerYes").value = "2ownerYes";
+              setTimeout(function () {
+                input2OwnerList.parentElement.style.display = "none";
+              }, 500);
+            }
           },
           validate: function (_input) {
             return undefined;
@@ -865,11 +987,14 @@ $(document).ready(function () {
         },
         secAnotherBusinessList: {
           value: "",
-          tag: "Business-list-2",
+          tag: "#Business-list-2",
           airtable: "Second Owner Business List",
           state: false,
           required: false,
           originalRequired: false,
+          init: function (_input) {
+            _input.parentElement.style.display = "none";
+          },
           validate: function (_input) {
             if (_input && _input != "") {
               return { status: true, message: "" };
@@ -879,166 +1004,33 @@ $(document).ready(function () {
         },
       },
     },
-    {
-      button: submitButton,
-      fields: {
-        releaseCheck: {
-          value: "",
-          tag: "Release-Information",
-          state: false,
-          required: true,
-          change: function (event) {
-            checkRelease = event.currentTarget.checked;
-            let responseObj = {};
-            if (!checkRelease) {
-              responseObj = {
-                status: false,
-                message: "I authorize (Required)",
-              };
-            } else {
-              responseObj = { status: true, message: "I authorize" };
-            }
-            setTimeout(function () {
-              checkInfos();
-            }, 250);
-            return responseObj;
-          },
-          validate: function (_input) {
-            checkInfos();
-            return undefined;
-          },
-        },
-        shareInfoCheck: {
-          value: "",
-          tag: "Share-Information",
-          state: false,
-          required: true,
-          change: function (event) {
-            checkShareInfo = event.currentTarget.checked;
-            let responseObj = {};
-            if (!checkShareInfo) {
-              responseObj = {
-                status: false,
-                message: "I authorize (Required)",
-              };
-            } else {
-              responseObj = { status: true, message: "I authorize" };
-            }
-            setTimeout(function () {
-              checkInfos();
-            }, 250);
-            return responseObj;
-          },
-          validate: function (_input) {
-            checkInfos();
-            return undefined;
-          },
-        },
-        creditNoticeCheck: {
-          value: "",
-          tag: "Credit-Act-Notice",
-          state: false,
-          required: true,
-          change: function (event) {
-            checkCreditNotice = event.currentTarget.checked;
-            let responseObj = {};
-            if (!checkCreditNotice) {
-              responseObj = {
-                status: false,
-                message: "I authorize (Required)",
-              };
-            } else {
-              responseObj = { status: true, message: "I authorize" };
-            }
-            setTimeout(function () {
-              checkInfos();
-            }, 250);
-            return responseObj;
-          },
-          validate: function (_input) {
-            checkInfos();
-            return undefined;
-          },
-        },
-      },
-    },
   ];
-
-  // Second Owner
-  secondOwnerBlock.style.display = "none";
-
-  $("#singleYes").change(function (event) {
-    secondOwnerBlock.style.display = "none";
-    const fields = creditAppState[currentState].fields;
-    for (const property in fields) {
-      const field = fields[property];
-      field.state = false;
-      if (field.originalRequired) field.required = false;
-    }
-  });
-
-  $("#singleNo").change(function (event) {
-    secondOwnerBlock.style.display = "block";
-    const inputBirth2 = document.getElementById("Birth-2");
-    inputBirth2.type = "date";
-    const fields = creditAppState[currentState].fields;
-    for (const property in fields) {
-      const field = fields[property];
-      field.state = false;
-      if (field.originalRequired) field.originalRequired;
-    }
-  });
-
-  input2OwnerList.parentElement.style.display = "none";
-
-  $("#2ownerYes").change(function (event) {
-    input2OwnerList.parentElement.style.display = "block";
-    input2OwnerList.focus();
-  });
-
-  $("#2ownerNo").change(function (event) {
-    input2OwnerList.parentElement.style.display = "none";
-  });
 
   function loadForms() {
     for (const step of creditAppState) {
       const { fields } = step;
       for (const name in fields) {
         const inputData = fields[name];
+        const input = document.getElementById(inputData.tag.replace("#", ""));
         // Pre-fill inputs from AirTable
 
         const dataSaved = mockResponse[inputData.airtable]
           ? mockResponse[inputData.airtable]
           : "";
-        if (typeof dataSaved === "boolean") {
-          const input = document.getElementById(inputData.tag);
-          if (input && dataSaved) {
-            input.checked = true;
-            input.value = "Yes";
-            inputData.value = true;
-          } else {
-            input.checked = false;
-            input.value = "No";
-            inputData.value = false;
-          }
-          console.log(
-            "typeof dataSaved: ",
-            inputData.tag,
-            typeof dataSaved,
-            dataSaved
-          );
+        if (typeof dataSaved === "boolean" && input) {
+          input.checked = dataSaved;
         } else {
           inputData.value = dataSaved;
-          $(`#${inputData.tag}`).val(inputData.value);
+          $(`${inputData.tag}`).val(inputData.value);
         }
 
-        $(`#${inputData.tag}`).on({
+        // End Pre-fill
+        if (inputData.init) inputData.init(input, inputData);
+        // // const initValid = inputData.validate(inputData.value);
+
+        $(`${inputData.tag}`).on({
           change: function (event) {
-            if (inputData.change) {
-              const resp = inputData.change(event);
-              inputData.value = resp.status;
-              inputData.state = inputData.value;
-            }
+            if (inputData.change) inputData.change(event);
           },
           keyup: function (event) {
             if (inputData.keyup) inputData.keyup($(this));
@@ -1048,31 +1040,30 @@ $(document).ready(function () {
           },
           blur: function (event) {
             const fields = creditAppState[currentState].fields;
-            validateBlockFields(fields, currentState);
+
             if (inputData.blur) inputData.blur($(this));
             let inputValue = event.currentTarget.value;
             if (!inputData.validate) {
               inputData.state = true;
+              checkFormRequirements();
               return;
             }
 
             const isValid = inputData.validate(inputValue);
-
             if (!isValid) {
+              checkFormRequirements();
               return;
             }
-            inputData.value = inputValue;
+
+            if (!inputData.isRadio) inputData.value = inputValue;
             if (isValid.data) {
               inputData.value = isValid.data;
             }
+
             if (isValid.status) {
-              let countRequiredFields = checkRequirements(fields);
-              if (countRequiredFields === 0) {
-                setIconStatusOk(formStatus[currentState]);
-              }
               if (!inputData.state) {
                 inputData.state = true;
-                inputData.value = inputValue;
+                if (!inputData.isRadio) inputData.value = inputValue;
                 if (event.currentTarget.nextSibling) {
                   event.currentTarget.nextSibling.innerHTML = "";
                 } else if (
@@ -1086,7 +1077,6 @@ $(document).ready(function () {
               if (inputData.state) {
                 inputData.state = false;
               }
-              setIconStatusError(formStatus[currentState]);
               if (event.currentTarget.nextSibling) {
                 event.currentTarget.nextSibling.innerHTML = isValid.message;
               } else if (
@@ -1097,19 +1087,23 @@ $(document).ready(function () {
                   isValid.message;
               }
             }
+            checkFormRequirements();
           },
         });
+        forceFieldsBlur();
       }
     }
   }
 
-  getCreditApp(function (response) {
-    console.log("getCreditApp", response.data);
-    mockResponse = response.data;
-    loadForms();
-  });
+  // getCreditApp(function (response) {
+  //   console.log("getCreditApp", response.data);
+  //   mockResponse = response.data;
+  //   loadForms();
+  // });
+  // TODO
+  loadForms();
 
-  console.log("creditAppState: ", {
-    creditAppState,
-  });
+  // console.log("creditAppState: ", {
+  //   creditAppState,
+  // });
 });
