@@ -1,4 +1,12 @@
 /*  */
+const params = new URLSearchParams(document.location.search);
+const token = params.get("token");
+const DEBUG_MODE = params.get("debug");
+if (DEBUG_MODE === "0") {
+  console.log(`DEBUG_MODE: ${DEBUG_MODE}`);
+  return;
+}
+
 $(document).ready(function () {
   $.getScript(
     "https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js",
@@ -26,10 +34,6 @@ $(document).ready(function () {
   ];
 
   let currentStatus = new Set([statusPossibles[0]]);
-  let params = new URLSearchParams(document.location.search);
-  let token = params.get("token");
-  const DEBUG_MODE = params.get("debug");
-
   const inputOwnerList = document.getElementById("Business-list");
   const secondOwnerBlock = document.getElementById("second-owner");
   const input2OwnerList = document.getElementById("Business-list-2");
@@ -96,11 +100,10 @@ $(document).ready(function () {
       token,
     };
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", `${getAPIBasePath()}/api/loan/security`);
-    xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
+    xhr.open("POST", `${getAPIBasePath()}/api/loan/security`, true);
+    // xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-    // xhr.withCredentials = true;
+    // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
       cb(JSON.parse(this.responseText));
@@ -146,9 +149,9 @@ $(document).ready(function () {
     console.log("saveCreditApp: ", payload);
     var xhr = new XMLHttpRequest();
     xhr.open("POST", `${getAPIBasePath()}/api/loan/save`, true);
-    xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
+    // xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+    // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     // xhr.withCredentials = true;
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
@@ -1113,9 +1116,9 @@ $(document).ready(function () {
     }
   }
 
-  if (DEBUG_MODE) {
+  if (DEBUG_MODE === "1") {
     loadForms();
-    console.log("creditAppState->Init State: ", {
+    console.log(`DEBUG_MODE: ${DEBUG_MODE}`, {
       creditAppState,
     });
   } else {

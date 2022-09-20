@@ -35,10 +35,9 @@ $(document).ready(function () {
     const payload = getData();
     var xhr = new XMLHttpRequest();
     xhr.open("POST", `${getAPIBasePath()}/api/loan/start`, true);
-    xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
+    // xhr.setRequestHeader("Authorization", "Basic YOUR_API_KEY");
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-    // xhr.withCredentials = true;
+    // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
       cb(this.status);
