@@ -90,7 +90,7 @@ if (DEBUG_MODE !== "0") {
       dataPayload["majorityAnotherBusiness"] = majorityAnotherBusiness;
       dataPayload["singleOwner"] = singleOwner;
       dataPayload["secAnotherBusiness"] = secAnotherBusiness;
-      dataPayload["status"] = currentStatus;
+      dataPayload["status"] = [...currentStatus];
       dataPayload["token"] = token;
       return dataPayload;
     }
@@ -145,7 +145,6 @@ if (DEBUG_MODE !== "0") {
 
     function saveCreditApp(cb) {
       const payload = getData();
-      console.log("saveCreditApp: ", payload);
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `${getAPIBasePath()}/api/loan/save`, true);
       xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
