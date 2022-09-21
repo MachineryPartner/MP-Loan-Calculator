@@ -302,7 +302,7 @@ if (DEBUG_MODE !== "0") {
         if (countCurrentRequiredFields === 0) {
           setIconStatusOk(formStatus[blockIndex]);
           formHeaders[blockIndex].classList.remove("is-error");
-        } else {
+        } else if (blockIndex !== currentState) {
           setIconStatusError(formStatus[blockIndex]);
           formHeaders[blockIndex].classList.add("is-error");
         }
