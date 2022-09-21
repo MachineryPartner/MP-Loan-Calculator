@@ -17,9 +17,9 @@ $(document).ready(function () {
     const domain = window.location.hostname;
     const isDev = "new-machinery-partner.webflow.io";
     const baseUrlProd =
-      "https://mp-loan-application-809rqqbut-machinerypartner.vercel.app";
+      "https://mp-loan-application-ay9vj9cbt-machinerypartner.vercel.app";
     const baseUrlDev =
-      "https://mp-loan-application-809rqqbut-machinerypartner.vercel.app";
+      "https://mp-loan-application-ay9vj9cbt-machinerypartner.vercel.app";
     if (domain === isDev) return baseUrlDev;
     return baseUrlProd;
   }
@@ -39,7 +39,7 @@ $(document).ready(function () {
     const payload = getData();
     var xhr = new XMLHttpRequest();
     xhr.open("POST", `${getAPIBasePath()}/api/loan/start`, true);
-    // xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
+    xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
@@ -53,9 +53,9 @@ $(document).ready(function () {
     event.preventDefault();
     currentStatus = statusPossibles.submited;
     const form = $(this);
-    // saveCreditApp(function () {
-    // });
-    form.submit();
+    saveCreditApp(function () {
+      form.submit();
+    });
   });
 
   function checkInfos() {

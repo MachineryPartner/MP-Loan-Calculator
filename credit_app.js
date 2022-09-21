@@ -40,9 +40,9 @@ if (DEBUG_MODE !== "0") {
       const domain = window.location.hostname;
       const isDev = "new-machinery-partner.webflow.io";
       const baseUrlProd =
-        "https://mp-loan-application-809rqqbut-machinerypartner.vercel.app";
+        "https://mp-loan-application-ay9vj9cbt-machinerypartner.vercel.app";
       const baseUrlDev =
-        "https://mp-loan-application-809rqqbut-machinerypartner.vercel.app";
+        "https://mp-loan-application-ay9vj9cbt-machinerypartner.vercel.app";
       if (domain === isDev) return baseUrlDev;
       return baseUrlProd;
     }
@@ -101,7 +101,7 @@ if (DEBUG_MODE !== "0") {
       };
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `${getAPIBasePath()}/api/loan/security`, true);
-      // xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
+      xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
@@ -147,7 +147,7 @@ if (DEBUG_MODE !== "0") {
       const payload = getData();
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `${getAPIBasePath()}/api/loan/save`, true);
-      // xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
+      xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
@@ -641,7 +641,7 @@ if (DEBUG_MODE !== "0") {
               return { status: true, message: "" };
             },
           },
-          materialUse: {
+          mainUse: {
             value: "",
             tag: "#Main-Use",
             airtable: "Business Main Use",
