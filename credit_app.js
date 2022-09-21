@@ -261,6 +261,11 @@ if (DEBUG_MODE !== "0") {
       });
     });
 
+    function setIconStatusReset(form) {
+      form.children[1].style.display = "none";
+      form.children[2].style.display = "none";
+    }
+
     function setIconStatusOk(form) {
       form.children[1].style.display = "block";
       form.children[2].style.display = "none";
@@ -299,15 +304,24 @@ if (DEBUG_MODE !== "0") {
       for (const step of creditAppState) {
         const { fields } = step;
         const countCurrentRequiredFields = checkBlockRequirements(fields);
-        if (countCurrentRequiredFields === 0) {
-          setIconStatusOk(formStatus[blockIndex]);
-          formHeaders[blockIndex].classList.remove("is-error");
-        } else if (blockIndex !== currentState) {
-          setIconStatusError(formStatus[blockIndex]);
-          formHeaders[blockIndex].classList.add("is-error");
-        }
         countRequiredFields += countCurrentRequiredFields;
         validateBlockFields(fields, blockIndex);
+        if (countCurrentRequiredFields === 0) {
+          formHeaders[blockIndex].classList.remove("is-error");
+          if (blockIndex === currentState) {
+            setIconStatusReset(formStatus[blockIndex]);
+          } else {
+            setIconStatusOk(formStatus[blockIndex]);
+          }
+        } else {
+          if (blockIndex !== currentState) {
+            setIconStatusError(formStatus[blockIndex]);
+            formHeaders[blockIndex].classList.add("is-error");
+          } else {
+            formHeaders[blockIndex].classList.remove("is-error");
+            setIconStatusReset(formStatus[blockIndex]);
+          }
+        }
         blockIndex += 1;
       }
       // console.log("currentStatus: ", currentStatus);
