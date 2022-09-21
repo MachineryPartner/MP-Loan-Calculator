@@ -101,7 +101,7 @@ if (DEBUG_MODE !== "0") {
       };
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `${getAPIBasePath()}/api/loan/security`, true);
-      xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
+      // xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
@@ -147,7 +147,7 @@ if (DEBUG_MODE !== "0") {
       const payload = getData();
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `${getAPIBasePath()}/api/loan/save`, true);
-      xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
+      // xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
