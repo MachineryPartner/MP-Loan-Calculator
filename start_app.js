@@ -17,9 +17,9 @@ $(document).ready(function () {
     const domain = window.location.hostname;
     const isDev = "new-machinery-partner.webflow.io";
     const baseUrlProd =
-      "https://mp-loan-application-mih2j08cr-machinerypartner.vercel.app";
+      "https://mp-loan-application-l0ueg79sw-machinerypartner.vercel.app";
     const baseUrlDev =
-      "https://mp-loan-application-mih2j08cr-machinerypartner.vercel.app";
+      "https://mp-loan-application-l0ueg79sw-machinerypartner.vercel.app";
     if (domain === isDev) return baseUrlDev;
     return baseUrlProd;
   }
