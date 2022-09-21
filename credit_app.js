@@ -39,8 +39,7 @@ if (DEBUG_MODE !== "0") {
     function getAPIBasePath() {
       const domain = window.location.hostname;
       const isDev = "new-machinery-partner.webflow.io";
-      const baseUrlProd =
-        "https://mp-loan-application-l0ueg79sw-machinerypartner.vercel.app";
+      const baseUrlProd = "https://mp-loan-application.vercel.app";
       const baseUrlDev =
         "https://mp-loan-application-l0ueg79sw-machinerypartner.vercel.app";
       if (domain === isDev) return baseUrlDev;
@@ -182,8 +181,10 @@ if (DEBUG_MODE !== "0") {
     function nextBlock(_currentState) {
       formBlocks[currentState].style.display = "none";
       currentState = _currentState;
-      formBlocks[currentState - 1].style.display = "none";
-      formBlocks[currentState].style.display = "block";
+      const lastBlock = formBlocks[currentState - 1];
+      if (lastBlock) lastBlock.style.display = "none";
+      const currentBlock = formBlocks[currentState];
+      if (currentBlock) currentBlock.style.display = "block";
       const fields = creditAppState[currentState - 1].fields;
       forceFieldsBlur();
       validateBlockFields(fields, currentState - 1);
