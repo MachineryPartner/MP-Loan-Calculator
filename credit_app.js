@@ -40,9 +40,9 @@ if (DEBUG_MODE !== "0") {
       const domain = window.location.hostname;
       const isDev = "new-machinery-partner.webflow.io";
       const baseUrlProd =
-        "https://mp-loan-application-14b6melnf-machinerypartner.vercel.app";
+        "https://mp-loan-application-matris8t7-machinerypartner.vercel.app";
       const baseUrlDev =
-        "https://mp-loan-application-14b6melnf-machinerypartner.vercel.app";
+        "https://mp-loan-application-matris8t7-machinerypartner.vercel.app";
       if (domain === isDev) return baseUrlDev;
       return baseUrlProd;
     }
