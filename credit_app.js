@@ -204,15 +204,24 @@ if (DEBUG_MODE !== "0") {
 
     // Set handler for display blocks
     $(".finance_form_header").on("click", function (event) {
+      const lastBlock = formBlocks[currentState];
       const targetIndex = Number(event.currentTarget.children[0].innerText) - 1;
+      const sameBlock = currentState == targetIndex;
+      console.log("status: ", currentState, targetIndex, sameBlock);
       currentState = targetIndex;
-      resetBlocksState();
+      const currentBlock = formBlocks[currentState];
+      if (currentBlock) {
+        if (sameBlock) {
+          currentBlock.style.display =
+            currentBlock.style.display === "block" ? "none" : "block";
+        } else {
+          if (lastBlock) lastBlock.style.display = "none";
+          currentBlock.style.display = "block";
+        }
+      }
       forceFieldsBlur();
       const fields = creditAppState[currentState].fields;
       validateBlockFields(fields, currentState);
-      event.currentTarget.nextSibling.style.display = handleBlockVisibility(
-        event.currentTarget.nextSibling.style.display
-      );
     });
 
     let submitButtonBusinessAddress = document.getElementById(
