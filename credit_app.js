@@ -255,6 +255,9 @@ if (DEBUG_MODE !== "0") {
       event.preventDefault();
       currentStatus.add(statusPossibles[statusPossibles.length - 1]);
       const form = $(this);
+      submitButton.style.pointerEvents = "none";
+      submitButton.classList.add("is-disable");
+      submitButton.value = "Creating DocuSign document...";
       saveCreditApp(function () {
         // form.submit();
         location.replace(`${getAPIBasePath()}/api/loan/docusign/sign`);

@@ -1,5 +1,6 @@
 /*  */
 $(document).ready(function () {
+  $(".iti").css("display", "block");
   let dataPayload = {};
   let statusPossibles = {
     contact: "PERSONAL_INFORMATION",
