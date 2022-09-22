@@ -1,6 +1,5 @@
 /*  */
 $(document).ready(function () {
-  $(".iti").css("display", "block");
   let dataPayload = {};
   let statusPossibles = {
     contact: "PERSONAL_INFORMATION",
@@ -13,13 +12,14 @@ $(document).ready(function () {
     utilsScript:
       "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
   });
+  // This fix an error with the phone input width
+  $(".iti").css("display", "block");
 
   function getAPIBasePath() {
     const domain = window.location.hostname;
     const isDev = "new-machinery-partner.webflow.io";
     const baseUrlProd = "https://mp-loan-application.vercel.app";
-    const baseUrlDev =
-      "https://mp-loan-application-l0ueg79sw-machinerypartner.vercel.app";
+    const baseUrlDev = "https://mp-loan-application.vercel.app";
     if (domain === isDev) return baseUrlDev;
     return baseUrlProd;
   }
