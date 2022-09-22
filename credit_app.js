@@ -40,8 +40,7 @@ if (DEBUG_MODE !== "0") {
       const domain = window.location.hostname;
       const isDev = "new-machinery-partner.webflow.io";
       const baseUrlProd = "https://mp-loan-application.vercel.app";
-      const baseUrlDev =
-        "https://mp-loan-application-l0ueg79sw-machinerypartner.vercel.app";
+      const baseUrlDev = "https://mp-loan-application.vercel.app";
       if (domain === isDev) return baseUrlDev;
       return baseUrlProd;
     }
@@ -257,7 +256,8 @@ if (DEBUG_MODE !== "0") {
       currentStatus.add(statusPossibles[statusPossibles.length - 1]);
       const form = $(this);
       saveCreditApp(function () {
-        form.submit();
+        // form.submit();
+        location.replace(`${getAPIBasePath()}/api/loan/docusign/sign`);
       });
     });
 
