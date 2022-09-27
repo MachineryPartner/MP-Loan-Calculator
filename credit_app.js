@@ -875,6 +875,10 @@ if (DEBUG_MODE !== "0") {
               if (event.currentTarget.value === "singleYes") {
                 secondOwnerBlock.style.display = "none";
                 singleOwner = true;
+                fields.secOwner.value = "";
+                fields.secOwnership.value = "";
+                fields.secBirth.value = "";
+                fields.secSsn.value = "";
                 removeRequeriments(fields);
               } else {
                 secondOwnerBlock.style.display = "block";
