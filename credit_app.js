@@ -36,9 +36,10 @@ if (DEBUG_MODE !== "0") {
 
     secondOwnerBlock.style.display = "none";
 
+    const isDev = "new-machinery-partner.webflow.io";
+
     function getAPIBasePath() {
       const domain = window.location.hostname;
-      const isDev = "new-machinery-partner.webflow.io";
       const baseUrlProd = "https://mp-loan-application.vercel.app";
       const baseUrlDev = "https://mp-loan-application.vercel.app";
       if (domain === isDev) return baseUrlDev;
@@ -149,7 +150,7 @@ if (DEBUG_MODE !== "0") {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
-        cb(this.status);
+        cb(JSON.parse(this.responseText));
       };
     }
 
@@ -207,7 +208,6 @@ if (DEBUG_MODE !== "0") {
       const lastBlock = formBlocks[currentState];
       const targetIndex = Number(event.currentTarget.children[0].innerText) - 1;
       const sameBlock = currentState == targetIndex;
-      console.log("status: ", currentState, targetIndex, sameBlock);
       currentState = targetIndex;
       const currentBlock = formBlocks[currentState];
       if (currentBlock) {
@@ -266,10 +266,26 @@ if (DEBUG_MODE !== "0") {
       const form = $(this);
       submitButton.style.pointerEvents = "none";
       submitButton.classList.add("is-disable");
-      submitButton.value = "Creating DocuSign document...";
-      saveCreditApp(function () {
-        // form.submit();
-        location.replace(`${getAPIBasePath()}/api/loan/docusign/sign`);
+      submitButton.value = "Saving your credit application...";
+
+      saveCreditApp(function (response) {
+        submitButton.value = "Creating your contract...";
+        console.log("saveCreditApp->Submit: ", response);
+        if (response.signature) {
+          const client = new window.HelloSign({
+            clientId: "c736633d45c53925cb3ec2c622e5bf99",
+          });
+          client.on("finish", () => {
+            console.log("Signature finished");
+            form.submit();
+          });
+          client.open(response.data, {
+            skipDomainVerification: isDev ? true : false,
+          });
+          submitButton.style.pointerEvents = "auto";
+          submitButton.classList.remove("is-disable");
+          submitButton.value = "Sign & Send";
+        }
       });
     });
 

@@ -15,9 +15,10 @@ $(document).ready(function () {
   // This fix an error with the phone input width
   $(".iti").css("display", "block");
 
+  const isDev = "new-machinery-partner.webflow.io";
+
   function getAPIBasePath() {
     const domain = window.location.hostname;
-    const isDev = "new-machinery-partner.webflow.io";
     const baseUrlProd = "https://mp-loan-application.vercel.app";
     const baseUrlDev = "https://mp-loan-application.vercel.app";
     if (domain === isDev) return baseUrlDev;
