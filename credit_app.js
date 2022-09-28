@@ -281,6 +281,7 @@ if (DEBUG_MODE !== "0") {
           });
           client.open(response.data, {
             skipDomainVerification: isDev ? true : false,
+            uxVersion: 2,
           });
           submitButton.style.pointerEvents = "auto";
           submitButton.classList.remove("is-disable");
@@ -302,6 +303,11 @@ if (DEBUG_MODE !== "0") {
     function setIconStatusError(form) {
       form.children[1].style.display = "none";
       form.children[2].style.display = "block";
+    }
+
+    function formatEmail(email) {
+      let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
+      return regex.test(email);
     }
 
     function doSetCaretPosition(oField, iCaretPos) {
@@ -714,6 +720,25 @@ if (DEBUG_MODE !== "0") {
               return { status: false, message: "Mandatory field" };
             },
           },
+          majorityEmail: {
+            value: "",
+            tag: "#Majority-Owner-Email",
+            airtable: "Majority Owner Email",
+            state: false,
+            required: false,
+            originalRequired: true,
+            validate: function (_input) {
+              if (!formatEmail(_input)) {
+                return { status: false, message: "Invalid email!" };
+              }
+              if (_input && _input.length >= 5) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 5) {
+                return { status: false, message: "Minimum characters 5" };
+              }
+              return { status: false, message: "Mandatory field" };
+            },
+          },
           majorityOwnership: {
             value: "",
             tag: "#Ownership",
@@ -928,6 +953,25 @@ if (DEBUG_MODE !== "0") {
               return { status: false, message: "Mandatory field" };
             },
           },
+          secEmail: {
+            value: "",
+            tag: "#Sec-Owner-Email",
+            airtable: "Second Owner Email",
+            state: false,
+            required: false,
+            originalRequired: true,
+            validate: function (_input) {
+              if (!formatEmail(_input)) {
+                return { status: false, message: "Invalid email!" };
+              }
+              if (_input && _input.length >= 5) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 5) {
+                return { status: false, message: "Minimum characters 5" };
+              }
+              return { status: false, message: "Mandatory field" };
+            },
+          },
           secOwnership: {
             value: "",
             tag: "#Ownership-2",
@@ -967,6 +1011,9 @@ if (DEBUG_MODE !== "0") {
             state: false,
             required: true,
             originalRequired: true,
+            init: function (_input) {
+              _input.type = "date";
+            },
             validate: function (_input) {
               if (_input && _input != "") {
                 return { status: true, message: "" };
