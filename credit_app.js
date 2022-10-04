@@ -271,6 +271,10 @@ if (DEBUG_MODE !== "0") {
       saveCreditApp(function (response) {
         submitButton.value = "Creating your contract...";
         console.log("saveCreditApp->Submit: ", response);
+        // DOCUSIGN FLOW
+        // location.replace(`${getAPIBasePath()}/api/loan/docusign/sign`);
+
+        // HELLOSIGN FLOW
         if (response.signature) {
           const client = new window.HelloSign({
             clientId: "c736633d45c53925cb3ec2c622e5bf99",
@@ -286,6 +290,8 @@ if (DEBUG_MODE !== "0") {
           submitButton.style.pointerEvents = "auto";
           submitButton.classList.remove("is-disable");
           submitButton.value = "Sign & Send";
+        } else {
+          form.submit();
         }
       });
     });
@@ -901,6 +907,7 @@ if (DEBUG_MODE !== "0") {
                 secondOwnerBlock.style.display = "none";
                 singleOwner = true;
                 fields.secOwner.value = "";
+                fields.secEmail.value = "";
                 fields.secOwnership.value = "";
                 fields.secBirth.value = "";
                 fields.secSsn.value = "";
