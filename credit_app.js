@@ -609,6 +609,26 @@ if (DEBUG_MODE !== "0") {
             airtable: "Business Monthly Revenue",
             state: false,
             required: false,
+            keyup: function (_this) {
+              formatCurrency(_this, false);
+            },
+            blur: function (_this) {
+              const input = document.getElementById("Monthly-Revenue");
+              if (input.value !== "") {
+                document.getElementById("Monthly-Revenue").value = currency(
+                  document.getElementById("Monthly-Revenue").value
+                ).value;
+              }
+              formatCurrency(_this, true);
+            },
+            focus: function () {
+              const input = document.getElementById("Monthly-Revenue");
+              if (input.value !== "") {
+                document.getElementById("Monthly-Revenue").value = currency(
+                  document.getElementById("Monthly-Revenue").value
+                ).value;
+              }
+            },
             validate: function (_input) {
               return { status: true, message: "" };
             },
