@@ -9,12 +9,13 @@ if (DEBUG_MODE !== "0") {
       function () {
         $("#Security").mask("999-99-9999");
         $("#Security-2").mask("999-99-9999");
+        $("#tax-id-2").mask("99-9999999");
       }
     );
     let dataPayload = {};
     let currentState = 0;
     let majorityAnotherBusiness = false;
-    let singleOwner = false;
+    let singleOwner = true;
     let secAnotherBusiness = false;
     let blockStates = {
       block: "none",
