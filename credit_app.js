@@ -959,6 +959,22 @@ if (DEBUG_MODE !== "0") {
       {
         button: submitButton2Owner,
         fields: {
+          secOwner: {
+            value: "",
+            tag: "#Sec-Owner-Name",
+            airtable: "Second Owner Name",
+            state: true,
+            required: false,
+            originalRequired: true,
+            validate: function (_input) {
+              if (_input && _input.length >= 5) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 5) {
+                return { status: false, message: "Minimum characters 5" };
+              }
+              return { status: false, message: "Mandatory field" };
+            },
+          },
           singleOwner: {
             value: true,
             tag: "input[name=Owned-by-single-person]", //Owner of business
@@ -986,7 +1002,7 @@ if (DEBUG_MODE !== "0") {
             },
             init: function (_input, field) {
               const fields = creditAppState[4].fields;
-              if (field.value) {
+              if (field.value === "" && fields["secOwner"].value === "") {
                 singleOwner = true;
                 document.getElementById("singleYes").click();
                 document.getElementById("singleYes").value = "singleYes";
@@ -1008,22 +1024,6 @@ if (DEBUG_MODE !== "0") {
             },
             validate: function (_input) {
               return undefined;
-            },
-          },
-          secOwner: {
-            value: "",
-            tag: "#Sec-Owner-Name",
-            airtable: "Second Owner Name",
-            state: true,
-            required: false,
-            originalRequired: true,
-            validate: function (_input) {
-              if (_input && _input.length >= 5) {
-                return { status: true, message: "" };
-              } else if (_input && _input.length < 5) {
-                return { status: false, message: "Minimum characters 5" };
-              }
-              return { status: false, message: "Mandatory field" };
             },
           },
           secEmail: {
