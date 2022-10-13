@@ -10,6 +10,8 @@ if (DEBUG_MODE !== "0") {
         $("#Security").mask("999-99-9999");
         $("#Security-2").mask("999-99-9999");
         $("#tax-id-2").mask("99-9999999");
+        $("#Founding-Date").mask("9999");
+        $("#Zip-Code").mask("99999-9999");
       }
     );
     let dataPayload = {};
@@ -186,9 +188,20 @@ if (DEBUG_MODE !== "0") {
       if (lastBlock) lastBlock.style.display = "none";
       const currentBlock = formBlocks[currentState];
       if (currentBlock) currentBlock.style.display = "block";
-      const fields = creditAppState[currentState - 1].fields;
       forceFieldsBlur();
-      validateBlockFields(fields, currentState - 1);
+      // const fields = creditAppState[currentState - 1].fields;
+      // validateBlockFields(fields, currentState - 1);
+      if (currentBlock && currentBlock.offsetTop) {
+        setTimeout(function () {
+          if (currentBlock.offsetTop) {
+            window.scrollTo({
+              behavior: "smooth",
+              left: 0,
+              top: currentBlock.offsetTop - 100,
+            });
+          }
+        }, 200);
+      }
     }
     // Get all Form Blocks
     //finance_form_status
@@ -218,11 +231,20 @@ if (DEBUG_MODE !== "0") {
         } else {
           if (lastBlock) lastBlock.style.display = "none";
           currentBlock.style.display = "block";
+          setTimeout(function () {
+            if (currentBlock.offsetTop) {
+              window.scrollTo({
+                behavior: "smooth",
+                left: 0,
+                top: currentBlock.offsetTop - 100,
+              });
+            }
+          }, 200);
         }
       }
       forceFieldsBlur();
-      const fields = creditAppState[currentState].fields;
-      validateBlockFields(fields, currentState);
+      // const fields = creditAppState[currentState].fields;
+      // validateBlockFields(fields, currentState);
     });
 
     let submitButtonBusinessAddress = document.getElementById(
@@ -285,7 +307,7 @@ if (DEBUG_MODE !== "0") {
             form.submit();
           });
           client.open(response.data, {
-            skipDomainVerification: isDev ? true : false,
+            skipDomainVerification: false,
             uxVersion: 2,
           });
           submitButton.style.pointerEvents = "auto";
@@ -420,8 +442,10 @@ if (DEBUG_MODE !== "0") {
       let count = 0;
       for (const name in fields) {
         const inputData = fields[name];
-        if (inputData.required && inputData.state === false) {
+        if (inputData.value !== "" && inputData.state === false) {
           // console.log("checkBlockRequirements->Field Name: ", name);
+          count += 1;
+        } else if (inputData.required && inputData.state === false) {
           count += 1;
         }
       }
@@ -546,7 +570,10 @@ if (DEBUG_MODE !== "0") {
               if (isValidZip) {
                 return { status: true, message: "" };
               } else if (_input && _input.length < 11) {
-                return { status: false, message: "Zip-code invalid!" };
+                return {
+                  status: false,
+                  message: "Please enter a 5 digit US Zip Code",
+                };
               }
               return { status: false, message: "Mandatory field" };
             },
@@ -586,11 +613,24 @@ if (DEBUG_MODE !== "0") {
             tag: "#Founding-Date",
             airtable: "Business Founding Date",
             state: false,
-            required: true,
-            init: function (_input) {
-              _input.type = "date";
-            },
+            required: false,
             validate: function (_input) {
+              if (_input && _input.length == 4) {
+                if (Number(_input) < 1500) {
+                  return {
+                    status: false,
+                    message: "Please enter a valid Year",
+                  };
+                } else if (Number(_input) > 2022) {
+                  return {
+                    status: false,
+                    message: "Please enter a valid Year",
+                  };
+                }
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 4) {
+                return { status: false, message: "Please enter a valid Year" };
+              }
               return { status: true, message: "" };
             },
           },
@@ -639,9 +679,14 @@ if (DEBUG_MODE !== "0") {
             tag: "#tax-id-2",
             airtable: "Business EIN",
             state: false,
-            required: false,
+            required: true,
             validate: function (_input) {
-              return { status: true, message: "" };
+              if (_input && _input.length == 10) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 10) {
+                return { status: false, message: "Please enter a valid EIN" };
+              }
+              return { status: false, message: "Mandatory field" };
             },
           },
         },
@@ -717,16 +762,16 @@ if (DEBUG_MODE !== "0") {
               return { status: true, message: "" };
             },
           },
-          mainUse: {
-            value: "",
-            tag: "#Main-Use",
-            airtable: "Business Main Use",
-            state: false,
-            required: false,
-            validate: function (_input) {
-              return { status: true, message: "" };
-            },
-          },
+          // mainUse: {
+          //   value: "",
+          //   tag: "#Main-Use",
+          //   airtable: "Business Main Use",
+          //   state: false,
+          //   required: false,
+          //   validate: function (_input) {
+          //     return { status: true, message: "" };
+          //   },
+          // },
         },
       },
       {
