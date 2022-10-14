@@ -1002,7 +1002,10 @@ if (DEBUG_MODE !== "0") {
             },
             init: function (_input, field) {
               const fields = creditAppState[4].fields;
-              if (field.value === "" && fields["secOwner"].value === "") {
+              if (
+                (field.value === "" && fields["secOwner"].value === "") ||
+                (field.value && fields["secOwner"].value === "")
+              ) {
                 singleOwner = true;
                 document.getElementById("singleYes").click();
                 document.getElementById("singleYes").value = "singleYes";
