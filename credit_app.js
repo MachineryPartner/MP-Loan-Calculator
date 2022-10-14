@@ -465,8 +465,13 @@ if (DEBUG_MODE !== "0") {
             } else {
               input.classList.remove("is-error");
             }
-            if (input.nextSibling)
-              input.nextSibling.innerHTML = ret.message || "";
+            if (input.nextSibling) {
+              if (input.nextSibling.className === "form_error-message") {
+                input.nextSibling.innerHTML = ret.message || "";
+              } else if (input.offsetParent && input.offsetParent.nextSibling) {
+                input.offsetParent.nextSibling.innerHTML = ret.message || "";
+              }
+            }
           }
         }
       }
@@ -1253,13 +1258,21 @@ if (DEBUG_MODE !== "0") {
                     inputData.state = true;
                     if (!inputData.isRadio) inputData.value = inputValue;
                     if (event.currentTarget.nextSibling) {
-                      event.currentTarget.nextSibling.innerHTML = "";
+                      if (
+                        event.currentTarget.nextSibling.className ===
+                        "form_error-message"
+                      )
+                        event.currentTarget.nextSibling.innerHTML = "";
                     } else if (
                       event.currentTarget.offsetParent &&
                       event.currentTarget.offsetParent.nextSibling
                     ) {
-                      event.currentTarget.offsetParent.nextSibling.innerHTML =
-                        "";
+                      if (
+                        event.currentTarget.offsetParent.nextSibling
+                          .className === "form_error-message"
+                      )
+                        event.currentTarget.offsetParent.nextSibling.innerHTML =
+                          "";
                     }
                   }
                 } else {
@@ -1267,13 +1280,22 @@ if (DEBUG_MODE !== "0") {
                     inputData.state = false;
                   }
                   if (event.currentTarget.nextSibling) {
-                    event.currentTarget.nextSibling.innerHTML = isValid.message;
+                    if (
+                      event.currentTarget.nextSibling.className ===
+                      "form_error-message"
+                    )
+                      event.currentTarget.nextSibling.innerHTML =
+                        isValid.message;
                   } else if (
                     event.currentTarget.offsetParent &&
                     event.currentTarget.offsetParent.nextSibling
                   ) {
-                    event.currentTarget.offsetParent.nextSibling.innerHTML =
-                      isValid.message;
+                    if (
+                      event.currentTarget.offsetParent.nextSibling.className ===
+                      "form_error-message"
+                    )
+                      event.currentTarget.offsetParent.nextSibling.innerHTML =
+                        isValid.message;
                   }
                 }
                 checkFormRequirements();
