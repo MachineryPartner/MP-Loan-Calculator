@@ -294,22 +294,22 @@ if (DEBUG_MODE !== "0") {
       saveCreditApp(function (response) {
         submitButton.value = "Creating your contract...";
         console.log("saveCreditApp->Submit: ", response);
-        // DOCUSIGN FLOW
-        // location.replace(`${getAPIBasePath()}/api/loan/docusign/sign`);
-
-        // HELLOSIGN FLOW
         if (response.signature) {
-          const client = new window.HelloSign({
-            clientId: "c736633d45c53925cb3ec2c622e5bf99",
-          });
-          client.on("finish", () => {
-            console.log("Signature finished");
-            form.submit();
-          });
-          client.open(response.data, {
-            skipDomainVerification: false,
-            uxVersion: 2,
-          });
+          // HelloSign Flow
+          // const client = new window.HelloSign({
+          //   clientId: "c736633d45c53925cb3ec2c622e5bf99",
+          // });
+          // client.on("finish", () => {
+          //   console.log("Signature finished");
+          //   form.submit();
+          // });
+          // client.open(response.data, {
+          //   skipDomainVerification: false,
+          //   uxVersion: 2,
+          // });
+
+          // DocuSign Flow
+          location.replace(response.data);
           submitButton.style.pointerEvents = "auto";
           submitButton.classList.remove("is-disable");
           submitButton.value = "Sign & Send";
@@ -1108,7 +1108,6 @@ if (DEBUG_MODE !== "0") {
             airtable: "Second Owner SSN",
             state: false,
             required: true,
-            originalRequired: true,
             focus: function () {
               showSSN($("#Security-2"), "secSsn");
             },
