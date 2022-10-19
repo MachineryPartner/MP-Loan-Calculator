@@ -310,9 +310,9 @@ if (DEBUG_MODE !== "0") {
 
           // DocuSign Flow
           location.replace(response.data);
-          submitButton.style.pointerEvents = "auto";
-          submitButton.classList.remove("is-disable");
-          submitButton.value = "Sign & Send";
+          // submitButton.style.pointerEvents = "auto";
+          // submitButton.classList.remove("is-disable");
+          // submitButton.value = "Sign & Send";
         } else {
           form.submit();
         }
