@@ -83,6 +83,18 @@ if (DEBUG_MODE !== "0") {
       return blockStates[currentState];
     }
 
+    function isMobile() {
+      if (
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     function getData() {
       creditAppState.forEach(function (row) {
         for (const property in row.fields) {
@@ -94,6 +106,7 @@ if (DEBUG_MODE !== "0") {
       dataPayload["secAnotherBusiness"] = secAnotherBusiness;
       dataPayload["status"] = [...currentStatus];
       dataPayload["token"] = token;
+      dataPayload["isMobile"] = isMobile();
       return dataPayload;
     }
 
