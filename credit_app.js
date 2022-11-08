@@ -882,28 +882,37 @@ if (DEBUG_MODE !== "0") {
             airtable: "Majority Owner SSN",
             state: false,
             required: true,
-            focus: function () {
-              showSSN($("#Security"), "majoritySsn");
-            },
-            blur: function () {
-              hideSSN($("#Security"), "majoritySsn");
-            },
-            validate: function validateSecury(value) {
-              var val = $("#Security").data("majoritySsn");
-              if (val && val.length === 11) {
-                return { status: true, message: "", data: val };
-              } else if (val && val.length < 11) {
-                return {
-                  status: false,
-                  message: "Invalid SSN number!",
-                  data: val,
-                };
+            // focus: function () {
+            //   showSSN($("#Security"), "majoritySsn");
+            //   console.log("showSSN");
+            // },
+            // blur: function () {
+            //   hideSSN($("#Security"), "majoritySsn");
+            //   console.log("hideSSN");
+            // },
+            // validate: function validateSecury(value) {
+            //   var val = $("#Security").data("majoritySsn");
+            //   if (val && val.length === 11) {
+            //     return { status: true, message: "", data: val };
+            //   } else if (val && val.length < 11) {
+            //     return {
+            //       status: false,
+            //       message: "Invalid SSN number!",
+            //       data: val,
+            //     };
+            //   }
+            //   return {
+            //     status: false,
+            //     message: "Mandatory field",
+            //     data: val,
+            //   };
+            // },
+            validate: function (_input) {
+              console.log("validate: ", _input.length);
+              if (_input && _input != "" && _input.length === 11) {
+                return { status: true, message: "" };
               }
-              return {
-                status: false,
-                message: "Mandatory field",
-                data: val,
-              };
+              return { status: false, message: "Mandatory field" };
             },
           },
           majorityAnotherBusiness: {
@@ -1121,28 +1130,35 @@ if (DEBUG_MODE !== "0") {
             airtable: "Second Owner SSN",
             state: false,
             required: true,
-            focus: function () {
-              showSSN($("#Security-2"), "secSsn");
-            },
-            blur: function () {
-              hideSSN($("#Security-2"), "secSsn");
-            },
-            validate: function validateSecury(value) {
-              var val = $("#Security-2").data("secSsn");
-              if (val && val.length === 11) {
-                return { status: true, message: "", data: val };
-              } else if (val && val.length < 11) {
-                return {
-                  status: false,
-                  message: "Invalid SSN number!",
-                  data: val,
-                };
+            // focus: function () {
+            //   showSSN($("#Security-2"), "secSsn");
+            // },
+            // blur: function () {
+            //   hideSSN($("#Security-2"), "secSsn");
+            // },
+            // validate: function validateSecury(value) {
+            //   var val = $("#Security-2").data("secSsn");
+            //   if (val && val.length === 11) {
+            //     return { status: true, message: "", data: val };
+            //   } else if (val && val.length < 11) {
+            //     return {
+            //       status: false,
+            //       message: "Invalid SSN number!",
+            //       data: val,
+            //     };
+            //   }
+            //   return {
+            //     status: false,
+            //     message: "Mandatory field",
+            //     data: val,
+            //   };
+            // },
+            validate: function (_input) {
+              console.log("validate: ", _input.length);
+              if (_input && _input != "" && _input.length === 11) {
+                return { status: true, message: "" };
               }
-              return {
-                status: false,
-                message: "Mandatory field",
-                data: val,
-              };
+              return { status: false, message: "Mandatory field" };
             },
           },
           secAnotherBusiness: {
