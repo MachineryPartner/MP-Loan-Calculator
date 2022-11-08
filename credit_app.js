@@ -908,7 +908,6 @@ if (DEBUG_MODE !== "0") {
             //   };
             // },
             validate: function (_input) {
-              console.log("validate: ", _input.length);
               if (_input && _input != "" && _input.length === 11) {
                 return { status: true, message: "" };
               }
@@ -1154,7 +1153,6 @@ if (DEBUG_MODE !== "0") {
             //   };
             // },
             validate: function (_input) {
-              console.log("validate: ", _input.length);
               if (_input && _input != "" && _input.length === 11) {
                 return { status: true, message: "" };
               }
