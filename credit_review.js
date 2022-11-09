@@ -7,10 +7,8 @@ if (DEBUG_MODE !== "0") {
     const isDev = "new-machinery-partner.webflow.io";
     function getAPIBasePath() {
       const domain = window.location.hostname;
-      const baseUrlProd =
-        "https://9c16-2804-1b0-1401-7463-ad98-1a21-2e2c-828.ngrok.io";
-      const baseUrlDev =
-        "https://9c16-2804-1b0-1401-7463-ad98-1a21-2e2c-828.ngrok.io";
+      const baseUrlProd = "https://mp-loan-application.vercel.app";
+      const baseUrlDev = "https://mp-loan-application.vercel.app";
       if (domain === isDev) return baseUrlDev;
       return baseUrlProd;
     }
@@ -27,8 +25,9 @@ if (DEBUG_MODE !== "0") {
         cb(JSON.parse(this.responseText));
       };
     }
-    function saveCreditApp(cb) {
-      creditData["Status"] = [...creditData["Status"], "REVIEW"];
+    function saveCreditApp(status, cb) {
+      creditData["Status"] = [...creditData["Status"], status];
+      creditData["Token"] = token;
       const payload = {
         token,
         ...creditData,
@@ -43,56 +42,196 @@ if (DEBUG_MODE !== "0") {
       };
     }
 
+    async function uploadFiles(formData, cb) {
+      try {
+        const res = await axios.post(
+          `https://os.machinerypartner.com/api/upload`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        cb(res.data);
+      } catch (e) {
+        cb();
+      }
+    }
+
+    const companyName = document.getElementById("Company-Name");
+    const appId = document.getElementById("App-Id");
+    const submitButton = document.getElementById("credit-app-submit");
+    const files = document.getElementById("files");
+    const fileInput = document.getElementById("uploadInput");
+    const dropBox = document.getElementById("dropBox");
+
     getCreditApp(function (response) {
       console.log("getCreditApp", response.data);
       creditData = response.data;
+      if (creditData["Documents"]) {
+        creditData["Documents"].forEach(function (file) {
+          addFile(file);
+        });
+      } else {
+        creditData["Documents"] = [];
+      }
+      companyName.innerHTML = creditData["Business Name"];
+      appId.innerHTML = `Application ID: #${creditData["Deal Id"]}`;
     });
-    let form = document.getElementById("wf-form-Finance");
-    let file = document.getElementById("file");
-    let fileList = [];
-    // TODO: Check array concat behavior adding single and multiple files at once
-    file.addEventListener(
-      "change",
-      function handleFiles(e) {
-        fileList = [...fileList, ...this.files];
+
+    dayjs.extend(dayjs_plugin_relativeTime);
+
+    [("dragenter", "dragover", "dragleave", "drop")].forEach((evt) => {
+      dropBox.addEventListener(evt, prevDefault, false);
+    });
+    function prevDefault(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    ["dragenter", "dragover"].forEach((evt) => {
+      dropBox.addEventListener(evt, hover, false);
+    });
+    ["dragleave", "drop"].forEach((evt) => {
+      dropBox.addEventListener(evt, unhover, false);
+    });
+    function hover(e) {
+      dropBox.classList.add("hover");
+    }
+    function unhover(e) {
+      dropBox.classList.remove("hover");
+    }
+
+    submitButton.addEventListener(
+      "click",
+      function (e) {
+        prevDefault(e);
+        submitButton.style.pointerEvents = "none";
+        submitButton.classList.add("is-disable");
+        submitButton.value = "Sending your Application for Review...";
+        saveCreditApp("REVIEW", function () {
+          submitButton.style.pointerEvents = "block";
+          submitButton.classList.remove("is-disable");
+          submitButton.value = "Submit for Review";
+        });
       },
       false
     );
 
-    form.addEventListener(
-      "submit",
+    fileInput.addEventListener(
+      "change",
       function (e) {
-        e.preventDefault();
-        const successMessage = document.querySelector("w-form-done");
-        const errorMessage = document.querySelector("w-form-error");
-        const formData = new FormData();
-        fileList.forEach(function (file) {
-          formData.append("attachments", file);
-        });
-        const requestOptions = {
-          method: "POST",
-          headers: {
-            Authorization: "Basic d2Vic2l0ZTpmb3Jt",
-          },
-          body: formData,
-        };
-        fetch(`${getAPIBasePath()}/api/upload`, requestOptions)
-          .then(function (response) {
-            form.style.display = "none";
-            successMessage.style.display = "block";
-            errorMessage.style.display = "none";
-            const ret = response.json();
-            console.log("ret", ret);
-            creditData["Documents"] = ret.attachments;
-            saveCreditApp(function () {});
-          })
-          .catch(function (error) {
-            successMessage.style.display = "none";
-            errorMessage.style.display = "block";
-          });
+        filesManager(this.files);
       },
       false
     );
+
+    dropBox.addEventListener("drop", mngDrop, false);
+
+    function mngDrop(e) {
+      let dataTrans = e.dataTransfer;
+      let files = dataTrans.files;
+      filesManager(files);
+    }
+
+    function upFile(file) {
+      let imageType = /image.*/;
+      let pdfType = /pdf/;
+      let excelType = /excel/;
+      if (
+        file.type.match(imageType) ||
+        file.type.match(pdfType) ||
+        file.type.match(excelType)
+      ) {
+        const formData = new FormData();
+        formData.append("attachments", file);
+        try {
+          previewFile(file);
+        } catch (e) {
+          console.log("Error Preview File", e);
+        }
+        try {
+          uploadFiles(formData, function (response) {
+            if (!response) {
+              let pendingDiv = document.getElementById(`wrap-${file.name}`);
+              pendingDiv.remove();
+              let wrap = document.createElement("div");
+              let imgCapt = document.createElement("p");
+              let errorHtml = `
+          <div class="uploaded_file-error"><img loading="lazy" src="https://assets-global.website-files.com/624c19a34c30c75b84ab76d9/63695bc9988cdc483b9cfd62_alert-triangle.svg" alt=""><div><div>${file.name}</div><div class="text-size-small text-color-grey-light w-file-upload-error-msg">
+          Upload failed. Something went wrong. Please retry.</div></div></div>`;
+              imgCapt.innerHTML = errorHtml;
+              files.appendChild(wrap).appendChild(imgCapt);
+            } else {
+              creditData["Documents"] = [
+                ...creditData["Documents"],
+                ...response.attachments,
+              ];
+              saveCreditApp("DOCUMENTS", function () {
+                let statusDiv = document.getElementById(file.name);
+                statusDiv.className = "text-size-small text-color-grey-light";
+              });
+            }
+          });
+        } catch (e) {
+          console.log("Error Uploading", e);
+        }
+      } else {
+        console.error("Only images are allowed!", file);
+      }
+    }
+
+    function addFile(file) {
+      let wrap = document.createElement("div");
+      let imgCapt = document.createElement("p");
+      let sucessHtml = `
+          <div class="uploaded_file-done w-file-upload-file"><img loading="lazy" src="https://assets-global.website-files.com/624c19a34c30c75b84ab76d9/636954644576e06e2e0c15e4_file-text.svg" alt="" class="upload-file-icon"><div class="div-block"><div class="text-block w-file-upload-file-name">${
+            file.filename
+          }</div><div class="text-size-small text-color-grey-light">Uploaded ${dayjs(
+        creditData["Updated At"] || new Date()
+      ).fromNow()}</div></div><div tabindex="0" aria-label="Remove file" role="button" class="link-2 w-file-remove-link"><div class="w-icon-file-upload-remove"></div></div></div>`;
+      imgCapt.innerHTML = sucessHtml;
+      files.appendChild(wrap).appendChild(imgCapt);
+    }
+
+    function previewFile(file) {
+      let imageType = /image.*/;
+      let pdfType = /pdf/;
+      let excelType = /excel/;
+      if (
+        file.type.match(imageType) ||
+        file.type.match(pdfType) ||
+        file.type.match(excelType)
+      ) {
+        let fReader = new FileReader();
+        fReader.readAsDataURL(file);
+        fReader.onloadend = function () {
+          let wrap = document.createElement("div");
+          let imgCapt = document.createElement("p");
+          let sucessHtml = `
+          <div id="wrap-${
+            file.name
+          }"class="uploaded_file-done w-file-upload-file">
+          <div id="${
+            file.name
+          }" class="small progress"><img loading="lazy" src="https://assets-global.website-files.com/624c19a34c30c75b84ab76d9/636954644576e06e2e0c15e4_file-text.svg" alt="" class="upload-file-icon"></div>
+          <div class="div-block"><div class="text-block w-file-upload-file-name">${
+            file.name
+          }</div><div class="text-size-small text-color-grey-light">Uploaded ${dayjs(
+            new Date()
+          ).fromNow()}</div></div><div tabindex="0" aria-label="Remove file" role="button" class="link-2 w-file-remove-link"><div class="w-icon-file-upload-remove"></div></div></div>`;
+          imgCapt.innerHTML = sucessHtml;
+          files.appendChild(wrap).appendChild(imgCapt);
+        };
+      } else {
+        console.error("Only images are allowed!", file);
+      }
+    }
+    function filesManager(files) {
+      files = [...files];
+      files.forEach(upFile);
+    }
 
     // END Ready
   });

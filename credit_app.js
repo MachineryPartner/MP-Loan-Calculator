@@ -104,7 +104,7 @@ if (DEBUG_MODE !== "0") {
       dataPayload["majorityAnotherBusiness"] = majorityAnotherBusiness;
       dataPayload["singleOwner"] = singleOwner;
       dataPayload["secAnotherBusiness"] = secAnotherBusiness;
-      dataPayload["status"] = [...currentStatus];
+      dataPayload["Status"] = [...currentStatus];
       dataPayload["token"] = token;
       dataPayload["isMobile"] = isMobile();
       return dataPayload;
