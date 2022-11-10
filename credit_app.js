@@ -107,6 +107,7 @@ if (DEBUG_MODE !== "0") {
       dataPayload["Status"] = [...currentStatus];
       dataPayload["token"] = token;
       dataPayload["isMobile"] = isMobile();
+      dataPayload["source"] = "CREDIT_APP";
       return dataPayload;
     }
 
@@ -1341,8 +1342,13 @@ if (DEBUG_MODE !== "0") {
     } else {
       getCreditApp(function (response) {
         console.log("getCreditApp", response.data);
-        mockResponse = response.data;
-        loadForms();
+        // Already signed, redirect to review page
+        if (response.signature) {
+          location.replace(response.data);
+        } else {
+          mockResponse = response.data;
+          loadForms();
+        }
       });
     }
   });

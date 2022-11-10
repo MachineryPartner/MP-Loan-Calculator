@@ -15,6 +15,7 @@ if (DEBUG_MODE !== "0") {
     function getCreditApp(cb) {
       const payload = {
         token,
+        source: "CREDIT_REVIEW",
       };
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `${getAPIBasePath()}/api/loan/security`, true);
@@ -59,13 +60,6 @@ if (DEBUG_MODE !== "0") {
       }
     }
 
-    const companyName = document.getElementById("Company-Name");
-    const appId = document.getElementById("App-Id");
-    const submitButton = document.getElementById("credit-app-submit");
-    const files = document.getElementById("files");
-    const fileInput = document.getElementById("uploadInput");
-    const dropBox = document.getElementById("dropBox");
-
     getCreditApp(function (response) {
       console.log("getCreditApp", response.data);
       creditData = response.data;
@@ -82,7 +76,13 @@ if (DEBUG_MODE !== "0") {
 
     dayjs.extend(dayjs_plugin_relativeTime);
 
-    [("dragenter", "dragover", "dragleave", "drop")].forEach((evt) => {
+    let companyName = document.getElementById("Company-Name");
+    let appId = document.getElementById("App-Id");
+    let submitButton = document.getElementById("credit-app-submit");
+    let fileInput = document.getElementById("uploadInput");
+    let dropBox = document.getElementById("dropBox");
+
+    ["dragenter", "dragover", "dragleave", "drop"].forEach((evt) => {
       dropBox.addEventListener(evt, prevDefault, false);
     });
     function prevDefault(e) {
@@ -103,10 +103,18 @@ if (DEBUG_MODE !== "0") {
       dropBox.classList.remove("hover");
     }
 
+    dropBox.addEventListener("drop", mngDrop, false);
+    function mngDrop(e) {
+      let dataTrans = e.dataTransfer;
+      let files = dataTrans.files;
+      filesManager(files);
+    }
+
     submitButton.addEventListener(
       "click",
       function (e) {
-        prevDefault(e);
+        e.preventDefault();
+        e.stopPropagation();
         submitButton.style.pointerEvents = "none";
         submitButton.classList.add("is-disable");
         submitButton.value = "Sending your Application for Review...";
@@ -126,14 +134,6 @@ if (DEBUG_MODE !== "0") {
       },
       false
     );
-
-    dropBox.addEventListener("drop", mngDrop, false);
-
-    function mngDrop(e) {
-      let dataTrans = e.dataTransfer;
-      let files = dataTrans.files;
-      filesManager(files);
-    }
 
     function upFile(file) {
       let imageType = /image.*/;
@@ -205,6 +205,7 @@ if (DEBUG_MODE !== "0") {
         file.type.match(excelType)
       ) {
         let fReader = new FileReader();
+        const files = document.getElementById("files");
         fReader.readAsDataURL(file);
         fReader.onloadend = function () {
           let wrap = document.createElement("div");
