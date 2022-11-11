@@ -4,6 +4,8 @@ const DEBUG_MODE = params.get("debug");
 let creditData = {};
 if (DEBUG_MODE !== "0") {
   $(document).ready(function () {
+    const upload = Upload({ apiKey: "public_FW25axZ42W9SnxbXHqBDp6LLrqDT" });
+
     const isDev = "new-machinery-partner.webflow.io";
     function getAPIBasePath() {
       const domain = window.location.hostname;
@@ -43,19 +45,32 @@ if (DEBUG_MODE !== "0") {
       };
     }
 
-    async function uploadFiles(formData, cb) {
+    async function uploadFiles(file, cb) {
       try {
-        const res = await axios.post(
-          `https://os.machinerypartner.com/api/upload`,
-          formData,
+        // const res = await axios.post(
+        //   // `https://os.machinerypartner.com/api/upload`,
+        //   "https://9c16-2804-1b0-1401-7463-ad98-1a21-2e2c-828.ngrok.io/api/upload",
+        //   file,
+        //   {
+        //     headers: {
+        //       "Content-Type": "multipart/form-data",
+        //     },
+        //   }
+        // );
+        // console.log("response: ", res);
+        // cb(res.data.attachments);
+
+        const { fileUrl } = await upload.uploadFile(file, {
+          tags: ["Expire-It"],
+        });
+        cb([
           {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        cb(res.data);
+            filename: file.name,
+            url: fileUrl,
+          },
+        ]);
       } catch (e) {
+        console.log(e);
         cb();
       }
     }
@@ -152,7 +167,7 @@ if (DEBUG_MODE !== "0") {
           console.log("Error Preview File", e);
         }
         try {
-          uploadFiles(formData, function (response) {
+          uploadFiles(file, function (response) {
             if (!response) {
               let pendingDiv = document.getElementById(`wrap-${file.name}`);
               pendingDiv.remove();
@@ -166,7 +181,7 @@ if (DEBUG_MODE !== "0") {
             } else {
               creditData["Documents"] = [
                 ...creditData["Documents"],
-                ...response.attachments,
+                ...response,
               ];
               saveCreditApp("DOCUMENTS", function () {
                 let statusDiv = document.getElementById(file.name);
