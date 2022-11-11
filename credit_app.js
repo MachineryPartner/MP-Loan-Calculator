@@ -40,7 +40,9 @@ if (DEBUG_MODE !== "0") {
     secondOwnerBlock.style.display = "none";
 
     let wrapper = document.getElementById("wrapper");
-    wrapper.style.display = "none";
+    // wrapper.style.display = "none";
+    wrapper.classList.add("small");
+    wrapper.classList.add("progress");
 
     const isDev = "new-machinery-partner.webflow.io";
 
@@ -124,7 +126,9 @@ if (DEBUG_MODE !== "0") {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
-        wrapper.style.display = "block";
+        // wrapper.style.display = "block";
+        wrapper.classList.remove("small");
+        wrapper.classList.remove("progress");
         cb(JSON.parse(this.responseText));
       };
     }

@@ -26,6 +26,8 @@ if (DEBUG_MODE !== "0") {
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
         wrapper.style.display = "block";
+        wrapper.classList.remove("small");
+        wrapper.classList.remove("progress");
         cb(JSON.parse(this.responseText));
       };
     }
@@ -98,7 +100,9 @@ if (DEBUG_MODE !== "0") {
     let fileInput = document.getElementById("uploadInput");
     let dropBox = document.getElementById("dropBox");
     let wrapper = document.getElementById("wrapper");
-    wrapper.style.display = "none";
+    // wrapper.style.display = "none";
+    wrapper.classList.add("small");
+    wrapper.classList.add("progress");
     [("dragenter", "dragover", "dragleave", "drop")].forEach((evt) => {
       dropBox.addEventListener(evt, prevDefault, false);
     });
