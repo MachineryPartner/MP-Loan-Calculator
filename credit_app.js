@@ -39,6 +39,9 @@ if (DEBUG_MODE !== "0") {
 
     secondOwnerBlock.style.display = "none";
 
+    let wrapper = document.getElementById("wrapper");
+    wrapper.style.display = "none";
+
     const isDev = "new-machinery-partner.webflow.io";
 
     function getAPIBasePath() {
@@ -123,6 +126,7 @@ if (DEBUG_MODE !== "0") {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
+        wrapper.style.display = "block";
         cb(JSON.parse(this.responseText));
       };
     }
@@ -1345,7 +1349,7 @@ if (DEBUG_MODE !== "0") {
       getCreditApp(function (response) {
         console.log("getCreditApp", response.data);
         // Already signed, redirect to review page
-        if (response.signature) {
+        if (response.data.signature) {
           location.replace(response.data);
         } else {
           mockResponse = response.data;

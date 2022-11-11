@@ -25,6 +25,7 @@ if (DEBUG_MODE !== "0") {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
+        wrapper.style.display = "block";
         cb(JSON.parse(this.responseText));
       };
     }
@@ -96,8 +97,9 @@ if (DEBUG_MODE !== "0") {
     let submitButton = document.getElementById("credit-app-submit");
     let fileInput = document.getElementById("uploadInput");
     let dropBox = document.getElementById("dropBox");
-
-    ["dragenter", "dragover", "dragleave", "drop"].forEach((evt) => {
+    let wrapper = document.getElementById("wrapper");
+    wrapper.style.display = "none";
+    [("dragenter", "dragover", "dragleave", "drop")].forEach((evt) => {
       dropBox.addEventListener(evt, prevDefault, false);
     });
     function prevDefault(e) {
