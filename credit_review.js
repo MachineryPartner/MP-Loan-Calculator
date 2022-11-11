@@ -25,7 +25,7 @@ if (DEBUG_MODE !== "0") {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
-        wrapper.style.display = "block";
+        // wrapper.style.display = "block";
         wrapper.classList.remove("small");
         wrapper.classList.remove("progress");
         cb(JSON.parse(this.responseText));
@@ -103,27 +103,35 @@ if (DEBUG_MODE !== "0") {
     // wrapper.style.display = "none";
     wrapper.classList.add("small");
     wrapper.classList.add("progress");
-    [("dragenter", "dragover", "dragleave", "drop")].forEach((evt) => {
-      dropBox.addEventListener(evt, prevDefault, false);
-    });
+
+    // [("dragenter", "dragover", "dragleave", "drop")].forEach((evt) => {
+    //   dropBox.addEventListener(evt, prevDefault, false);
+    // });
     function prevDefault(e) {
       e.preventDefault();
       e.stopPropagation();
     }
+    dropBox.addEventListener("dragenter", prevDefault, false);
+    dropBox.addEventListener("dragover", prevDefault, false);
+    dropBox.addEventListener("dragleave", prevDefault, false);
+    dropBox.addEventListener("drop", prevDefault, false);
 
-    ["dragenter", "dragover"].forEach((evt) => {
-      dropBox.addEventListener(evt, hover, false);
-    });
-    ["dragleave", "drop"].forEach((evt) => {
-      dropBox.addEventListener(evt, unhover, false);
-    });
     function hover(e) {
       dropBox.classList.add("hover");
     }
     function unhover(e) {
       dropBox.classList.remove("hover");
     }
-
+    // ["dragenter", "dragover"].forEach((evt) => {
+    //   dropBox.addEventListener(evt, hover, false);
+    // });
+    // ["dragleave", "drop"].forEach((evt) => {
+    //   dropBox.addEventListener(evt, unhover, false);
+    // });
+    dropBox.addEventListener("dragenter", hover, false);
+    dropBox.addEventListener("dragover", hover, false);
+    dropBox.addEventListener("dragleave", unhover, false);
+    dropBox.addEventListener("drop", unhover, false);
     dropBox.addEventListener("drop", mngDrop, false);
     function mngDrop(e) {
       let dataTrans = e.dataTransfer;
