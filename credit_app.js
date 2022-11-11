@@ -46,10 +46,8 @@ if (DEBUG_MODE !== "0") {
 
     function getAPIBasePath() {
       const domain = window.location.hostname;
-      const baseUrlProd =
-        "https://9c16-2804-1b0-1401-7463-ad98-1a21-2e2c-828.ngrok.io";
-      const baseUrlDev =
-        "https://9c16-2804-1b0-1401-7463-ad98-1a21-2e2c-828.ngrok.io";
+      const baseUrlProd = "https://mp-loan-application.vercel.app";
+      const baseUrlDev = "https://mp-loan-application.vercel.app";
       if (domain === isDev) return baseUrlDev;
       return baseUrlProd;
     }
