@@ -7,6 +7,46 @@ if (DEBUG_MODE !== "0") {
     const upload = Upload({ apiKey: "public_FW25axZ42W9SnxbXHqBDp6LLrqDT" });
 
     const isDev = "new-machinery-partner.webflow.io";
+    dayjs.extend(dayjs_plugin_relativeTime);
+    let wrapper = document.getElementById("wrapper");
+    let wrapperPlaid = document.getElementById("plaid_button-group");
+    let toastMessage = document.getElementById("toast-message");
+    let companyName = document.getElementById("Company-Name");
+    let appId = document.getElementById("App-Id");
+    let submitButton = document.getElementById("credit-app-submit");
+    let plaidButton = document.getElementById("Connect-Plaid");
+    let goPlaidButton = document.getElementById("Go-Plaid");
+    let uploadManuallyButton = document.getElementById("Upload-Manually");
+    let fileInput = document.getElementById("uploadInput");
+    let dropBox = document.getElementById("upload-area");
+    let uploadPage = document.getElementById("Review");
+    let sucessPage = document.getElementById("Success");
+    let plaidPage = document.getElementById("Plaid");
+    sucessPage.style.display = "none";
+    plaidPage.style.display = "none";
+    wrapper.classList.add("small");
+    wrapper.classList.add("progress");
+
+    function showUploadPage() {
+      uploadPage.style.display = "block";
+      sucessPage.style.display = "none";
+      plaidPage.style.display = "none";
+    }
+
+    function showPlaidPage() {
+      sucessPage.style.display = "none";
+      plaidPage.style.display = "block";
+      uploadPage.style.display = "none";
+    }
+
+    function showSuccessPage() {
+      sucessPage.style.display = "block";
+      plaidPage.style.display = "none";
+      uploadPage.style.display = "none";
+      toastMessage.innerHTML =
+        "<b>Your application is now in review!</b> Congrats! Will be touch when your offers are ready - usually in 2-4 days.";
+    }
+
     function getAPIBasePath() {
       const domain = window.location.hostname;
       const baseUrlProd = "https://mp-loan-application.vercel.app";
@@ -50,19 +90,6 @@ if (DEBUG_MODE !== "0") {
 
     async function uploadFiles(file, cb) {
       try {
-        // const res = await axios.post(
-        //   // `https://os.machinerypartner.com/api/upload`,
-        //   "https://9c16-2804-1b0-1401-7463-ad98-1a21-2e2c-828.ngrok.io/api/upload",
-        //   file,
-        //   {
-        //     headers: {
-        //       "Content-Type": "multipart/form-data",
-        //     },
-        //   }
-        // );
-        // console.log("response: ", res);
-        // cb(res.data.attachments);
-
         const { fileUrl } = await upload.uploadFile(file, {
           tags: ["Expire-It"],
         });
@@ -81,6 +108,17 @@ if (DEBUG_MODE !== "0") {
     getCreditApp(function (response) {
       console.log("getCreditApp", response.data);
       creditData = response.data;
+      // if (creditData["Plaid Access Token"]) {
+      //   plaidButton.style.pointerEvents = "none";
+      //   plaidButton.classList.add("is-disable");
+      //   plaidButton.innerHTML = "Connected to Plaid.";
+      // }
+      if (creditData["Status"].includes("REVIEW")) {
+        showSuccessPage();
+      } else {
+        showUploadPage();
+        // showPlaidPage();
+      }
       if (creditData["Documents"]) {
         creditData["Documents"].forEach(function (file) {
           addFile(file);
@@ -92,21 +130,6 @@ if (DEBUG_MODE !== "0") {
       appId.innerHTML = `Application ID: #${creditData["Deal Id"]}`;
     });
 
-    dayjs.extend(dayjs_plugin_relativeTime);
-
-    let companyName = document.getElementById("Company-Name");
-    let appId = document.getElementById("App-Id");
-    let submitButton = document.getElementById("credit-app-submit");
-    let fileInput = document.getElementById("uploadInput");
-    let dropBox = document.getElementById("dropBox");
-    let wrapper = document.getElementById("wrapper");
-    // wrapper.style.display = "none";
-    wrapper.classList.add("small");
-    wrapper.classList.add("progress");
-
-    // [("dragenter", "dragover", "dragleave", "drop")].forEach((evt) => {
-    //   dropBox.addEventListener(evt, prevDefault, false);
-    // });
     function prevDefault(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -122,12 +145,6 @@ if (DEBUG_MODE !== "0") {
     function unhover(e) {
       dropBox.classList.remove("hover");
     }
-    // ["dragenter", "dragover"].forEach((evt) => {
-    //   dropBox.addEventListener(evt, hover, false);
-    // });
-    // ["dragleave", "drop"].forEach((evt) => {
-    //   dropBox.addEventListener(evt, unhover, false);
-    // });
     dropBox.addEventListener("dragenter", hover, false);
     dropBox.addEventListener("dragover", hover, false);
     dropBox.addEventListener("dragleave", unhover, false);
@@ -139,6 +156,83 @@ if (DEBUG_MODE !== "0") {
       filesManager(files);
     }
 
+    plaidButton.addEventListener(
+      "click",
+      async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        plaidButton.style.pointerEvents = "none";
+        plaidButton.classList.add("is-disable");
+        wrapperPlaid.classList.add("small");
+        wrapperPlaid.classList.add("progress");
+        console.log("Connect Plaid");
+        const fetchLinkToken = async () => {
+          const response = await fetch(
+            `${getAPIBasePath()}/api/loan/plaid/create-link-token`
+          );
+          const { linkToken } = await response.json();
+          return linkToken;
+        };
+        const handler = Plaid.create({
+          token: await fetchLinkToken(),
+          onSuccess: async (publicToken, metadata) => {
+            console.log("onSuccess->publicToken: ", publicToken);
+            console.log("onSuccess->metadata: ", metadata);
+            const response = await fetch(
+              `${getAPIBasePath()}/api/loan/plaid/token-exchange`,
+              {
+                method: "POST",
+                body: JSON.stringify({ publicToken, metadata, token }),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            const { message } = await response.json();
+            console.log("onSuccess->response: ", message);
+            if (message === "PLAID_CONNECTED") {
+              plaidButton.innerHTML = "Connected to Plaid.";
+              saveCreditApp("REVIEW", function () {
+                showSuccessPage();
+              });
+            }
+          },
+          onEvent: (metadata) => {
+            console.log("onEvent: ", metadata);
+          },
+          onExit: (error, metadata) => {
+            console.log("onExit: ", error, metadata);
+            plaidButton.style.pointerEvents = "auto";
+            plaidButton.classList.remove("is-disable");
+            wrapperPlaid.classList.remove("small");
+            wrapperPlaid.classList.remove("progress");
+          },
+        });
+        handler.open();
+      },
+      false
+    );
+    // goPlaidButton.addEventListener(
+    //   "click",
+    //   function (e) {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     showPlaidPage();
+    //   },
+    //   false
+    // );
+
+    uploadManuallyButton.addEventListener(
+      "click",
+      function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("uploadManuallyButton");
+        showUploadPage();
+      },
+      false
+    );
+
     submitButton.addEventListener(
       "click",
       function (e) {
@@ -148,6 +242,7 @@ if (DEBUG_MODE !== "0") {
         submitButton.classList.add("is-disable");
         submitButton.value = "Sending your Application for Review...";
         saveCreditApp("REVIEW", function () {
+          showSuccessPage();
           submitButton.style.pointerEvents = "block";
           submitButton.classList.remove("is-disable");
           submitButton.value = "Submit for Review";
