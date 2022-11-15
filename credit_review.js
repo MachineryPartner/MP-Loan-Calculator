@@ -187,11 +187,11 @@ if (DEBUG_MODE !== "0") {
                 },
               }
             );
-            const { message, data } = await response.json();
+            const { message } = await response.json();
             console.log("onSuccess->response: ", message);
             if (message === "PLAID_CONNECTED") {
               plaidButton.innerHTML = "Connected to Plaid.";
-              saveCreditApp("REVIEW", data, function () {
+              saveCreditApp("REVIEW", {}, function () {
                 showSuccessPage();
               });
             }
