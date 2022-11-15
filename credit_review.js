@@ -71,11 +71,12 @@ if (DEBUG_MODE !== "0") {
         cb(JSON.parse(this.responseText));
       };
     }
-    function saveCreditApp(status, cb) {
+    function saveCreditApp(status, _payload, cb) {
       creditData["Status"] = [...creditData["Status"], status];
       creditData["Token"] = token;
       const payload = {
         token,
+        ..._payload,
         ...creditData,
       };
       var xhr = new XMLHttpRequest();
@@ -163,8 +164,6 @@ if (DEBUG_MODE !== "0") {
         e.stopPropagation();
         plaidButton.style.pointerEvents = "none";
         plaidButton.classList.add("is-disable");
-        wrapperPlaid.classList.add("small");
-        wrapperPlaid.classList.add("progress");
         console.log("Connect Plaid");
         const fetchLinkToken = async () => {
           const response = await fetch(
@@ -188,11 +187,11 @@ if (DEBUG_MODE !== "0") {
                 },
               }
             );
-            const { message } = await response.json();
+            const { message, data } = await response.json();
             console.log("onSuccess->response: ", message);
             if (message === "PLAID_CONNECTED") {
               plaidButton.innerHTML = "Connected to Plaid.";
-              saveCreditApp("REVIEW", function () {
+              saveCreditApp("REVIEW", data, function () {
                 showSuccessPage();
               });
             }
@@ -204,8 +203,6 @@ if (DEBUG_MODE !== "0") {
             console.log("onExit: ", error, metadata);
             plaidButton.style.pointerEvents = "auto";
             plaidButton.classList.remove("is-disable");
-            wrapperPlaid.classList.remove("small");
-            wrapperPlaid.classList.remove("progress");
           },
         });
         handler.open();
@@ -241,7 +238,7 @@ if (DEBUG_MODE !== "0") {
         submitButton.style.pointerEvents = "none";
         submitButton.classList.add("is-disable");
         submitButton.value = "Sending your Application for Review...";
-        saveCreditApp("REVIEW", function () {
+        saveCreditApp("REVIEW", {}, function () {
           showSuccessPage();
           submitButton.style.pointerEvents = "block";
           submitButton.classList.remove("is-disable");
@@ -292,7 +289,7 @@ if (DEBUG_MODE !== "0") {
                 ...creditData["Documents"],
                 ...response,
               ];
-              saveCreditApp("DOCUMENTS", function () {
+              saveCreditApp("DOCUMENTS", {}, function () {
                 let statusDiv = document.getElementById(file.name);
                 statusDiv.className = "text-size-small text-color-grey-light";
               });
