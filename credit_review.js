@@ -191,9 +191,9 @@ if (DEBUG_MODE !== "0") {
             console.log("onSuccess->response: ", message);
             if (message === "PLAID_CONNECTED") {
               plaidButton.innerHTML = "Connected to Plaid.";
-              saveCreditApp("REVIEW", {}, function () {
-                showSuccessPage();
-              });
+              // saveCreditApp("REVIEW", {}, function () {
+              showSuccessPage();
+              // });
             }
           },
           onEvent: (metadata) => {
