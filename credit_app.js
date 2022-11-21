@@ -1351,7 +1351,7 @@ if (DEBUG_MODE !== "0") {
       getCreditApp(function (response) {
         console.log("getCreditApp", response.data);
         // Already signed, redirect to review page
-        if (response.data.signature) {
+        if (response.signature) {
           location.replace(response.data);
         } else {
           mockResponse = response.data;
