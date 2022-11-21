@@ -112,13 +112,13 @@ if (DEBUG_MODE !== "0") {
       dataPayload["Status"] = [...currentStatus];
       dataPayload["token"] = token;
       dataPayload["isMobile"] = isMobile();
-      dataPayload["source"] = "CREDIT_APP";
       return dataPayload;
     }
 
     function getCreditApp(cb) {
       const payload = {
         token,
+        source: "CREDIT_APP",
       };
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `${getAPIBasePath()}/api/loan/security`, true);
