@@ -204,23 +204,33 @@ if (DEBUG_MODE !== "0") {
     }
 
     function nextBlock(_currentState) {
-      formBlocks[currentState].style.display = "none";
+      // formBlocks[currentState].style.display = "none";
       currentState = _currentState;
       const lastBlock = formBlocks[currentState - 1];
-      if (lastBlock) lastBlock.style.display = "none";
+      if (lastBlock) {
+        lastBlock.classList.add("content-hide");
+        window.setTimeout(function () {
+          lastBlock.style.display = "none";
+        }, 500);
+      }
       const currentBlock = formBlocks[currentState];
-      if (currentBlock) currentBlock.style.display = "block";
+      if (currentBlock) {
+        currentBlock.classList.remove("content-hide");
+        window.setTimeout(function () {
+          currentBlock.style.display = "block";
+        }, 500);
+      }
       forceFieldsBlur();
       // const fields = creditAppState[currentState - 1].fields;
       // validateBlockFields(fields, currentState - 1);
       if (currentBlock && currentBlock.offsetTop) {
         setTimeout(function () {
           if (currentBlock.offsetTop) {
-            window.scrollTo({
-              behavior: "smooth",
-              left: 0,
-              top: currentBlock.offsetTop - 100,
-            });
+            // window.scrollTo({
+            //   behavior: "smooth",
+            //   left: 0,
+            //   top: currentBlock.offsetTop - 100,
+            // });
           }
         }, 200);
       }
@@ -251,15 +261,21 @@ if (DEBUG_MODE !== "0") {
           currentBlock.style.display =
             currentBlock.style.display === "block" ? "none" : "block";
         } else {
-          if (lastBlock) lastBlock.style.display = "none";
+          if (lastBlock) {
+            lastBlock.classList.add("content-hide");
+            window.setTimeout(function () {
+              lastBlock.style.display = "none";
+            }, 500);
+          }
+          currentBlock.classList.remove("content-hide");
           currentBlock.style.display = "block";
           setTimeout(function () {
             if (currentBlock.offsetTop) {
-              window.scrollTo({
-                behavior: "smooth",
-                left: 0,
-                top: currentBlock.offsetTop - 100,
-              });
+              // window.scrollTo({
+              //   behavior: "smooth",
+              //   left: 0,
+              //   top: currentBlock.offsetTop - 100,
+              // });
             }
           }, 200);
         }
@@ -1337,7 +1353,7 @@ if (DEBUG_MODE !== "0") {
               },
             });
           }
-          forceFormFieldsBlur();
+          // forceFormFieldsBlur();
         }
       }
     }
