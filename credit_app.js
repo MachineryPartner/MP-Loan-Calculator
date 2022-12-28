@@ -220,9 +220,9 @@ if (DEBUG_MODE !== "0") {
           currentBlock.style.display = "block";
         }, 500);
       }
-      forceFieldsBlur();
-      // const fields = creditAppState[currentState - 1].fields;
-      // validateBlockFields(fields, currentState - 1);
+      // forceFieldsBlur();
+      const fields = creditAppState[currentState - 1].fields;
+      validateBlockFields(fields, currentState - 1);
       if (currentBlock && currentBlock.offsetTop) {
         setTimeout(function () {
           if (currentBlock.offsetTop) {
@@ -278,11 +278,12 @@ if (DEBUG_MODE !== "0") {
               // });
             }
           }, 200);
+          const fields =
+            creditAppState[currentState >= 0 ? currentState - 1 : 0].fields;
+          validateBlockFields(fields, currentState >= 0 ? currentState - 1 : 0);
         }
       }
-      forceFieldsBlur();
-      // const fields = creditAppState[currentState].fields;
-      // validateBlockFields(fields, currentState);
+      // forceFieldsBlur();
     });
 
     let submitButtonBusinessAddress = document.getElementById(
@@ -290,6 +291,7 @@ if (DEBUG_MODE !== "0") {
     );
     $("#save-button-business-address").on("click", function (event) {
       nextBlock(1);
+      checkFormRequirements();
       saveCreditApp(function () {});
     });
 
@@ -298,24 +300,28 @@ if (DEBUG_MODE !== "0") {
     );
     $("#save-button-business-info").on("click", function (event) {
       nextBlock(2);
+      checkFormRequirements();
       saveCreditApp(function () {});
     });
 
     let submitButtonAmount = document.getElementById("save-button-amount");
     $("#save-button-amount").on("click", function (event) {
       nextBlock(3);
+      checkFormRequirements();
       saveCreditApp(function () {});
     });
 
     let submitButtonOwner = document.getElementById("save-button-owner");
     $("#save-button-owner").on("click", function (event) {
       nextBlock(4);
+      checkFormRequirements();
       saveCreditApp(function () {});
     });
 
     let submitButton2Owner = document.getElementById("save-button-2owner");
     $("#save-button-2owner").on("click", function (event) {
       nextBlock(5);
+      checkFormRequirements();
       saveCreditApp(function () {});
     });
 
@@ -406,30 +412,30 @@ if (DEBUG_MODE !== "0") {
         const { fields } = step;
         const countCurrentRequiredFields = checkBlockRequirements(fields);
         countRequiredFields += countCurrentRequiredFields;
-        validateBlockFields(fields, blockIndex);
-        if (countCurrentRequiredFields === 0) {
-          formHeaders[blockIndex].classList.remove("is-error");
-          if (blockIndex === currentState) {
-            setIconStatusReset(formStatus[blockIndex]);
-          } else {
-            setIconStatusOk(formStatus[blockIndex]);
-          }
-        } else {
-          if (blockIndex !== currentState) {
-            setIconStatusError(formStatus[blockIndex]);
-            formHeaders[blockIndex].classList.add("is-error");
-          } else {
-            formHeaders[blockIndex].classList.remove("is-error");
-            setIconStatusReset(formStatus[blockIndex]);
-          }
-        }
+        // validateBlockFields(fields, blockIndex);
+        // if (countCurrentRequiredFields === 0) {
+        //   formHeaders[blockIndex].classList.remove("is-error");
+        //   if (blockIndex === currentState) {
+        //     setIconStatusReset(formStatus[blockIndex]);
+        //   } else {
+        //     setIconStatusOk(formStatus[blockIndex]);
+        //   }
+        // } else {
+        //   if (blockIndex !== currentState) {
+        //     setIconStatusError(formStatus[blockIndex]);
+        //     formHeaders[blockIndex].classList.add("is-error");
+        //   } else {
+        //     formHeaders[blockIndex].classList.remove("is-error");
+        //     setIconStatusReset(formStatus[blockIndex]);
+        //   }
+        // }
         blockIndex += 1;
       }
       // console.log("currentStatus: ", currentStatus);
       if (countRequiredFields === 0) {
         submitButton.style.pointerEvents = "auto";
         submitButton.classList.remove("is-disable");
-        getData();
+        // getData();
         // console.log("checkFormRequirements: ", {
         //   countRequiredFields,
         //   dataPayload,
@@ -481,9 +487,10 @@ if (DEBUG_MODE !== "0") {
       for (const name in fields) {
         const inputData = fields[name];
         if (inputData.value !== "" && inputData.state === false) {
-          // console.log("checkBlockRequirements->Field Name: ", name);
+          // console.log("1checkBlockRequirements->Field Name: ", name);
           count += 1;
         } else if (inputData.required && inputData.state === false) {
+          // console.log("2checkBlockRequirements->Field Name: ", name);
           count += 1;
         }
       }
@@ -514,10 +521,11 @@ if (DEBUG_MODE !== "0") {
         }
       }
       let countRequiredFields = checkBlockRequirements(fields);
-      // console.log("validateBlockFields: ", {
-      //   countRequiredFields,
-      //   creditAppState,
-      // });
+      //console.log("validateBlockFields: ", {
+      //  index,
+      //  countRequiredFields,
+      //  creditAppState,
+      //});
       if (countRequiredFields === 0) {
         setIconStatusOk(formStatus[index]);
         formHeaders[index].classList.remove("is-error");
@@ -1273,13 +1281,15 @@ if (DEBUG_MODE !== "0") {
                 let inputValue = event.currentTarget.value;
                 if (!inputData.validate) {
                   inputData.state = true;
-                  checkFormRequirements();
+                  // checkFormRequirements();
+                  validateBlockFields(fields, currentState);
                   return;
                 }
 
                 const isValid = inputData.validate(inputValue);
                 if (!isValid) {
-                  checkFormRequirements();
+                  // checkFormRequirements();
+                  validateBlockFields(fields, currentState);
                   return;
                 }
 
@@ -1333,7 +1343,8 @@ if (DEBUG_MODE !== "0") {
                         isValid.message;
                   }
                 }
-                checkFormRequirements();
+                // checkFormRequirements();
+                validateBlockFields(fields, currentState);
               },
             });
           }
