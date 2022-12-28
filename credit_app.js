@@ -658,22 +658,6 @@ if (DEBUG_MODE !== "0") {
             state: false,
             required: false,
             validate: function (_input) {
-              if (_input && _input.length == 4) {
-                if (Number(_input) < 1500) {
-                  return {
-                    status: false,
-                    message: "Please enter a valid Year",
-                  };
-                } else if (Number(_input) > 2022) {
-                  return {
-                    status: false,
-                    message: "Please enter a valid Year",
-                  };
-                }
-                return { status: true, message: "" };
-              } else if (_input && _input.length < 4) {
-                return { status: false, message: "Please enter a valid Year" };
-              }
               return { status: true, message: "" };
             },
           },
