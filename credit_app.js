@@ -279,8 +279,8 @@ if (DEBUG_MODE !== "0") {
             }
           }, 200);
           const fields =
-            creditAppState[currentState >= 0 ? currentState - 1 : 0].fields;
-          validateBlockFields(fields, currentState >= 0 ? currentState - 1 : 0);
+            creditAppState[currentState > 0 ? currentState - 1 : 0].fields;
+          validateBlockFields(fields, currentState > 0 ? currentState - 1 : 0);
         }
       }
       // forceFieldsBlur();
