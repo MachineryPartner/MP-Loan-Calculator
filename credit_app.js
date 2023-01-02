@@ -39,10 +39,18 @@ if (DEBUG_MODE !== "0") {
 
     secondOwnerBlock.style.display = "none";
 
-    let wrapper = document.getElementById("wrapper");
-    // wrapper.style.display = "none";
-    wrapper.classList.add("small");
-    wrapper.classList.add("progress");
+    let formFormLoading = document.getElementById("form_form_loading");
+    formFormLoading.style.display = "block";
+    let formSectionBusiness = document.getElementById("form_section_business");
+    let formSectionInfo = document.getElementById("form_section_info");
+    let formSectionLoan = document.getElementById("form_section_loan");
+    let formSectionMajority = document.getElementById("form_section_majority");
+    let formSectionSecond = document.getElementById("form_section_second");
+    formSectionBusiness.style.display = "none";
+    formSectionInfo.style.display = "none";
+    formSectionLoan.style.display = "none";
+    formSectionMajority.style.display = "none";
+    formSectionSecond.style.display = "none";
 
     const isDev = "new-machinery-partner.webflow.io";
 
@@ -126,9 +134,12 @@ if (DEBUG_MODE !== "0") {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
-        // wrapper.style.display = "block";
-        wrapper.classList.remove("small");
-        wrapper.classList.remove("progress");
+        formFormLoading.style.display = "none";
+        formSectionBusiness.style.display = "block";
+        formSectionInfo.style.display = "block";
+        formSectionLoan.style.display = "block";
+        formSectionMajority.style.display = "block";
+        formSectionSecond.style.display = "block";
         cb(JSON.parse(this.responseText));
       };
     }
@@ -207,12 +218,12 @@ if (DEBUG_MODE !== "0") {
       // formBlocks[currentState].style.display = "none";
       currentState = _currentState;
       const lastBlock = formBlocks[currentState - 1];
-      if (lastBlock) {
-        lastBlock.classList.add("content-hide");
-        window.setTimeout(function () {
-          lastBlock.style.display = "none";
-        }, 500);
-      }
+      // if (lastBlock) {
+      //   lastBlock.classList.add("content-hide");
+      //   window.setTimeout(function () {
+      //     lastBlock.style.display = "none";
+      //   }, 500);
+      // }
       const currentBlock = formBlocks[currentState];
       if (currentBlock) {
         currentBlock.classList.remove("content-hide");
@@ -572,7 +583,7 @@ if (DEBUG_MODE !== "0") {
           },
           address: {
             value: "",
-            tag: "#Address-3",
+            tag: "#BusinessAddress",
             airtable: "Business Street Address",
             state: false,
             required: true,
@@ -587,7 +598,7 @@ if (DEBUG_MODE !== "0") {
           },
           addressComplement: {
             value: "",
-            tag: "#Address-4",
+            tag: "#AddressAlternative",
             airtable: "Business Street Complement",
             state: false,
             required: false,
