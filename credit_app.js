@@ -215,36 +215,20 @@ if (DEBUG_MODE !== "0") {
     }
 
     function nextBlock(_currentState) {
-      // formBlocks[currentState].style.display = "none";
       currentState = _currentState;
       const lastBlock = formBlocks[currentState - 1];
       if (lastBlock) {
-        lastBlock.classList.add("content-hide");
+        lastBlock.style.height = "0";
         window.setTimeout(function () {
-          lastBlock.style.display = "none";
-        }, 500);
-      }
-      const currentBlock = formBlocks[currentState];
-      if (currentBlock) {
-        currentBlock.classList.remove("content-hide");
-        window.setTimeout(function () {
-          currentBlock.style.display = "block";
-        }, 500);
-      }
-      // forceFieldsBlur();
-      const fields = creditAppState[currentState - 1].fields;
-      validateBlockFields(fields, currentState - 1, true);
-      if (currentBlock && currentBlock.offsetTop) {
-        setTimeout(function () {
-          if (currentBlock.offsetTop) {
-            // window.scrollTo({
-            //   behavior: "smooth",
-            //   left: 0,
-            //   top: currentBlock.offsetTop - 100,
-            // });
+          const currentBlock = formBlocks[currentState];
+          if (currentBlock) {
+            currentBlock.style.height = "auto";
           }
         }, 200);
       }
+      forceFieldsBlur();
+      const fields = creditAppState[currentState - 1].fields;
+      validateBlockFields(fields, currentState - 1, true);
     }
     // Get all Form Blocks
     //finance_form_status
@@ -252,13 +236,13 @@ if (DEBUG_MODE !== "0") {
     const formStatus = document.getElementsByClassName("finance_form_status");
     const formBlocks = document.getElementsByClassName("finance_form_content");
     // Reset form state
-    function resetBlocksState() {
-      for (const block of formBlocks) {
-        block.style.display = "none";
-      }
-    }
-    resetBlocksState();
-    formBlocks[0].style.display = "block";
+    // function resetBlocksState() {
+    //   for (const block of formBlocks) {
+    //     block.style.display = "none";
+    //   }
+    // }
+    // resetBlocksState();
+    // formBlocks[0].style.display = "block";
 
     // Set handler for display blocks
     $(".finance_form_header").on("click", function (event) {
@@ -269,17 +253,15 @@ if (DEBUG_MODE !== "0") {
       const currentBlock = formBlocks[currentState];
       if (currentBlock) {
         if (sameBlock) {
-          currentBlock.style.display =
-            currentBlock.style.display === "block" ? "none" : "block";
+          // currentBlock.style.display =
+          //   currentBlock.style.display === "block" ? "none" : "block";
         } else {
           if (lastBlock) {
-            lastBlock.classList.add("content-hide");
-            window.setTimeout(function () {
-              lastBlock.style.display = "none";
-            }, 500);
+            lastBlock.style.height = "0";
           }
-          currentBlock.classList.remove("content-hide");
-          currentBlock.style.display = "block";
+          // currentBlock.classList.remove("content-hide");
+          // currentBlock.style.display = "block";
+          // currentBlock.style.height = "auto";
           setTimeout(function () {
             if (currentBlock.offsetTop) {
               // window.scrollTo({
