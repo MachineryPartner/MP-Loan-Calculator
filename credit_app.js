@@ -218,12 +218,12 @@ if (DEBUG_MODE !== "0") {
       // formBlocks[currentState].style.display = "none";
       currentState = _currentState;
       const lastBlock = formBlocks[currentState - 1];
-      // if (lastBlock) {
-      //   lastBlock.classList.add("content-hide");
-      //   window.setTimeout(function () {
-      //     lastBlock.style.display = "none";
-      //   }, 500);
-      // }
+      if (lastBlock) {
+        lastBlock.classList.add("content-hide");
+        window.setTimeout(function () {
+          lastBlock.style.display = "none";
+        }, 500);
+      }
       const currentBlock = formBlocks[currentState];
       if (currentBlock) {
         currentBlock.classList.remove("content-hide");
@@ -233,7 +233,7 @@ if (DEBUG_MODE !== "0") {
       }
       // forceFieldsBlur();
       const fields = creditAppState[currentState - 1].fields;
-      validateBlockFields(fields, currentState - 1);
+      validateBlockFields(fields, currentState - 1, true);
       if (currentBlock && currentBlock.offsetTop) {
         setTimeout(function () {
           if (currentBlock.offsetTop) {
@@ -291,7 +291,11 @@ if (DEBUG_MODE !== "0") {
           }, 200);
           const fields =
             creditAppState[currentState > 0 ? currentState - 1 : 0].fields;
-          validateBlockFields(fields, currentState > 0 ? currentState - 1 : 0);
+          validateBlockFields(
+            fields,
+            currentState > 0 ? currentState - 1 : 0,
+            true
+          );
         }
       }
       // forceFieldsBlur();
@@ -508,7 +512,7 @@ if (DEBUG_MODE !== "0") {
       return count;
     }
 
-    function validateBlockFields(fields, index) {
+    function validateBlockFields(fields, index, updateHeaders = true) {
       for (const property in fields) {
         const field = fields[property];
         const input = document.getElementById(field.tag.replace("#", ""));
@@ -538,13 +542,17 @@ if (DEBUG_MODE !== "0") {
       //  creditAppState,
       //});
       if (countRequiredFields === 0) {
-        setIconStatusOk(formStatus[index]);
-        formHeaders[index].classList.remove("is-error");
         currentStatus.add(statusPossibles[index]);
+        if (updateHeaders) {
+          setIconStatusOk(formStatus[index]);
+          formHeaders[index].classList.remove("is-error");
+        }
       } else {
         currentStatus.delete(statusPossibles[index]);
-        formHeaders[index].classList.add("is-error");
-        setIconStatusError(formStatus[index]);
+        if (updateHeaders) {
+          formHeaders[index].classList.add("is-error");
+          setIconStatusError(formStatus[index]);
+        }
       }
     }
 
@@ -1293,14 +1301,14 @@ if (DEBUG_MODE !== "0") {
                 if (!inputData.validate) {
                   inputData.state = true;
                   // checkFormRequirements();
-                  validateBlockFields(fields, currentState);
+                  validateBlockFields(fields, currentState, false);
                   return;
                 }
 
                 const isValid = inputData.validate(inputValue);
                 if (!isValid) {
                   // checkFormRequirements();
-                  validateBlockFields(fields, currentState);
+                  validateBlockFields(fields, currentState, false);
                   return;
                 }
 
@@ -1355,7 +1363,7 @@ if (DEBUG_MODE !== "0") {
                   }
                 }
                 // checkFormRequirements();
-                validateBlockFields(fields, currentState);
+                validateBlockFields(fields, currentState, false);
               },
             });
           }
