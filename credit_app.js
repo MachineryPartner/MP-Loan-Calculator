@@ -40,6 +40,7 @@ if (DEBUG_MODE !== "0") {
     secondOwnerBlock.style.display = "none";
 
     let formFormLoading = document.getElementById("form_form_loading");
+    let formSubmitArea = document.getElementById("finance-form-submit");
     formFormLoading.style.display = "block";
     let formSectionBusiness = document.getElementById("form_section_business");
     let formSectionInfo = document.getElementById("form_section_info");
@@ -51,6 +52,7 @@ if (DEBUG_MODE !== "0") {
     formSectionLoan.style.display = "none";
     formSectionMajority.style.display = "none";
     formSectionSecond.style.display = "none";
+    formSubmitArea.style.display = "none";
 
     const isDev = "new-machinery-partner.webflow.io";
 
@@ -140,6 +142,7 @@ if (DEBUG_MODE !== "0") {
         formSectionLoan.style.display = "block";
         formSectionMajority.style.display = "block";
         formSectionSecond.style.display = "block";
+        formSubmitArea.style.display = "block";
         cb(JSON.parse(this.responseText));
       };
     }
