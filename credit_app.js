@@ -224,8 +224,10 @@ if (DEBUG_MODE !== "0") {
       if (lastBlock) {
         lastBlock.style.maxHeight = "0px";
         lastBlock.style.height = "0px";
-        currentBlock.style.height = "auto";
-        currentBlock.style.maxHeight = "1000px";
+        setTimeout(function () {
+          currentBlock.style.height = "auto";
+          currentBlock.style.maxHeight = "2000px";
+        }, 100);
       }
       forceFieldsBlur();
       const fields = creditAppState[currentState - 1].fields;
@@ -252,7 +254,7 @@ if (DEBUG_MODE !== "0") {
     }
     resetBlocksState();
     formBlocks[0].style.height = "auto";
-    formBlocks[0].style.maxHeight = "1000px";
+    formBlocks[0].style.maxHeight = "2000px";
 
     // Set handler for display blocks
     $(".finance_form_header").on("click", function (event) {
@@ -265,8 +267,9 @@ if (DEBUG_MODE !== "0") {
       // console.log("openCollapse: ", openCollapse, currentBlock.style);
       if (openCollapse) {
         lastBlock.style.height = "0px";
+        lastBlock.style.maxHeight = "0px";
         currentBlock.style.height = "auto";
-        currentBlock.style.maxHeight = "1000px";
+        currentBlock.style.maxHeight = "2000px";
       } else {
         currentBlock.style.height = "0px";
         currentBlock.style.maxHeight = "0px";
