@@ -252,6 +252,7 @@ if (DEBUG_MODE !== "0") {
     }
     resetBlocksState();
     formBlocks[0].style.height = "auto";
+    formBlocks[0].style.maxHeight = "1000px";
 
     // Set handler for display blocks
     $(".finance_form_header").on("click", function (event) {
