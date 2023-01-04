@@ -222,10 +222,10 @@ if (DEBUG_MODE !== "0") {
       const lastBlock = formBlocks[currentState - 1];
       const currentBlock = formBlocks[currentState];
       if (lastBlock) {
+        lastBlock.style.maxHeight = "0px";
         lastBlock.style.height = "0px";
-        // setTimeout(function () {
         currentBlock.style.height = "auto";
-        // }, 500);
+        currentBlock.style.maxHeight = "1000px";
       }
       forceFieldsBlur();
       const fields = creditAppState[currentState - 1].fields;
@@ -248,7 +248,6 @@ if (DEBUG_MODE !== "0") {
     function resetBlocksState() {
       for (const block of formBlocks) {
         block.style.height = "0px";
-        block.style.transition = "all 500ms ease";
       }
     }
     resetBlocksState();
@@ -262,19 +261,14 @@ if (DEBUG_MODE !== "0") {
       currentState = targetIndex;
       const currentBlock = formBlocks[currentState];
       const openCollapse = currentBlock.style.height !== "auto";
-      // console.log(
-      //   "openCollapse: ",
-      //   openCollapse,
-      //   currentBlock.style.height,
-      //   currentBlock.style.transition
-      // );
+      // console.log("openCollapse: ", openCollapse, currentBlock.style);
       if (openCollapse) {
-        lastBlock.style.height = "0";
-        // setTimeout(function () {
+        lastBlock.style.height = "0px";
         currentBlock.style.height = "auto";
-        // }, 500);
+        currentBlock.style.maxHeight = "1000px";
       } else {
         currentBlock.style.height = "0px";
+        currentBlock.style.maxHeight = "0px";
       }
       if (currentBlock) {
         if (sameBlock) {
