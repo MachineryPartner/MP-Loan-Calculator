@@ -217,14 +217,12 @@ if (DEBUG_MODE !== "0") {
     function nextBlock(_currentState) {
       currentState = _currentState;
       const lastBlock = formBlocks[currentState - 1];
+      const currentBlock = formBlocks[currentState];
       if (lastBlock) {
-        lastBlock.style.height = "0";
-        window.setTimeout(function () {
-          const currentBlock = formBlocks[currentState];
-          if (currentBlock) {
-            currentBlock.style.height = "auto";
-          }
-        }, 200);
+        lastBlock.style.height = "0px";
+        // setTimeout(function () {
+        currentBlock.style.height = "auto";
+        // }, 500);
       }
       forceFieldsBlur();
       const fields = creditAppState[currentState - 1].fields;
@@ -244,6 +242,15 @@ if (DEBUG_MODE !== "0") {
     // resetBlocksState();
     // formBlocks[0].style.display = "block";
 
+    function resetBlocksState() {
+      for (const block of formBlocks) {
+        block.style.height = "0px";
+        block.style.transition = "all 500ms ease";
+      }
+    }
+    resetBlocksState();
+    formBlocks[0].style.height = "auto";
+
     // Set handler for display blocks
     $(".finance_form_header").on("click", function (event) {
       const lastBlock = formBlocks[currentState];
@@ -251,13 +258,26 @@ if (DEBUG_MODE !== "0") {
       const sameBlock = currentState == targetIndex;
       currentState = targetIndex;
       const currentBlock = formBlocks[currentState];
+      const openCollapse = currentBlock.style.height !== "auto";
+      // console.log(
+      //   "openCollapse: ",
+      //   openCollapse,
+      //   currentBlock.style.height,
+      //   currentBlock.style.transition
+      // );
+      if (openCollapse) {
+        lastBlock.style.height = "0";
+        // setTimeout(function () {
+        currentBlock.style.height = "auto";
+        // }, 500);
+      } else {
+        currentBlock.style.height = "0px";
+      }
       if (currentBlock) {
         if (sameBlock) {
-          // currentBlock.style.display =
-          //   currentBlock.style.display === "block" ? "none" : "block";
         } else {
           if (lastBlock) {
-            lastBlock.style.height = "0";
+            // lastBlock.style.height = "0";
           }
           // currentBlock.classList.remove("content-hide");
           // currentBlock.style.display = "block";
