@@ -226,7 +226,7 @@ if (DEBUG_MODE !== "0") {
         lastBlock.style.height = "0px";
         setTimeout(function () {
           currentBlock.style.height = "auto";
-          currentBlock.style.maxHeight = "2000px";
+          currentBlock.style.maxHeight = "3000px";
         }, 100);
       }
       forceFieldsBlur();
@@ -254,7 +254,7 @@ if (DEBUG_MODE !== "0") {
     }
     resetBlocksState();
     formBlocks[0].style.height = "auto";
-    formBlocks[0].style.maxHeight = "2000px";
+    formBlocks[0].style.maxHeight = "3000px";
 
     // Set handler for display blocks
     $(".finance_form_header").on("click", function (event) {
@@ -269,7 +269,7 @@ if (DEBUG_MODE !== "0") {
         lastBlock.style.height = "0px";
         lastBlock.style.maxHeight = "0px";
         currentBlock.style.height = "auto";
-        currentBlock.style.maxHeight = "2000px";
+        currentBlock.style.maxHeight = "3000px";
       } else {
         currentBlock.style.height = "0px";
         currentBlock.style.maxHeight = "0px";
