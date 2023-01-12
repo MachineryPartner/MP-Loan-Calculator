@@ -446,8 +446,13 @@ if (DEBUG_MODE !== "0") {
             }
           });
         } else {
+          submitButton.value = "Please check all the required fields...";
           submitButton.style.pointerEvents = "auto";
-          submitButton.classList.remove("is-disable");
+          submitButton.classList.add("is-disable");
+          setTimeout(function () {
+            submitButton.classList.remove("is-disable");
+            submitButton.value = "Sign & Send";
+          }, 5000);
         }
       });
     });
