@@ -33,7 +33,7 @@ if (DEBUG_MODE !== "0") {
     ];
 
     let currentStatus = new Set([statusPossibles[0]]);
-    const inputOwnerList = document.getElementById("Business-list");
+    const inputOwnerList = document.getElementById("Business-list-3");
     const secondOwnerBlock = document.getElementById("second-owner");
     const input2OwnerList = document.getElementById("Business-list-2");
 
@@ -45,13 +45,13 @@ if (DEBUG_MODE !== "0") {
     let formSectionBusiness = document.getElementById("form_section_business");
     let formSectionInfo = document.getElementById("form_section_info");
     let formSectionLoan = document.getElementById("form_section_loan");
-    let formSectionMajority = document.getElementById("form_section_majority");
-    let formSectionSecond = document.getElementById("form_section_second");
+    let formSectionMajority = document.getElementById("form_section_owner");
+    // let formSectionSecond = document.getElementById("form_section_second");
     formSectionBusiness.style.display = "none";
     formSectionInfo.style.display = "none";
     formSectionLoan.style.display = "none";
     formSectionMajority.style.display = "none";
-    formSectionSecond.style.display = "none";
+    // formSectionSecond.style.display = "none";
     formSubmitArea.style.display = "none";
 
     const isDev = "new-machinery-partner.webflow.io";
@@ -141,7 +141,7 @@ if (DEBUG_MODE !== "0") {
         formSectionInfo.style.display = "block";
         formSectionLoan.style.display = "block";
         formSectionMajority.style.display = "block";
-        formSectionSecond.style.display = "block";
+        // formSectionSecond.style.display = "block";
         formSubmitArea.style.display = "block";
         cb(JSON.parse(this.responseText));
       };
@@ -217,17 +217,68 @@ if (DEBUG_MODE !== "0") {
       }
     }
 
+    function collapseSection(element) {
+      // get the height of the element's inner content, regardless of its actual size
+      var sectionHeight = element.scrollHeight;
+
+      // temporarily disable all css transitions
+      var elementTransition = element.style.transition;
+      element.style.transition = "";
+
+      // on the next frame (as soon as the previous style change has taken effect),
+      // explicitly set the element's height to its current pixel height, so we
+      // aren't transitioning out of 'auto'
+      requestAnimationFrame(function () {
+        element.style.height = sectionHeight + "px";
+        element.style.transition = elementTransition;
+
+        // on the next frame (as soon as the previous style change has taken effect),
+        // have the element transition to height: 0
+        requestAnimationFrame(function () {
+          element.style.height = 0 + "px";
+        });
+      });
+
+      // mark the section as "currently collapsed"
+      element.setAttribute("data-collapsed", "true");
+    }
+
+    function expandSection(element) {
+      // get the height of the element's inner content, regardless of its actual size
+      var sectionHeight = element.scrollHeight;
+
+      // have the element transition to the height of its inner content
+      element.style.height = sectionHeight + "px";
+
+      // when the next css transition finishes (which should be the one we just triggered)
+      element.addEventListener("transitionend", function (e) {
+        // remove this event listener so it only gets triggered once
+        element.removeEventListener("transitionend", arguments.callee);
+
+        // remove "height" from the element's inline styles, so it can return to its initial value
+        element.style.height = null;
+      });
+
+      // mark the section as "currently not collapsed"
+      element.setAttribute("data-collapsed", "false");
+    }
+
     function nextBlock(_currentState) {
       currentState = _currentState;
       const lastBlock = formBlocks[currentState - 1];
       const currentBlock = formBlocks[currentState];
-      if (lastBlock) {
+      if (lastBlock && currentBlock) {
         lastBlock.style.maxHeight = "0px";
         lastBlock.style.height = "0px";
         setTimeout(function () {
           currentBlock.style.height = "auto";
           currentBlock.style.maxHeight = "3000px";
-        }, 100);
+        }, 500);
+        // collapseSection(lastBlock);
+        // expandSection(currentBlock);
+      } else {
+        lastBlock.style.maxHeight = "0px";
+        lastBlock.style.height = "0px";
       }
       forceFieldsBlur();
       const fields = creditAppState[currentState - 1].fields;
@@ -250,6 +301,7 @@ if (DEBUG_MODE !== "0") {
     function resetBlocksState() {
       for (const block of formBlocks) {
         block.style.height = "0px";
+        block.style.transiction = "max-height 0.4s ease-out";
       }
     }
     resetBlocksState();
@@ -263,6 +315,8 @@ if (DEBUG_MODE !== "0") {
       const sameBlock = currentState == targetIndex;
       currentState = targetIndex;
       const currentBlock = formBlocks[currentState];
+      const isCollapsed =
+        currentBlock.getAttribute("data-collapsed") === "true";
       const openCollapse = currentBlock.style.height !== "auto";
       // console.log("openCollapse: ", openCollapse, currentBlock.style);
       if (openCollapse) {
@@ -270,9 +324,12 @@ if (DEBUG_MODE !== "0") {
         lastBlock.style.maxHeight = "0px";
         currentBlock.style.height = "auto";
         currentBlock.style.maxHeight = "3000px";
+        // collapseSection(lastBlock);
+        // expandSection(currentBlock);
       } else {
         currentBlock.style.height = "0px";
         currentBlock.style.maxHeight = "0px";
+        // collapseSection(currentBlock);
       }
       if (currentBlock) {
         if (sameBlock) {
@@ -329,16 +386,16 @@ if (DEBUG_MODE !== "0") {
       saveCreditApp(function () {});
     });
 
-    let submitButtonOwner = document.getElementById("save-button-owner");
-    $("#save-button-owner").on("click", function (event) {
-      nextBlock(4);
-      checkFormRequirements();
-      saveCreditApp(function () {});
-    });
+    // let submitButtonOwner = document.getElementById("save-button-owner");
+    // $("#save-button-owner").on("click", function (event) {
+    //   nextBlock(4);
+    //   checkFormRequirements();
+    //   saveCreditApp(function () {});
+    // });
 
     let submitButton2Owner = document.getElementById("save-button-2owner");
     $("#save-button-2owner").on("click", function (event) {
-      nextBlock(5);
+      nextBlock(4);
       checkFormRequirements();
       saveCreditApp(function () {});
     });
@@ -832,11 +889,11 @@ if (DEBUG_MODE !== "0") {
         },
       },
       {
-        button: submitButtonOwner,
+        button: submitButton2Owner,
         fields: {
           majorityName: {
             value: "",
-            tag: "#Full-name-3",
+            tag: "#Full-name-4",
             airtable: "Majority Owner Name",
             state: false,
             required: true,
@@ -870,18 +927,18 @@ if (DEBUG_MODE !== "0") {
           },
           majorityOwnership: {
             value: "",
-            tag: "#Ownership",
+            tag: "#Ownership-3",
             airtable: "Majority Owner Ownership",
             state: false,
             required: true,
             focus: function () {
-              let input = document.getElementById("Ownership");
+              let input = document.getElementById("Ownership-3");
               let inputValue = input.value;
               let inputNumber = currency(inputValue).value;
               if (inputNumber !== 0) {
-                document.getElementById("Ownership").value = inputNumber;
+                document.getElementById("Ownership-3").value = inputNumber;
               } else {
-                document.getElementById("Ownership").value = "";
+                document.getElementById("Ownership-3").value = "";
               }
             },
             validate: function (_input) {
@@ -889,7 +946,7 @@ if (DEBUG_MODE !== "0") {
               if (inputNumber > 100) {
                 _input = 100;
                 inputNumber = currency(_input).value;
-                document.getElementById("Ownership").value = _input;
+                document.getElementById("Ownership-3").value = _input;
               }
               if (inputNumber && Number(inputNumber) >= 10) {
                 return { status: true, message: "" };
@@ -901,7 +958,7 @@ if (DEBUG_MODE !== "0") {
           },
           majorityBirth: {
             value: "",
-            tag: "#Birth",
+            tag: "#Birth-3",
             airtable: "Majority Owner Birth Date",
             state: false,
             required: true,
@@ -917,7 +974,7 @@ if (DEBUG_MODE !== "0") {
           },
           majoritySsn: {
             value: "",
-            tag: "#Security",
+            tag: "#Security-3",
             airtable: "Majority Owner SSN",
             state: false,
             required: true,
@@ -1004,7 +1061,7 @@ if (DEBUG_MODE !== "0") {
           },
           majorityAnotherBusinessList: {
             value: "",
-            tag: "#Business-list",
+            tag: "#Business-list-3",
             airtable: "Majority Owner Business List",
             state: false,
             required: false,
@@ -1019,14 +1076,9 @@ if (DEBUG_MODE !== "0") {
               return { status: false, message: "Mandatory field" };
             },
           },
-        },
-      },
-      {
-        button: submitButton2Owner,
-        fields: {
           secOwner: {
             value: "",
-            tag: "#Sec-Owner-Name",
+            tag: "#Sec-Owner-Name-2",
             airtable: "Second Owner Name",
             state: true,
             required: false,
@@ -1066,7 +1118,7 @@ if (DEBUG_MODE !== "0") {
               }
             },
             init: function (_input, field) {
-              const fields = creditAppState[4].fields;
+              const fields = creditAppState[3].fields;
               if (
                 (field.value === "" && fields["secOwner"].value === "") ||
                 (field.value && fields["secOwner"].value === "")
@@ -1096,7 +1148,7 @@ if (DEBUG_MODE !== "0") {
           },
           secEmail: {
             value: "",
-            tag: "#Sec-Owner-Email",
+            tag: "#Sec-Owner-Email-2",
             airtable: "Second Owner Email",
             state: false,
             required: false,
