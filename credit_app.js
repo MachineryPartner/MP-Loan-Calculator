@@ -33,10 +33,12 @@ if (DEBUG_MODE !== "0") {
     ];
 
     let currentStatus = new Set([statusPossibles[0]]);
+    const majorityOwnerBlock = document.getElementById("majority-owner");
     const inputOwnerList = document.getElementById("Business-list-3");
     const secondOwnerBlock = document.getElementById("second-owner");
     const input2OwnerList = document.getElementById("Business-list-2");
 
+    majorityOwnerBlock.style.display = "none";
     secondOwnerBlock.style.display = "none";
 
     let formFormLoading = document.getElementById("form_form_loading");
@@ -122,6 +124,13 @@ if (DEBUG_MODE !== "0") {
       dataPayload["Status"] = [...currentStatus];
       dataPayload["token"] = token;
       dataPayload["isMobile"] = isMobile();
+      if (singleOwner) {
+        dataPayload["secOwner"] = "";
+        dataPayload["secEmail"] = "";
+        dataPayload["secOwnership"] = "";
+        dataPayload["secBirth"] = "";
+        dataPayload["secSsn"] = "";
+      }
       return dataPayload;
     }
 
@@ -310,6 +319,7 @@ if (DEBUG_MODE !== "0") {
 
     // Set handler for display blocks
     $(".finance_form_header").on("click", function (event) {
+      if (currentState > formBlocks.length - 1) currentState = currentState - 1;
       const lastBlock = formBlocks[currentState];
       const targetIndex = Number(event.currentTarget.children[0].innerText) - 1;
       const sameBlock = currentState == targetIndex;
@@ -366,7 +376,6 @@ if (DEBUG_MODE !== "0") {
     );
     $("#save-button-business-address").on("click", function (event) {
       nextBlock(1);
-      checkFormRequirements();
       saveCreditApp(function () {});
     });
 
@@ -375,65 +384,70 @@ if (DEBUG_MODE !== "0") {
     );
     $("#save-button-business-info").on("click", function (event) {
       nextBlock(2);
-      checkFormRequirements();
       saveCreditApp(function () {});
     });
 
     let submitButtonAmount = document.getElementById("save-button-amount");
     $("#save-button-amount").on("click", function (event) {
       nextBlock(3);
-      checkFormRequirements();
       saveCreditApp(function () {});
     });
 
     // let submitButtonOwner = document.getElementById("save-button-owner");
     // $("#save-button-owner").on("click", function (event) {
     //   nextBlock(4);
-    //   checkFormRequirements();
     //   saveCreditApp(function () {});
     // });
 
     let submitButton2Owner = document.getElementById("save-button-2owner");
     $("#save-button-2owner").on("click", function (event) {
       nextBlock(4);
-      checkFormRequirements();
       saveCreditApp(function () {});
     });
 
     let submitButton = document.getElementById("credit-app-submit");
-    submitButton.style.pointerEvents = "none";
+    // submitButton.style.pointerEvents = "none";
+    submitButton.classList.remove("is-disable");
     $("#credit-app-submit").on("click", function (event) {
       event.preventDefault();
-      currentStatus.add(statusPossibles[statusPossibles.length - 1]);
-      const form = $(this);
-      submitButton.style.pointerEvents = "none";
-      submitButton.classList.add("is-disable");
-      submitButton.value = "Saving your credit application...";
+      resetBlocksState();
+      forceFormFieldsBlur();
+      checkFormBlocksRequirements(function (valid) {
+        submitButton.style.pointerEvents = "none";
+        submitButton.classList.add("is-disable");
+        if (valid) {
+          currentStatus.add(statusPossibles[statusPossibles.length - 1]);
+          const form = $(this);
+          submitButton.value = "Saving your credit application...";
+          saveCreditApp(function (response) {
+            submitButton.value = "Creating your contract...";
+            console.log("saveCreditApp->Submit: ", response);
+            if (response.signature) {
+              // HelloSign Flow
+              // const client = new window.HelloSign({
+              //   clientId: "c736633d45c53925cb3ec2c622e5bf99",
+              // });
+              // client.on("finish", () => {
+              //   console.log("Signature finished");
+              //   form.submit();
+              // });
+              // client.open(response.data, {
+              //   skipDomainVerification: false,
+              //   uxVersion: 2,
+              // });
 
-      saveCreditApp(function (response) {
-        submitButton.value = "Creating your contract...";
-        console.log("saveCreditApp->Submit: ", response);
-        if (response.signature) {
-          // HelloSign Flow
-          // const client = new window.HelloSign({
-          //   clientId: "c736633d45c53925cb3ec2c622e5bf99",
-          // });
-          // client.on("finish", () => {
-          //   console.log("Signature finished");
-          //   form.submit();
-          // });
-          // client.open(response.data, {
-          //   skipDomainVerification: false,
-          //   uxVersion: 2,
-          // });
-
-          // DocuSign Flow
-          location.replace(response.data);
-          // submitButton.style.pointerEvents = "auto";
-          // submitButton.classList.remove("is-disable");
-          // submitButton.value = "Sign & Send";
+              // DocuSign Flow
+              location.replace(response.data);
+              // submitButton.style.pointerEvents = "auto";
+              // submitButton.classList.remove("is-disable");
+              // submitButton.value = "Sign & Send";
+            } else {
+              form.submit();
+            }
+          });
         } else {
-          form.submit();
+          submitButton.style.pointerEvents = "auto";
+          submitButton.classList.remove("is-disable");
         }
       });
     });
@@ -507,6 +521,40 @@ if (DEBUG_MODE !== "0") {
         blockIndex += 1;
       }
       // console.log("currentStatus: ", currentStatus);
+      // if (countRequiredFields === 0) {
+      //   submitButton.style.pointerEvents = "auto";
+      //   submitButton.classList.remove("is-disable");
+      // getData();
+      // console.log("checkFormRequirements: ", {
+      //   countRequiredFields,
+      //   dataPayload,
+      //   creditAppState,
+      // });
+      // } else {
+      //   submitButton.style.pointerEvents = "none";
+      //   submitButton.classList.add("is-disable");
+      // }
+    }
+
+    function resetFormStatus() {
+      let blockIndex = 0;
+      for (const step of creditAppState) {
+        setIconStatusReset(formStatus[blockIndex]);
+        blockIndex += 1;
+      }
+    }
+
+    function checkFormBlocksRequirements(callback) {
+      let countRequiredFields = 0;
+      let blockIndex = 0;
+      for (const step of creditAppState) {
+        const { fields } = step;
+        const countCurrentRequiredFields = checkBlockRequirements(fields);
+        countRequiredFields += countCurrentRequiredFields;
+        validateBlockFields(fields, blockIndex, true);
+        blockIndex += 1;
+      }
+      // console.log("currentStatus: ", currentStatus);
       if (countRequiredFields === 0) {
         submitButton.style.pointerEvents = "auto";
         submitButton.classList.remove("is-disable");
@@ -516,9 +564,11 @@ if (DEBUG_MODE !== "0") {
         //   dataPayload,
         //   creditAppState,
         // });
+        return callback(true);
       } else {
         submitButton.style.pointerEvents = "none";
         submitButton.classList.add("is-disable");
+        return callback(false);
       }
     }
 
@@ -572,35 +622,39 @@ if (DEBUG_MODE !== "0") {
       return count;
     }
 
-    function validateBlockFields(fields, index, updateHeaders = true) {
-      for (const property in fields) {
-        const field = fields[property];
-        const input = document.getElementById(field.tag.replace("#", ""));
-        if (input) {
-          const ret = field.validate(input.value);
-          if (ret) {
-            field.state = ret.status;
-            if (field.state === false) {
-              input.classList.add("is-error");
-            } else {
-              input.classList.remove("is-error");
-            }
-            if (input.nextSibling) {
-              if (input.nextSibling.className === "form_error-message") {
-                input.nextSibling.innerHTML = ret.message || "";
-              } else if (input.offsetParent && input.offsetParent.nextSibling) {
-                input.offsetParent.nextSibling.innerHTML = ret.message || "";
-              }
+    function validateInputField(field) {
+      const input = document.getElementById(field.tag.replace("#", ""));
+      if (input) {
+        const ret = field.validate(input.value);
+        if (ret) {
+          field.state = ret.status;
+          if (field.state === false) {
+            input.classList.add("is-error");
+          } else {
+            input.classList.remove("is-error");
+          }
+          if (input.nextSibling) {
+            if (input.nextSibling.className === "form_error-message") {
+              input.nextSibling.innerHTML = ret.message || "";
+            } else if (input.offsetParent && input.offsetParent.nextSibling) {
+              input.offsetParent.nextSibling.innerHTML = ret.message || "";
             }
           }
         }
       }
+    }
+
+    function validateBlockFields(fields, index, updateHeaders = true) {
+      for (const property in fields) {
+        const field = fields[property];
+        validateInputField(field);
+      }
       let countRequiredFields = checkBlockRequirements(fields);
-      //console.log("validateBlockFields: ", {
-      //  index,
-      //  countRequiredFields,
-      //  creditAppState,
-      //});
+      // console.log("validateBlockFields: ", {
+      //   index,
+      //   countRequiredFields,
+      //   creditAppState,
+      // });
       if (countRequiredFields === 0) {
         currentStatus.add(statusPossibles[index]);
         if (updateHeaders) {
@@ -1010,55 +1064,6 @@ if (DEBUG_MODE !== "0") {
               return { status: false, message: "Mandatory field" };
             },
           },
-          majorityAnotherBusiness: {
-            value: false,
-            tag: "input[name=Owner-of-business]",
-            airtable: "Majority Owner Another Business",
-            state: true,
-            required: true,
-            originalRequired: true,
-            isRadio: true,
-            change: function (event) {
-              if (event.currentTarget.value === "ownerAnotherYes") {
-                majorityAnotherBusiness = true;
-                document.getElementById("ownerAnotherYes").click();
-                inputOwnerList.parentElement.style.display = "block";
-                inputOwnerList.focus();
-              } else {
-                majorityAnotherBusiness = false;
-                document.getElementById("ownerAnotherNo").click();
-                inputOwnerList.value = "";
-                inputOwnerList.parentElement.style.display = "none";
-              }
-            },
-            init: function (_input, field) {
-              if (field.value) {
-                majorityAnotherBusiness = true;
-                document.getElementById("ownerAnotherYes").click();
-                document.getElementById("ownerAnotherYes").value =
-                  "ownerAnotherYes";
-                document.getElementById("ownerAnotherNo").value =
-                  "ownerAnotherNo";
-                setTimeout(function () {
-                  inputOwnerList.parentElement.style.display = "block";
-                  inputOwnerList.focus();
-                }, 500);
-              } else {
-                majorityAnotherBusiness = false;
-                document.getElementById("ownerAnotherNo").click();
-                document.getElementById("ownerAnotherNo").value =
-                  "ownerAnotherNo";
-                document.getElementById("ownerAnotherYes").value =
-                  "ownerAnotherYes";
-                setTimeout(function () {
-                  inputOwnerList.parentElement.style.display = "none";
-                }, 500);
-              }
-            },
-            validate: function (_input) {
-              return undefined;
-            },
-          },
           majorityAnotherBusinessList: {
             value: "",
             tag: "#Business-list-3",
@@ -1066,9 +1071,6 @@ if (DEBUG_MODE !== "0") {
             state: false,
             required: false,
             originalRequired: false,
-            init: function (_input) {
-              _input.parentElement.style.display = "none";
-            },
             validate: function (_input) {
               if (_input && _input != "") {
                 return { status: true, message: "" };
@@ -1098,11 +1100,15 @@ if (DEBUG_MODE !== "0") {
             airtable: "Single Owner",
             state: true,
             required: true,
-            originalRequired: true,
+            originalRequired: "",
             isRadio: true,
             change: function (event) {
               const fields = creditAppState[currentState].fields;
-              if (event.currentTarget.value === "singleYes") {
+              const checked = document.getElementsByName(
+                "Owned-by-single-person"
+              )[0].checked;
+              if (checked) {
+                majorityOwnerBlock.style.display = "block";
                 secondOwnerBlock.style.display = "none";
                 singleOwner = true;
                 fields.secOwner.value = "";
@@ -1112,6 +1118,7 @@ if (DEBUG_MODE !== "0") {
                 fields.secSsn.value = "";
                 removeRequeriments(fields);
               } else {
+                majorityOwnerBlock.style.display = "block";
                 secondOwnerBlock.style.display = "block";
                 singleOwner = false;
                 addRequeriments(fields);
@@ -1119,24 +1126,23 @@ if (DEBUG_MODE !== "0") {
             },
             init: function (_input, field) {
               const fields = creditAppState[3].fields;
-              if (
-                (field.value === "" && fields["secOwner"].value === "") ||
-                (field.value && fields["secOwner"].value === "")
-              ) {
+              if (field.value) {
                 singleOwner = true;
                 document.getElementById("singleYes").click();
                 document.getElementById("singleYes").value = "singleYes";
                 document.getElementById("singleNo").value = "singleNo";
                 setTimeout(function () {
+                  majorityOwnerBlock.style.display = "block";
                   secondOwnerBlock.style.display = "none";
                 }, 500);
                 removeRequeriments(fields);
-              } else {
+              } else if (field.value === "" && fields.secOwner.value !== "") {
                 singleOwner = false;
                 document.getElementById("singleNo").click();
                 document.getElementById("singleNo").value = "singleNo";
                 document.getElementById("singleYes").value = "singleYes";
                 setTimeout(function () {
+                  majorityOwnerBlock.style.display = "block";
                   secondOwnerBlock.style.display = "block";
                 }, 500);
                 addRequeriments(fields);
@@ -1250,51 +1256,6 @@ if (DEBUG_MODE !== "0") {
               return { status: false, message: "Mandatory field" };
             },
           },
-          secAnotherBusiness: {
-            value: false,
-            tag: "input[name=2Owner-of-business]",
-            airtable: "Second Owner Another Business",
-            state: true,
-            required: true,
-            originalRequired: true,
-            isRadio: true,
-            change: function (event) {
-              if (event.currentTarget.value === "2ownerYes") {
-                secAnotherBusiness = true;
-                document.getElementById("2ownerYes").click();
-                input2OwnerList.parentElement.style.display = "block";
-                input2OwnerList.focus();
-              } else {
-                secAnotherBusiness = false;
-                input2OwnerList.value = "";
-                document.getElementById("2ownerNo").click();
-                input2OwnerList.parentElement.style.display = "none";
-              }
-            },
-            init: function (_input, field) {
-              if (field.value) {
-                secAnotherBusiness = true;
-                document.getElementById("2ownerYes").click();
-                document.getElementById("2ownerYes").value = "2ownerYes";
-                document.getElementById("2ownerNo").value = "2ownerNo";
-                setTimeout(function () {
-                  input2OwnerList.parentElement.style.display = "block";
-                  input2OwnerList.focus();
-                }, 500);
-              } else {
-                secAnotherBusiness = false;
-                document.getElementById("2ownerNo").click();
-                document.getElementById("2ownerNo").value = "2ownerNo";
-                document.getElementById("2ownerYes").value = "2ownerYes";
-                setTimeout(function () {
-                  input2OwnerList.parentElement.style.display = "none";
-                }, 500);
-              }
-            },
-            validate: function (_input) {
-              return undefined;
-            },
-          },
           secAnotherBusinessList: {
             value: "",
             tag: "#Business-list-2",
@@ -1302,9 +1263,6 @@ if (DEBUG_MODE !== "0") {
             state: false,
             required: false,
             originalRequired: false,
-            init: function (_input) {
-              _input.parentElement.style.display = "none";
-            },
             validate: function (_input) {
               if (_input && _input != "") {
                 return { status: true, message: "" };
@@ -1356,14 +1314,16 @@ if (DEBUG_MODE !== "0") {
                 if (!inputData.validate) {
                   inputData.state = true;
                   // checkFormRequirements();
-                  validateBlockFields(fields, currentState, false);
+                  // validateBlockFields(fields, currentState, false);
+                  validateInputField(inputData);
                   return;
                 }
 
                 const isValid = inputData.validate(inputValue);
                 if (!isValid) {
                   // checkFormRequirements();
-                  validateBlockFields(fields, currentState, false);
+                  // validateBlockFields(fields, currentState, false);
+                  validateInputField(inputData);
                   return;
                 }
 
@@ -1418,7 +1378,8 @@ if (DEBUG_MODE !== "0") {
                   }
                 }
                 // checkFormRequirements();
-                validateBlockFields(fields, currentState, false);
+                // validateBlockFields(fields, currentState, false);
+                validateInputField(inputData);
               },
             });
           }
