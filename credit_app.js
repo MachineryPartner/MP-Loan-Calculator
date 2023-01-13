@@ -296,7 +296,7 @@ if (DEBUG_MODE !== "0") {
         currentBlock.style.height = "0px";
         setTimeout(function () {
           currentBlock.style.height = "auto";
-          currentBlock.style.maxHeight = "3000px";
+          currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
           currentBlock.scrollTop = currentBlock.scrollHeight;
         }, 300);
         // collapseSection(lastBlock);
@@ -326,7 +326,7 @@ if (DEBUG_MODE !== "0") {
     function resetBlocksState() {
       for (const block of formBlocks) {
         block.style.height = "0px";
-        block.style.transition = "max-height 1s ease-in";
+        block.style.transition = "all 1s ease-in";
       }
     }
     resetBlocksState();
@@ -350,19 +350,30 @@ if (DEBUG_MODE !== "0") {
       //   currentBlock.style.height,
       //   lastBlock.style.height
       // );
-      lastBlock.style.height = "0px";
-      lastBlock.style.maxHeight = "0px";
-      currentBlock.style.height = "0px";
-      currentBlock.style.maxHeight = "0px";
       if (openCollapse) {
+        lastBlock.style.height = "auto";
+        lastBlock.style.maxHeight = "0px";
         currentBlock.style.height = "auto";
-        currentBlock.style.maxHeight = "3000px";
+        currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
         currentBlock.scrollTop = currentBlock.scrollHeight;
         // collapseSection(lastBlock);
         // expandSection(currentBlock);
       } else {
-        currentBlock.style.height = "0px";
-        currentBlock.style.maxHeight = "0px";
+        const valueBefore = Number(lastBlock.style.maxHeight.split("px")[0]);
+        const collapse = setInterval(function () {
+          const value = Number(lastBlock.style.maxHeight.split("px")[0]);
+          if (value < 100) {
+            lastBlock.style.height = "auto";
+            lastBlock.style.maxHeight = `${value - 100}px`;
+          } else {
+            lastBlock.style.maxHeight = "0px";
+          }
+        }, valueBefore / 100);
+        setTimeout(function () {
+          clearInterval(collapse);
+          lastBlock.style.height = "0px";
+          lastBlock.style.maxHeight = "0px";
+        }, 1000);
         // collapseSection(currentBlock);
       }
       // console.log(
