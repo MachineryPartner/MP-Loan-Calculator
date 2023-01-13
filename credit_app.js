@@ -7,8 +7,8 @@ if (DEBUG_MODE !== "0") {
     $.getScript(
       "https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js",
       function () {
-        $("#Security").mask("999-99-9999");
         $("#Security-2").mask("999-99-9999");
+        $("#Security-3").mask("999-99-9999");
         $("#tax-id-2").mask("99-9999999");
         $("#Founding-Date").mask("9999");
         $("#Zip-Code").mask("99999-9999");
@@ -398,6 +398,7 @@ if (DEBUG_MODE !== "0") {
           errorBlock.style.display = "none";
           currentStatus.add(statusPossibles[statusPossibles.length - 1]);
           const form = $(this);
+          submitButton.classList.add("is-disable");
           submitButton.value = "Creating your contract...";
           saveCreditApp(function (response) {
             console.log("saveCreditApp->Submit: ", response);
@@ -877,7 +878,8 @@ if (DEBUG_MODE !== "0") {
             tag: "#Full-name-4",
             airtable: "Majority Owner Name",
             state: false,
-            required: true,
+            required: false,
+            originalRequired: true,
             validate: function (_input) {
               if (_input && _input.length >= 5) {
                 return { status: true, message: "" };
@@ -911,7 +913,8 @@ if (DEBUG_MODE !== "0") {
             tag: "#Ownership-3",
             airtable: "Majority Owner Ownership",
             state: false,
-            required: true,
+            required: false,
+            originalRequired: true,
             focus: function () {
               let input = document.getElementById("Ownership-3");
               let inputValue = input.value;
@@ -942,7 +945,8 @@ if (DEBUG_MODE !== "0") {
             tag: "#Birth-3",
             airtable: "Majority Owner Birth Date",
             state: false,
-            required: true,
+            required: false,
+            originalRequired: true,
             init: function (_input) {
               _input.type = "date";
             },
@@ -958,7 +962,8 @@ if (DEBUG_MODE !== "0") {
             tag: "#Security-3",
             airtable: "Majority Owner SSN",
             state: false,
-            required: true,
+            required: false,
+            originalRequired: true,
             // focus: function () {
             //   showSSN($("#Security"), "majoritySsn");
             //   console.log("showSSN");
@@ -1009,7 +1014,7 @@ if (DEBUG_MODE !== "0") {
             value: "",
             tag: "#Sec-Owner-Name-2",
             airtable: "Second Owner Name",
-            state: true,
+            state: false,
             required: false,
             originalRequired: true,
             validate: function (_input) {
@@ -1153,7 +1158,7 @@ if (DEBUG_MODE !== "0") {
             tag: "#Birth-2",
             airtable: "Second Owner Birth Date",
             state: false,
-            required: true,
+            required: false,
             originalRequired: true,
             init: function (_input) {
               _input.type = "date";
@@ -1170,7 +1175,8 @@ if (DEBUG_MODE !== "0") {
             tag: "#Security-2",
             airtable: "Second Owner SSN",
             state: false,
-            required: true,
+            required: false,
+            originalRequired: true,
             // focus: function () {
             //   showSSN($("#Security-2"), "secSsn");
             // },
@@ -1258,16 +1264,12 @@ if (DEBUG_MODE !== "0") {
                 let inputValue = event.currentTarget.value;
                 if (!inputData.validate) {
                   inputData.state = true;
-                  // checkFormRequirements();
-                  // validateBlockFields(fields, currentState, false);
                   validateInputField(inputData);
                   return;
                 }
 
                 const isValid = inputData.validate(inputValue);
                 if (!isValid) {
-                  // checkFormRequirements();
-                  // validateBlockFields(fields, currentState, false);
                   validateInputField(inputData);
                   return;
                 }
@@ -1322,13 +1324,10 @@ if (DEBUG_MODE !== "0") {
                         isValid.message;
                   }
                 }
-                // checkFormRequirements();
-                // validateBlockFields(fields, currentState, false);
                 validateInputField(inputData);
               },
             });
           }
-          // forceFormFieldsBlur();
         }
       }
     }
