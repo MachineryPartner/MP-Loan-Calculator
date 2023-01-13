@@ -297,6 +297,7 @@ if (DEBUG_MODE !== "0") {
         setTimeout(function () {
           currentBlock.style.height = "auto";
           currentBlock.style.maxHeight = "3000px";
+          currentBlock.scrollTop = currentBlock.scrollHeight;
         }, 300);
         // collapseSection(lastBlock);
         // expandSection(currentBlock);
@@ -356,6 +357,7 @@ if (DEBUG_MODE !== "0") {
       if (openCollapse) {
         currentBlock.style.height = "auto";
         currentBlock.style.maxHeight = "3000px";
+        currentBlock.scrollTop = currentBlock.scrollHeight;
         // collapseSection(lastBlock);
         // expandSection(currentBlock);
       } else {
