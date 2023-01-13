@@ -49,6 +49,7 @@ if (DEBUG_MODE !== "0") {
     secondOwnerBlock.style.display = "none";
 
     let formFormLoading = document.getElementById("form_form_loading");
+    let formFormLoadingMessage = document.getElementById("loading-message");
     let formSubmitArea = document.getElementById("finance-form-submit");
     formFormLoading.style.display = "block";
     let formSectionBusiness = document.getElementById("form_section_business");
@@ -150,14 +151,21 @@ if (DEBUG_MODE !== "0") {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
-        formFormLoading.style.display = "none";
-        formSectionBusiness.style.display = "block";
-        formSectionInfo.style.display = "block";
-        formSectionLoan.style.display = "block";
-        formSectionMajority.style.display = "block";
-        // formSectionSecond.style.display = "block";
-        formSubmitArea.style.display = "block";
-        cb(JSON.parse(this.responseText));
+        const responseData = JSON.parse(this.responseText);
+        if (responseData.success) {
+          formFormLoading.style.display = "none";
+          formSectionBusiness.style.display = "block";
+          formSectionInfo.style.display = "block";
+          formSectionLoan.style.display = "block";
+          formSectionMajority.style.display = "block";
+          formSubmitArea.style.display = "block";
+          formFormLoadingMessage.innerHTML =
+            "Loading. This should take only a few seconds...";
+          cb(responseData);
+        } else {
+          formFormLoadingMessage.innerHTML =
+            "Finance application not found. Please contact our support team.";
+        }
       };
     }
 
