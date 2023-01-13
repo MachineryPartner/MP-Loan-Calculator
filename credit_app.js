@@ -34,6 +34,9 @@ if (DEBUG_MODE !== "0") {
 
     let currentStatus = new Set([statusPossibles[0]]);
     const errorBlock = document.getElementById("form-submit-error-callout");
+    const singleOwnerErrorMessage = document.getElementById(
+      "single-owner-error-message"
+    );
     const primaryLabel1 = document.getElementById("primary-label-1");
     const primaryLabel2 = document.getElementById("primary-label-2");
     const primaryOwnerSeparator = document.getElementById(
@@ -474,6 +477,16 @@ if (DEBUG_MODE !== "0") {
       } else {
         submitButton.style.pointerEvents = "none";
         submitButton.classList.add("is-disable");
+        if (
+          !document.getElementById("singleYes").checked &&
+          !document.getElementById("singleNo").checked
+        ) {
+          singleOwnerErrorMessage.style.display = "block";
+          singleOwnerErrorMessage.innerHTML = "Mandatory field";
+        } else {
+          singleOwnerErrorMessage.innerHTML = "";
+          singleOwnerErrorMessage.style.display = "none";
+        }
         return callback(false);
       }
     }
@@ -1035,6 +1048,8 @@ if (DEBUG_MODE !== "0") {
                 singleOwner = false;
                 addRequeriments(fields);
               }
+              singleOwnerErrorMessage.innerHTML = "";
+              singleOwnerErrorMessage.style.display = "none";
             },
             init: function (_input, field) {
               const fields = creditAppState[3].fields;
@@ -1051,6 +1066,8 @@ if (DEBUG_MODE !== "0") {
                   secondOwnerBlock.style.display = "none";
                 }, 500);
                 removeRequeriments(fields);
+                singleOwnerErrorMessage.innerHTML = "";
+                singleOwnerErrorMessage.style.display = "none";
               } else if (field.value === "" && fields.secOwner.value !== "") {
                 singleOwner = false;
                 primaryOwnerSeparator.style.display = "block";
@@ -1064,6 +1081,8 @@ if (DEBUG_MODE !== "0") {
                   secondOwnerBlock.style.display = "block";
                 }, 500);
                 addRequeriments(fields);
+                singleOwnerErrorMessage.innerHTML = "";
+                singleOwnerErrorMessage.style.display = "none";
               }
             },
             validate: function (_input) {
