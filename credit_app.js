@@ -379,16 +379,16 @@ if (DEBUG_MODE !== "0") {
       event.preventDefault();
       resetBlocksState();
       forceFormFieldsBlur();
+      submitButton.style.pointerEvents = "none";
+      submitButton.classList.add("is-disable");
+      submitButton.value = "Proceeding...";
       checkFormBlocksRequirements(function (valid) {
-        submitButton.style.pointerEvents = "none";
-        submitButton.classList.add("is-disable");
         if (valid) {
           errorBlock.style.display = "none";
           currentStatus.add(statusPossibles[statusPossibles.length - 1]);
           const form = $(this);
-          submitButton.value = "Saving your credit application...";
+          submitButton.value = "Creating your contract...";
           saveCreditApp(function (response) {
-            submitButton.value = "Creating your contract...";
             console.log("saveCreditApp->Submit: ", response);
             if (response.signature) {
               // DocuSign Flow
@@ -398,9 +398,12 @@ if (DEBUG_MODE !== "0") {
             }
           });
         } else {
-          submitButton.classList.remove("is-disable");
-          submitButton.style.pointerEvents = "auto";
-          errorBlock.style.display = "block";
+          setTimeout(function () {
+            submitButton.classList.remove("is-disable");
+            submitButton.style.pointerEvents = "auto";
+            errorBlock.style.display = "block";
+            submitButton.value = "Proceed to Sign";
+          }, 2000);
         }
       });
     });
@@ -1001,7 +1004,7 @@ if (DEBUG_MODE !== "0") {
             value: true,
             tag: "input[name=Owned-by-single-person]", //Owner of business
             airtable: "Single Owner",
-            state: true,
+            state: false,
             required: true,
             originalRequired: "",
             isRadio: true,
