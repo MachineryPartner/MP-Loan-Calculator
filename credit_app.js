@@ -34,6 +34,11 @@ if (DEBUG_MODE !== "0") {
 
     let currentStatus = new Set([statusPossibles[0]]);
     const errorBlock = document.getElementById("form-submit-error-callout");
+    const primaryLabel1 = document.getElementById("primary-label-1");
+    const primaryLabel2 = document.getElementById("primary-label-2");
+    const primaryOwnerSeparator = document.getElementById(
+      "primary-owner-separator"
+    );
     const majorityOwnerBlock = document.getElementById("majority-owner");
     const secondOwnerBlock = document.getElementById("second-owner");
 
@@ -1006,6 +1011,9 @@ if (DEBUG_MODE !== "0") {
                 "Owned-by-single-person"
               )[0].checked;
               if (checked) {
+                primaryLabel1.innerHTML = "";
+                primaryLabel2.innerHTML = "";
+                primaryOwnerSeparator.style.display = "none";
                 majorityOwnerBlock.style.display = "block";
                 secondOwnerBlock.style.display = "none";
                 singleOwner = true;
@@ -1016,6 +1024,9 @@ if (DEBUG_MODE !== "0") {
                 fields.secSsn.value = "";
                 removeRequeriments(fields);
               } else {
+                primaryLabel1.innerHTML = "Primary ";
+                primaryLabel2.innerHTML = "Primary ";
+                primaryOwnerSeparator.style.display = "block";
                 majorityOwnerBlock.style.display = "block";
                 secondOwnerBlock.style.display = "block";
                 singleOwner = false;
@@ -1026,6 +1037,9 @@ if (DEBUG_MODE !== "0") {
               const fields = creditAppState[3].fields;
               if (field.value) {
                 singleOwner = true;
+                primaryOwnerSeparator.style.display = "none";
+                primaryLabel1.innerHTML = "";
+                primaryLabel2.innerHTML = "";
                 document.getElementById("singleYes").click();
                 document.getElementById("singleYes").value = "singleYes";
                 document.getElementById("singleNo").value = "singleNo";
@@ -1036,6 +1050,9 @@ if (DEBUG_MODE !== "0") {
                 removeRequeriments(fields);
               } else if (field.value === "" && fields.secOwner.value !== "") {
                 singleOwner = false;
+                primaryOwnerSeparator.style.display = "block";
+                primaryLabel1.innerHTML = "Primary ";
+                primaryLabel2.innerHTML = "Primary ";
                 document.getElementById("singleNo").click();
                 document.getElementById("singleNo").value = "singleNo";
                 document.getElementById("singleYes").value = "singleYes";
