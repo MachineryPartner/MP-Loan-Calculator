@@ -33,10 +33,9 @@ if (DEBUG_MODE !== "0") {
     ];
 
     let currentStatus = new Set([statusPossibles[0]]);
+    const errorBlock = document.getElementById("form-submit-error-callout");
     const majorityOwnerBlock = document.getElementById("majority-owner");
-    const inputOwnerList = document.getElementById("Business-list-3");
     const secondOwnerBlock = document.getElementById("second-owner");
-    const input2OwnerList = document.getElementById("Business-list-2");
 
     majorityOwnerBlock.style.display = "none";
     secondOwnerBlock.style.display = "none";
@@ -48,12 +47,10 @@ if (DEBUG_MODE !== "0") {
     let formSectionInfo = document.getElementById("form_section_info");
     let formSectionLoan = document.getElementById("form_section_loan");
     let formSectionMajority = document.getElementById("form_section_owner");
-    // let formSectionSecond = document.getElementById("form_section_second");
     formSectionBusiness.style.display = "none";
     formSectionInfo.style.display = "none";
     formSectionLoan.style.display = "none";
     formSectionMajority.style.display = "none";
-    // formSectionSecond.style.display = "none";
     formSubmitArea.style.display = "none";
 
     const isDev = "new-machinery-partner.webflow.io";
@@ -202,9 +199,9 @@ if (DEBUG_MODE !== "0") {
       };
     }
 
-    function forceFieldsBlur() {
-      if (creditAppState[currentState]) {
-        const fields = creditAppState[currentState].fields;
+    function forceFieldsBlur(state) {
+      if (creditAppState[state]) {
+        const fields = creditAppState[state].fields;
         for (const property in fields) {
           const field = fields[property];
           $(`${field.tag}`).focus();
@@ -289,7 +286,7 @@ if (DEBUG_MODE !== "0") {
         lastBlock.style.maxHeight = "0px";
         lastBlock.style.height = "0px";
       }
-      forceFieldsBlur();
+      forceFieldsBlur(currentState - 1);
       const fields = creditAppState[currentState - 1].fields;
       validateBlockFields(fields, currentState - 1, true);
     }
@@ -310,7 +307,7 @@ if (DEBUG_MODE !== "0") {
     function resetBlocksState() {
       for (const block of formBlocks) {
         block.style.height = "0px";
-        block.style.transiction = "max-height 0.4s ease-out";
+        block.style.transiction = "all 1s ease-in";
       }
     }
     resetBlocksState();
@@ -341,34 +338,6 @@ if (DEBUG_MODE !== "0") {
         currentBlock.style.maxHeight = "0px";
         // collapseSection(currentBlock);
       }
-      if (currentBlock) {
-        if (sameBlock) {
-        } else {
-          if (lastBlock) {
-            // lastBlock.style.height = "0";
-          }
-          // currentBlock.classList.remove("content-hide");
-          // currentBlock.style.display = "block";
-          // currentBlock.style.height = "auto";
-          setTimeout(function () {
-            if (currentBlock.offsetTop) {
-              // window.scrollTo({
-              //   behavior: "smooth",
-              //   left: 0,
-              //   top: currentBlock.offsetTop - 100,
-              // });
-            }
-          }, 200);
-          const fields =
-            creditAppState[currentState > 0 ? currentState - 1 : 0].fields;
-          // validateBlockFields(
-          //   fields,
-          //   currentState > 0 ? currentState - 1 : 0,
-          //   true
-          // );
-        }
-      }
-      // forceFieldsBlur();
     });
 
     let submitButtonBusinessAddress = document.getElementById(
@@ -393,12 +362,6 @@ if (DEBUG_MODE !== "0") {
       saveCreditApp(function () {});
     });
 
-    // let submitButtonOwner = document.getElementById("save-button-owner");
-    // $("#save-button-owner").on("click", function (event) {
-    //   nextBlock(4);
-    //   saveCreditApp(function () {});
-    // });
-
     let submitButton2Owner = document.getElementById("save-button-2owner");
     $("#save-button-2owner").on("click", function (event) {
       nextBlock(4);
@@ -406,7 +369,6 @@ if (DEBUG_MODE !== "0") {
     });
 
     let submitButton = document.getElementById("credit-app-submit");
-    // submitButton.style.pointerEvents = "none";
     submitButton.classList.remove("is-disable");
     $("#credit-app-submit").on("click", function (event) {
       event.preventDefault();
@@ -416,6 +378,7 @@ if (DEBUG_MODE !== "0") {
         submitButton.style.pointerEvents = "none";
         submitButton.classList.add("is-disable");
         if (valid) {
+          errorBlock.style.display = "none";
           currentStatus.add(statusPossibles[statusPossibles.length - 1]);
           const form = $(this);
           submitButton.value = "Saving your credit application...";
@@ -423,36 +386,16 @@ if (DEBUG_MODE !== "0") {
             submitButton.value = "Creating your contract...";
             console.log("saveCreditApp->Submit: ", response);
             if (response.signature) {
-              // HelloSign Flow
-              // const client = new window.HelloSign({
-              //   clientId: "c736633d45c53925cb3ec2c622e5bf99",
-              // });
-              // client.on("finish", () => {
-              //   console.log("Signature finished");
-              //   form.submit();
-              // });
-              // client.open(response.data, {
-              //   skipDomainVerification: false,
-              //   uxVersion: 2,
-              // });
-
               // DocuSign Flow
               location.replace(response.data);
-              // submitButton.style.pointerEvents = "auto";
-              // submitButton.classList.remove("is-disable");
-              // submitButton.value = "Sign & Send";
             } else {
               form.submit();
             }
           });
         } else {
-          submitButton.value = "Please check all the required fields...";
+          submitButton.classList.remove("is-disable");
           submitButton.style.pointerEvents = "auto";
-          submitButton.classList.add("is-disable");
-          setTimeout(function () {
-            submitButton.classList.remove("is-disable");
-            submitButton.value = "Sign & Send";
-          }, 5000);
+          errorBlock.style.display = "block";
         }
       });
     });
@@ -496,56 +439,6 @@ if (DEBUG_MODE !== "0") {
         oField.selectionStart = iCaretPos;
         oField.selectionEnd = iCaretPos;
         oField.focus();
-      }
-    }
-
-    function checkFormRequirements() {
-      let countRequiredFields = 0;
-      let blockIndex = 0;
-      for (const step of creditAppState) {
-        const { fields } = step;
-        const countCurrentRequiredFields = checkBlockRequirements(fields);
-        countRequiredFields += countCurrentRequiredFields;
-        // validateBlockFields(fields, blockIndex);
-        // if (countCurrentRequiredFields === 0) {
-        //   formHeaders[blockIndex].classList.remove("is-error");
-        //   if (blockIndex === currentState) {
-        //     setIconStatusReset(formStatus[blockIndex]);
-        //   } else {
-        //     setIconStatusOk(formStatus[blockIndex]);
-        //   }
-        // } else {
-        //   if (blockIndex !== currentState) {
-        //     setIconStatusError(formStatus[blockIndex]);
-        //     formHeaders[blockIndex].classList.add("is-error");
-        //   } else {
-        //     formHeaders[blockIndex].classList.remove("is-error");
-        //     setIconStatusReset(formStatus[blockIndex]);
-        //   }
-        // }
-        blockIndex += 1;
-      }
-      // console.log("currentStatus: ", currentStatus);
-      // if (countRequiredFields === 0) {
-      //   submitButton.style.pointerEvents = "auto";
-      //   submitButton.classList.remove("is-disable");
-      // getData();
-      // console.log("checkFormRequirements: ", {
-      //   countRequiredFields,
-      //   dataPayload,
-      //   creditAppState,
-      // });
-      // } else {
-      //   submitButton.style.pointerEvents = "none";
-      //   submitButton.classList.add("is-disable");
-      // }
-    }
-
-    function resetFormStatus() {
-      let blockIndex = 0;
-      for (const step of creditAppState) {
-        setIconStatusReset(formStatus[blockIndex]);
-        blockIndex += 1;
       }
     }
 
