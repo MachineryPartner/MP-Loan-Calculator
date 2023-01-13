@@ -292,10 +292,12 @@ if (DEBUG_MODE !== "0") {
       if (lastBlock && currentBlock) {
         lastBlock.style.maxHeight = "0px";
         lastBlock.style.height = "0px";
+        currentBlock.style.maxHeight = "0px";
+        currentBlock.style.height = "0px";
         setTimeout(function () {
           currentBlock.style.height = "auto";
           currentBlock.style.maxHeight = "3000px";
-        }, 500);
+        }, 300);
         // collapseSection(lastBlock);
         // expandSection(currentBlock);
       } else {
@@ -323,7 +325,7 @@ if (DEBUG_MODE !== "0") {
     function resetBlocksState() {
       for (const block of formBlocks) {
         block.style.height = "0px";
-        block.style.transiction = "all 1s ease-in";
+        block.style.transition = "max-height 1s ease-in";
       }
     }
     resetBlocksState();
@@ -341,10 +343,17 @@ if (DEBUG_MODE !== "0") {
       const isCollapsed =
         currentBlock.getAttribute("data-collapsed") === "true";
       const openCollapse = currentBlock.style.height !== "auto";
-      // console.log("openCollapse: ", openCollapse, currentBlock.style);
+      // console.log(
+      //   "1) openCollapse: ",
+      //   openCollapse,
+      //   currentBlock.style.height,
+      //   lastBlock.style.height
+      // );
+      lastBlock.style.height = "0px";
+      lastBlock.style.maxHeight = "0px";
+      currentBlock.style.height = "0px";
+      currentBlock.style.maxHeight = "0px";
       if (openCollapse) {
-        lastBlock.style.height = "0px";
-        lastBlock.style.maxHeight = "0px";
         currentBlock.style.height = "auto";
         currentBlock.style.maxHeight = "3000px";
         // collapseSection(lastBlock);
@@ -354,6 +363,12 @@ if (DEBUG_MODE !== "0") {
         currentBlock.style.maxHeight = "0px";
         // collapseSection(currentBlock);
       }
+      // console.log(
+      //   "2) openCollapse: ",
+      //   openCollapse,
+      //   currentBlock.style.height,
+      //   lastBlock.style.height
+      // );
     });
 
     let submitButtonBusinessAddress = document.getElementById(
