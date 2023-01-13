@@ -290,11 +290,13 @@ if (DEBUG_MODE !== "0") {
       const lastBlock = formBlocks[currentState - 1];
       const currentBlock = formBlocks[currentState];
       if (lastBlock && currentBlock) {
+        lastBlock.setAttribute("data-collapsed", "true");
         lastBlock.style.maxHeight = "0px";
         lastBlock.style.height = "0px";
         currentBlock.style.maxHeight = "0px";
         currentBlock.style.height = "0px";
         setTimeout(function () {
+          currentBlock.setAttribute("data-collapsed", "false");
           currentBlock.style.height = "auto";
           currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
           currentBlock.scrollTop = currentBlock.scrollHeight;
@@ -327,11 +329,13 @@ if (DEBUG_MODE !== "0") {
       for (const block of formBlocks) {
         block.style.height = "0px";
         block.style.transition = "all 1s ease-in";
+        block.setAttribute("data-collapsed", "true");
       }
     }
     resetBlocksState();
     formBlocks[0].style.height = "auto";
-    formBlocks[0].style.maxHeight = "3000px";
+    formBlocks[0].style.maxHeight = "2000px";
+    formBlocks[0].setAttribute("data-collapsed", "false");
 
     // Set handler for display blocks
     $(".finance_form_header").on("click", function (event) {
@@ -350,15 +354,18 @@ if (DEBUG_MODE !== "0") {
       //   currentBlock.style.height,
       //   lastBlock.style.height
       // );
-      if (openCollapse) {
+      if (isCollapsed) {
+        lastBlock.setAttribute("data-collapsed", "true");
         lastBlock.style.height = "auto";
         lastBlock.style.maxHeight = "0px";
         currentBlock.style.height = "auto";
+        currentBlock.setAttribute("data-collapsed", "false");
         currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
         currentBlock.scrollTop = currentBlock.scrollHeight;
         // collapseSection(lastBlock);
         // expandSection(currentBlock);
       } else {
+        lastBlock.setAttribute("data-collapsed", "true");
         const valueBefore = Number(lastBlock.style.maxHeight.split("px")[0]);
         const collapse = setInterval(function () {
           const value = Number(lastBlock.style.maxHeight.split("px")[0]);
