@@ -414,7 +414,6 @@ if (DEBUG_MODE !== "0") {
           currentStatus.add(statusPossibles[statusPossibles.length - 1]);
           const form = $(this);
           submitButton.classList.add("is-disable");
-          submitButton.value = "Creating your contract...";
           saveCreditApp(function (response) {
             console.log("saveCreditApp->Submit: ", response);
             if (response.signature) {
