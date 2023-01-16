@@ -152,20 +152,20 @@ if (DEBUG_MODE !== "0") {
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
         const responseData = JSON.parse(this.responseText);
-        if (responseData.success) {
-          formFormLoading.style.display = "none";
-          formSectionBusiness.style.display = "block";
-          formSectionInfo.style.display = "block";
-          formSectionLoan.style.display = "block";
-          formSectionMajority.style.display = "block";
-          formSubmitArea.style.display = "block";
-          formFormLoadingMessage.innerHTML =
-            "Loading. This should take only a few seconds...";
-          cb(responseData);
-        } else {
-          formFormLoadingMessage.innerHTML =
-            "Finance application not found. Please contact our support team.";
-        }
+        // if (responseData.success) {
+        formFormLoading.style.display = "none";
+        formSectionBusiness.style.display = "block";
+        formSectionInfo.style.display = "block";
+        formSectionLoan.style.display = "block";
+        formSectionMajority.style.display = "block";
+        formSubmitArea.style.display = "block";
+        formFormLoadingMessage.innerHTML =
+          "Loading. This should take only a few seconds...";
+        cb(responseData);
+        // } else {
+        //   formFormLoadingMessage.innerHTML =
+        //     "Finance application not found. Please contact our support team.";
+        // }
       };
     }
 
