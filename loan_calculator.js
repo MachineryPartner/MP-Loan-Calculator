@@ -96,8 +96,6 @@ if (DEBUG_MODE !== "0") {
 
     // console.log({ AMOUNT, down_payment, term, interest_rate, sales_tax });
     if (term === 0) {
-      document.getElementById("total-financed").innerHTML = 0;
-      document.getElementById("total-taxes").innerHTML = 0;
       document.getElementById("total-monthly").innerHTML = 0;
       return;
     }
