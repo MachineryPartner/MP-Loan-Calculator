@@ -5,11 +5,10 @@ let creditData = {};
 if (DEBUG_MODE !== "0") {
   $(document).ready(function () {
     const upload = Upload({ apiKey: "public_FW25axZ42W9SnxbXHqBDp6LLrqDT" });
-
     const isDev = "new-machinery-partner.webflow.io";
     dayjs.extend(dayjs_plugin_relativeTime);
-    let wrapper = document.getElementById("wrapper");
-    let wrapperPlaid = document.getElementById("plaid_button-group");
+    let formFormLoading = document.getElementById("form_form_loading");
+    let formWrapper = document.getElementById("form-wrapper");
     let toastMessage = document.getElementById("toast-message");
     let companyName = document.getElementById("Company-Name");
     let appId = document.getElementById("App-Id");
@@ -19,13 +18,12 @@ if (DEBUG_MODE !== "0") {
     let uploadManuallyButton = document.getElementById("Upload-Manually");
     let fileInput = document.getElementById("uploadInput");
     let dropBox = document.getElementById("upload-area");
-    let uploadPage = document.getElementById("Review");
-    let sucessPage = document.getElementById("Success");
+    let uploadPage = document.getElementById("Upload");
+    let sucessPage = document.getElementById("Review");
     let plaidPage = document.getElementById("Plaid");
-    sucessPage.style.display = "none";
-    plaidPage.style.display = "none";
-    wrapper.classList.add("small");
-    wrapper.classList.add("progress");
+
+    formFormLoading.style.display = "block";
+    formWrapper.style.display = "none";
 
     function showUploadPage() {
       uploadPage.style.display = "block";
@@ -65,9 +63,8 @@ if (DEBUG_MODE !== "0") {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
-        // wrapper.style.display = "block";
-        wrapper.classList.remove("small");
-        wrapper.classList.remove("progress");
+        formFormLoading.style.display = "none";
+        formWrapper.style.display = "block";
         cb(JSON.parse(this.responseText));
       };
     }
@@ -107,13 +104,20 @@ if (DEBUG_MODE !== "0") {
     }
 
     getCreditApp(function (response) {
-      console.log("getCreditApp", response.data);
       creditData = response.data;
       // if (creditData["Plaid Access Token"]) {
       //   plaidButton.style.pointerEvents = "none";
       //   plaidButton.classList.add("is-disable");
       //   plaidButton.innerHTML = "Connected to Plaid.";
       // }
+      companyName.innerHTML = creditData["Business Name"];
+      appId.innerHTML = `Application ID: #${creditData["Deal Id"]}`;
+      console.log(
+        "getCreditApp",
+        response.data,
+        creditData["Status"],
+        creditData["Status"].includes("REVIEW")
+      );
       if (creditData["Status"].includes("REVIEW")) {
         showSuccessPage();
       } else {
@@ -127,8 +131,6 @@ if (DEBUG_MODE !== "0") {
       } else {
         creditData["Documents"] = [];
       }
-      companyName.innerHTML = creditData["Business Name"];
-      appId.innerHTML = `Application ID: #${creditData["Deal Id"]}`;
     });
 
     function prevDefault(e) {
@@ -209,15 +211,15 @@ if (DEBUG_MODE !== "0") {
       },
       false
     );
-    // goPlaidButton.addEventListener(
-    //   "click",
-    //   function (e) {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     showPlaidPage();
-    //   },
-    //   false
-    // );
+    goPlaidButton.addEventListener(
+      "click",
+      function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        showPlaidPage();
+      },
+      false
+    );
 
     uploadManuallyButton.addEventListener(
       "click",
