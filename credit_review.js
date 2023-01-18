@@ -41,6 +41,7 @@ if (DEBUG_MODE !== "0") {
       sucessPage.style.display = "block";
       plaidPage.style.display = "none";
       uploadPage.style.display = "none";
+      submitButton.style.display = "none";
       toastMessage.innerHTML =
         "<b>Your application is now in review!</b> Congrats! Will be touch when your offers are ready - usually in 2-4 days.";
     }
@@ -211,15 +212,15 @@ if (DEBUG_MODE !== "0") {
       },
       false
     );
-    goPlaidButton.addEventListener(
-      "click",
-      function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        showPlaidPage();
-      },
-      false
-    );
+    // goPlaidButton.addEventListener(
+    //   "click",
+    //   function (e) {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     showPlaidPage();
+    //   },
+    //   false
+    // );
 
     uploadManuallyButton.addEventListener(
       "click",
