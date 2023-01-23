@@ -8,9 +8,9 @@ if (DEBUG_MODE !== "0") {
     const isDev = "new-machinery-partner.webflow.io";
     dayjs.extend(dayjs_plugin_relativeTime);
     let formFormLoading = document.getElementById("form_form_loading");
-    let formWrapper = document.getElementById("form-wrapper");
+    // let formWrapper = document.getElementById("form-wrapper");
     let toastMessage = document.getElementById("toast-message");
-    let companyName = document.getElementById("Company-Name");
+    let companyName = document.getElementById("company-name");
     let appId = document.getElementById("App-Id");
     let submitButton = document.getElementById("credit-app-submit");
     let plaidButton = document.getElementById("Connect-Plaid");
@@ -23,7 +23,11 @@ if (DEBUG_MODE !== "0") {
     let plaidPage = document.getElementById("Plaid");
 
     formFormLoading.style.display = "block";
-    formWrapper.style.display = "none";
+    appId.style.display = "none";
+    companyName.style.display = "none";
+    sucessPage.style.display = "none";
+    plaidPage.style.display = "none";
+    uploadPage.style.display = "none";
 
     function showUploadPage() {
       uploadPage.style.display = "block";
@@ -65,7 +69,7 @@ if (DEBUG_MODE !== "0") {
       xhr.send(JSON.stringify(payload));
       xhr.onload = function () {
         formFormLoading.style.display = "none";
-        formWrapper.style.display = "block";
+        // formWrapper.style.display = "block";
         cb(JSON.parse(this.responseText));
       };
     }
@@ -111,8 +115,10 @@ if (DEBUG_MODE !== "0") {
       //   plaidButton.classList.add("is-disable");
       //   plaidButton.innerHTML = "Connected to Plaid.";
       // }
-      companyName.innerHTML = creditData["Business Name"];
+      companyName.innerHTML = creditData["Business Name"] || "    ";
       appId.innerHTML = `Application ID: #${creditData["Deal Id"]}`;
+      companyName.style.display = "block";
+      appId.style.display = "block";
       console.log(
         "getCreditApp",
         response.data,
