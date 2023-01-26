@@ -1035,13 +1035,20 @@ if (DEBUG_MODE !== "0") {
               const checked = document.getElementsByName(
                 "Owned-by-single-person"
               )[0].checked;
+              const currentBlock = formBlocks[currentState];
+              currentBlock.style.maxHeight = "3000px";
               if (checked) {
                 primaryLabel1.innerHTML = "";
                 primaryLabel2.innerHTML = "";
                 primaryOwnerSeparator.style.display = "none";
-                majorityOwnerBlock.style.display = "block";
-                secondOwnerBlock.style.display = "none";
                 singleOwner = true;
+                setTimeout(function () {
+                  // console.log("clicked singleOwner yes");
+                  majorityOwnerBlock.style.maxHeight = "2000px";
+                  majorityOwnerBlock.style.height = "auto";
+                  majorityOwnerBlock.style.display = "block";
+                  secondOwnerBlock.style.display = "none";
+                }, 500);
                 fields.secOwner.value = "";
                 fields.secEmail.value = "";
                 fields.secOwnership.value = "";
@@ -1052,8 +1059,12 @@ if (DEBUG_MODE !== "0") {
                 primaryLabel1.innerHTML = "Primary ";
                 primaryLabel2.innerHTML = "Primary ";
                 primaryOwnerSeparator.style.display = "block";
+                majorityOwnerBlock.style.height = "auto";
+                majorityOwnerBlock.style.maxHeight = "2000px";
                 majorityOwnerBlock.style.display = "block";
+                secondOwnerBlock.style.height = "auto";
                 secondOwnerBlock.style.display = "block";
+                secondOwnerBlock.style.maxHeight = "2000px";
                 singleOwner = false;
                 addRequeriments(fields);
               }
@@ -1071,6 +1082,9 @@ if (DEBUG_MODE !== "0") {
                 document.getElementById("singleYes").value = "singleYes";
                 document.getElementById("singleNo").value = "singleNo";
                 setTimeout(function () {
+                  // console.log("default singleOwner yes");
+                  majorityOwnerBlock.style.maxHeight = "2000px";
+                  majorityOwnerBlock.style.height = "auto";
                   majorityOwnerBlock.style.display = "block";
                   secondOwnerBlock.style.display = "none";
                 }, 500);
@@ -1086,7 +1100,12 @@ if (DEBUG_MODE !== "0") {
                 document.getElementById("singleNo").value = "singleNo";
                 document.getElementById("singleYes").value = "singleYes";
                 setTimeout(function () {
+                  // console.log("default singleOwner no");
+                  majorityOwnerBlock.style.maxHeight = "2000px";
+                  majorityOwnerBlock.style.height = "auto";
                   majorityOwnerBlock.style.display = "block";
+                  secondOwnerBlock.style.maxHeight = "2000px";
+                  secondOwnerBlock.style.height = "auto";
                   secondOwnerBlock.style.display = "block";
                 }, 500);
                 addRequeriments(fields);
