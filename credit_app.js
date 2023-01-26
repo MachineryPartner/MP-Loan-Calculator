@@ -595,6 +595,16 @@ if (DEBUG_MODE !== "0") {
           setIconStatusError(formStatus[index]);
         }
       }
+      if (
+        !document.getElementById("singleYes").checked &&
+        !document.getElementById("singleNo").checked
+      ) {
+        singleOwnerErrorMessage.style.display = "block";
+        singleOwnerErrorMessage.innerHTML = "Mandatory field";
+      } else {
+        singleOwnerErrorMessage.innerHTML = "";
+        singleOwnerErrorMessage.style.display = "none";
+      }
     }
 
     function removeRequeriments(fields) {
