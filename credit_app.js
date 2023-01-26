@@ -597,7 +597,8 @@ if (DEBUG_MODE !== "0") {
       }
       if (
         !document.getElementById("singleYes").checked &&
-        !document.getElementById("singleNo").checked
+        !document.getElementById("singleNo").checked &&
+        index == 3
       ) {
         singleOwnerErrorMessage.style.display = "block";
         singleOwnerErrorMessage.innerHTML = "Mandatory field";
