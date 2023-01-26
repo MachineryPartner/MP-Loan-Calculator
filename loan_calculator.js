@@ -23,14 +23,16 @@ if (DEBUG_MODE !== "0") {
 
   $("#Interest-rate").on({
     keyup: function () {
-      document.getElementById("Interest-rate").value = formatNumber(
-        document.getElementById("Interest-rate").value
-      );
+      // document.getElementById("Interest-rate").value = formatNumber(
+      //   document.getElementById("Interest-rate").value
+      // );
     },
     focus: function () {
       document.getElementById("Interest-rate").value = currency(
         document.getElementById("Interest-rate").value
       ).value;
+      if (document.getElementById("Interest-rate").value === "0")
+        document.getElementById("Interest-rate").value = "";
     },
     blur: function () {
       document.getElementById("Interest-rate").value = `${
@@ -45,14 +47,16 @@ if (DEBUG_MODE !== "0") {
 
   $("#Salex-tax").on({
     keyup: function () {
-      document.getElementById("#Salex-tax").value = formatNumber(
-        document.getElementById("#Salex-tax").value
-      );
+      // document.getElementById("#Salex-tax").value = formatNumber(
+      //   document.getElementById("#Salex-tax").value
+      // );
     },
     focus: function () {
       document.getElementById("Salex-tax").value = currency(
         document.getElementById("Salex-tax").value
       ).value;
+      if (document.getElementById("Salex-tax").value === "0")
+        document.getElementById("Salex-tax").value = "";
     },
     blur: function () {
       document.getElementById("Salex-tax").value = `${
