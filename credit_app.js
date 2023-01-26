@@ -246,7 +246,7 @@ if (DEBUG_MODE !== "0") {
       if (lastBlock && currentBlock) {
         lastBlock.setAttribute("data-collapsed", "true");
         lastBlock.style.maxHeight = "0px";
-        lastBlock.style.height = "0px";
+        lastBlock.style.height = "auto";
         currentBlock.style.maxHeight = "0px";
         currentBlock.style.height = "0px";
         setTimeout(function () {
@@ -261,8 +261,9 @@ if (DEBUG_MODE !== "0") {
           );
         }, 300);
       } else {
-        lastBlock.style.maxHeight = "0px";
+        lastBlock.setAttribute("data-collapsed", "true");
         lastBlock.style.height = "0px";
+        lastBlock.style.maxHeight = "0px";
       }
       forceFieldsBlur(currentState - 1);
       const fields = creditAppState[currentState - 1].fields;
@@ -314,11 +315,10 @@ if (DEBUG_MODE !== "0") {
       // );
       if (isCollapsed) {
         lastBlock.setAttribute("data-collapsed", "true");
-        lastBlock.style.height = "auto";
         lastBlock.style.maxHeight = "0px";
+        lastBlock.style.height = "auto";
         currentBlock.style.height = "auto";
         currentBlock.setAttribute("data-collapsed", "false");
-        // console.log("currentBlock.scrollHeight: ", currentBlock.scrollHeight);
         currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
         $("html, body").animate(
           {
@@ -342,7 +342,7 @@ if (DEBUG_MODE !== "0") {
           clearInterval(collapse);
           lastBlock.style.height = "0px";
           lastBlock.style.maxHeight = "0px";
-        }, 1000);
+        }, 800);
       }
     });
 
