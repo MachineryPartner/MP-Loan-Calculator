@@ -260,8 +260,6 @@ if (DEBUG_MODE !== "0") {
             600
           );
         }, 300);
-        // collapseSection(lastBlock);
-        // expandSection(currentBlock);
       } else {
         lastBlock.style.maxHeight = "0px";
         lastBlock.style.height = "0px";
@@ -301,7 +299,6 @@ if (DEBUG_MODE !== "0") {
       if (currentState > formBlocks.length - 1) currentState = currentState - 1;
       const lastBlock = formBlocks[currentState];
       const targetIndex = Number(event.currentTarget.children[0].innerText) - 1;
-      const sameBlock = currentState == targetIndex;
       currentState = targetIndex;
       const currentBlock = formBlocks[currentState];
       const isCollapsed =
@@ -311,7 +308,9 @@ if (DEBUG_MODE !== "0") {
       //   "1) openCollapse: ",
       //   openCollapse,
       //   currentBlock.style.height,
-      //   lastBlock.style.height
+      //   currentBlock.style.maxHeight,
+      //   lastBlock.style.height,
+      //   lastBlock.style.maxHeight
       // );
       if (isCollapsed) {
         lastBlock.setAttribute("data-collapsed", "true");
@@ -319,6 +318,7 @@ if (DEBUG_MODE !== "0") {
         lastBlock.style.maxHeight = "0px";
         currentBlock.style.height = "auto";
         currentBlock.setAttribute("data-collapsed", "false");
+        // console.log("currentBlock.scrollHeight: ", currentBlock.scrollHeight);
         currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
         $("html, body").animate(
           {
@@ -343,14 +343,7 @@ if (DEBUG_MODE !== "0") {
           lastBlock.style.height = "0px";
           lastBlock.style.maxHeight = "0px";
         }, 1000);
-        // collapseSection(currentBlock);
       }
-      // console.log(
-      //   "2) openCollapse: ",
-      //   openCollapse,
-      //   currentBlock.style.height,
-      //   lastBlock.style.height
-      // );
     });
 
     let submitButtonBusinessAddress = document.getElementById(
@@ -536,10 +529,20 @@ if (DEBUG_MODE !== "0") {
       for (const name in fields) {
         const inputData = fields[name];
         if (inputData.value !== "" && inputData.state === false) {
-          // console.log("1checkBlockRequirements->Field Name: ", name);
+          // console.log(
+          //   "1checkBlockRequirements->Field Name: ",
+          //   name,
+          //   inputData.value,
+          //   inputData.state
+          // );
           count += 1;
         } else if (inputData.required && inputData.state === false) {
-          // console.log("2checkBlockRequirements->Field Name: ", name);
+          // console.log(
+          //   "2checkBlockRequirements->Field Name: ",
+          //   name,
+          //   inputData.required,
+          //   inputData.state
+          // );
           count += 1;
         }
       }
@@ -604,6 +607,7 @@ if (DEBUG_MODE !== "0") {
     function addRequeriments(fields) {
       for (const property in fields) {
         const field = fields[property];
+        if (property.startsWith("sec") && singleOwner) continue;
         field.required = field.originalRequired || false;
       }
     }
@@ -1028,7 +1032,7 @@ if (DEBUG_MODE !== "0") {
             airtable: "Single Owner",
             state: false,
             required: true,
-            originalRequired: "",
+            originalRequired: true,
             isRadio: true,
             change: function (event) {
               const fields = creditAppState[currentState].fields;
@@ -1037,6 +1041,7 @@ if (DEBUG_MODE !== "0") {
               )[0].checked;
               const currentBlock = formBlocks[currentState];
               currentBlock.style.maxHeight = "3000px";
+              fields.singleOwner.state = true;
               if (checked) {
                 primaryLabel1.innerHTML = "";
                 primaryLabel2.innerHTML = "";
@@ -1056,6 +1061,7 @@ if (DEBUG_MODE !== "0") {
                 fields.secSsn.value = "";
                 removeRequeriments(fields);
               } else {
+                // console.log("clicked singleOwner no");
                 primaryLabel1.innerHTML = "Primary ";
                 primaryLabel2.innerHTML = "Primary ";
                 primaryOwnerSeparator.style.display = "block";
@@ -1066,8 +1072,8 @@ if (DEBUG_MODE !== "0") {
                 secondOwnerBlock.style.display = "block";
                 secondOwnerBlock.style.maxHeight = "2000px";
                 singleOwner = false;
-                addRequeriments(fields);
               }
+              addRequeriments(fields);
               singleOwnerErrorMessage.innerHTML = "";
               singleOwnerErrorMessage.style.display = "none";
             },
@@ -1075,6 +1081,7 @@ if (DEBUG_MODE !== "0") {
               const fields = creditAppState[3].fields;
               if (field.value) {
                 singleOwner = true;
+                fields.singleOwner.state = true;
                 primaryOwnerSeparator.style.display = "none";
                 primaryLabel1.innerHTML = "";
                 primaryLabel2.innerHTML = "";
@@ -1093,6 +1100,7 @@ if (DEBUG_MODE !== "0") {
                 singleOwnerErrorMessage.style.display = "none";
               } else if (field.value === "" && fields.secOwner.value !== "") {
                 singleOwner = false;
+                fields.singleOwner.state = true;
                 primaryOwnerSeparator.style.display = "block";
                 primaryLabel1.innerHTML = "Primary ";
                 primaryLabel2.innerHTML = "Primary ";
@@ -1108,10 +1116,10 @@ if (DEBUG_MODE !== "0") {
                   secondOwnerBlock.style.height = "auto";
                   secondOwnerBlock.style.display = "block";
                 }, 500);
-                addRequeriments(fields);
                 singleOwnerErrorMessage.innerHTML = "";
                 singleOwnerErrorMessage.style.display = "none";
               }
+              addRequeriments(fields);
             },
             validate: function (_input) {
               return undefined;
