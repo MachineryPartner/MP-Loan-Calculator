@@ -255,11 +255,13 @@ if (DEBUG_MODE !== "0") {
           currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
           $("html, body").animate(
             {
-              scrollTop: formHeaders[currentState].offsetTop,
+              scrollTop: financePageTop
+              /* scrollTop: formHeaders[currentState]
+              .offsetTop */
             },
-            600
+            /* 600 */
           );
-        }, 300);
+        }, /* 300 */);
       } else {
         lastBlock.setAttribute("data-collapsed", "true");
         lastBlock.style.height = "0px";
@@ -274,6 +276,10 @@ if (DEBUG_MODE !== "0") {
     const formHeaders = document.getElementsByClassName("finance_form_header");
     const formStatus = document.getElementsByClassName("finance_form_status");
     const formBlocks = document.getElementsByClassName("finance_form_content");
+
+    // Adding HTML elements for animation reset
+    const financePageTop = document.getElementsByClassName("nav_wrapper");
+    const pageHeader = document.getElementsByClassName("padding-vertical");
     // Reset form state
     // function resetBlocksState() {
     //   for (const block of formBlocks) {
@@ -286,7 +292,7 @@ if (DEBUG_MODE !== "0") {
     function resetBlocksState() {
       for (const block of formBlocks) {
         block.style.height = "0px";
-        block.style.transition = "all 1s ease-in";
+        block.style.transition = "all 0.25s linear";
         block.setAttribute("data-collapsed", "true");
       }
     }
@@ -322,9 +328,10 @@ if (DEBUG_MODE !== "0") {
         currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
         $("html, body").animate(
           {
-            scrollTop: formHeaders[currentState].offsetTop,
+            scrollTop: financePageTop
+            /* scrollTop: formHeaders[currentState].offsetTop, */
           },
-          600
+          /* 600 */
         );
       } else {
         lastBlock.setAttribute("data-collapsed", "true");
