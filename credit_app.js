@@ -255,13 +255,11 @@ if (DEBUG_MODE !== "0") {
           currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
           $("html, body").animate(
             {
-              scrollTop: financePageTop
-              /* scrollTop: formHeaders[currentState]
-              .offsetTop */
+              /* scrollTop: financePageTop */
+              scrollTop: formHeaders[currentState].offsetTop-20
             },
-            /* 600 */
           );
-        }, /* 300 */);
+        },1000);
       } else {
         lastBlock.setAttribute("data-collapsed", "true");
         lastBlock.style.height = "0px";
@@ -328,10 +326,9 @@ if (DEBUG_MODE !== "0") {
         currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
         $("html, body").animate(
           {
-            scrollTop: financePageTop
-            /* scrollTop: formHeaders[currentState].offsetTop, */
+            /* scrollTop: financePageTop */
+            scrollTop: formHeaders[currentState].offsetTop-20,
           },
-          /* 600 */
         );
       } else {
         lastBlock.setAttribute("data-collapsed", "true");
@@ -359,6 +356,7 @@ if (DEBUG_MODE !== "0") {
     $("#save-button-business-address").on("click", function (event) {
       nextBlock(1);
       saveCreditApp(function () {});
+      
     });
 
     let submitButtonBusinessInfo = document.getElementById(
