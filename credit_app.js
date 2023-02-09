@@ -256,7 +256,7 @@ if (DEBUG_MODE !== "0") {
           $("html, body").animate(
             {
               /* scrollTop: financePageTop */
-              scrollTop: formHeaders[currentState].offsetTop-20
+              scrollTop: formHeaders[currentState - 1].offsetTop-20
             },
           );
         },600);
