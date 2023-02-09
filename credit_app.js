@@ -259,7 +259,7 @@ if (DEBUG_MODE !== "0") {
               scrollTop: formHeaders[currentState].offsetTop-20
             },
           );
-        },1000);
+        },600);
       } else {
         lastBlock.setAttribute("data-collapsed", "true");
         lastBlock.style.height = "0px";
@@ -318,18 +318,19 @@ if (DEBUG_MODE !== "0") {
       //   lastBlock.style.maxHeight
       // );
       if (isCollapsed) {
-        lastBlock.setAttribute("data-collapsed", "true");
-        lastBlock.style.maxHeight = "0px";
-        lastBlock.style.height = "auto";
-        currentBlock.style.height = "auto";
-        currentBlock.setAttribute("data-collapsed", "false");
-        currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
-        $("html, body").animate(
-          {
-            /* scrollTop: financePageTop */
-            scrollTop: formHeaders[currentState].offsetTop-20,
-          },
-        );
+          lastBlock.setAttribute("data-collapsed", "true");
+          lastBlock.style.maxHeight = "0px";
+          lastBlock.style.height = "auto";
+          currentBlock.style.height = "auto";
+          setTimeout(function () {
+          currentBlock.setAttribute("data-collapsed", "false");
+          currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
+          $("html, body").animate(
+            {
+              scrollTop: formHeaders[currentState].offsetTop-20,
+            },
+            )
+          },600);
       } else {
         lastBlock.setAttribute("data-collapsed", "true");
         const valueBefore = Number(lastBlock.style.maxHeight.split("px")[0]);
