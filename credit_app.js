@@ -3,7 +3,7 @@ const params = new URLSearchParams(document.location.search);
 const token = params.get("token");
 const DEBUG_MODE = params.get("debug");
 if (DEBUG_MODE !== "0") {
-  $(document).ready(function () {
+$(document).ready(function () {
     $.getScript(
       "https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js",
       function () {
@@ -52,10 +52,12 @@ if (DEBUG_MODE !== "0") {
     let formFormLoadingMessage = document.getElementById("loading-message");
     let formSubmitArea = document.getElementById("finance-form-submit");
     formFormLoading.style.display = "block";
+    let formSectionEquipment = document.getElementById("form_section_equipment");
     let formSectionBusiness = document.getElementById("form_section_business");
     let formSectionInfo = document.getElementById("form_section_info");
     let formSectionLoan = document.getElementById("form_section_loan");
     let formSectionMajority = document.getElementById("form_section_owner");
+    formSectionEquipment.style.display = "none"
     formSectionBusiness.style.display = "none";
     formSectionInfo.style.display = "none";
     formSectionLoan.style.display = "none";
@@ -154,6 +156,7 @@ if (DEBUG_MODE !== "0") {
         const responseData = JSON.parse(this.responseText);
         // if (responseData.success) {
         formFormLoading.style.display = "none";
+        formSectionEquipment.style.display = "block";
         formSectionBusiness.style.display = "block";
         formSectionInfo.style.display = "block";
         formSectionLoan.style.display = "block";
@@ -167,6 +170,14 @@ if (DEBUG_MODE !== "0") {
         //     "Finance application not found. Please contact our support team.";
         // }
       };
+    }
+    let allModels = []
+    async function getAllEquipment() {
+      const Equrl = "https://mp-loan-application.vercel.app/api/models"
+
+      const response = await fetch(Equrl);
+      allModels = await response.json();
+      console.log(allModels)
     }
 
     let mockResponse = {
@@ -351,11 +362,20 @@ if (DEBUG_MODE !== "0") {
       }
     });
 
+    let submitButtonEquipment = document.getElementById(
+      "save-button-equipment"
+    );
+    $("#save-button-equipment").on("click", function (event) {
+      nextBlock(1);
+      saveCreditApp(function () {});
+      
+    });
+
     let submitButtonBusinessAddress = document.getElementById(
       "save-button-business-address"
     );
     $("#save-button-business-address").on("click", function (event) {
-      nextBlock(1);
+      nextBlock(2);
       saveCreditApp(function () {});
       
     });
@@ -364,19 +384,19 @@ if (DEBUG_MODE !== "0") {
       "save-button-business-info"
     );
     $("#save-button-business-info").on("click", function (event) {
-      nextBlock(2);
+      nextBlock(3);
       saveCreditApp(function () {});
     });
 
     let submitButtonAmount = document.getElementById("save-button-amount");
     $("#save-button-amount").on("click", function (event) {
-      nextBlock(3);
+      nextBlock(4);
       saveCreditApp(function () {});
     });
 
     let submitButton2Owner = document.getElementById("save-button-2owner");
     $("#save-button-2owner").on("click", function (event) {
-      nextBlock(4);
+      nextBlock(5);
       saveCreditApp(function () {});
     });
 
@@ -409,7 +429,7 @@ if (DEBUG_MODE !== "0") {
             submitButton.classList.remove("is-disable");
             submitButton.style.pointerEvents = "auto";
             errorBlock.style.display = "block";
-            submitButton.value = "Proceed to Sign";
+            submitButton.value = "Proceed to DocuSign";
           }, 2000);
         }
       });
@@ -486,7 +506,7 @@ if (DEBUG_MODE !== "0") {
           !document.getElementById("singleNo").checked
         ) {
           singleOwnerErrorMessage.style.display = "block";
-          singleOwnerErrorMessage.innerHTML = "Mandatory field";
+          singleOwnerErrorMessage.innerHTML = "Required field";
         } else {
           singleOwnerErrorMessage.innerHTML = "";
           singleOwnerErrorMessage.style.display = "none";
@@ -607,7 +627,7 @@ if (DEBUG_MODE !== "0") {
         index == 3
       ) {
         singleOwnerErrorMessage.style.display = "block";
-        singleOwnerErrorMessage.innerHTML = "Mandatory field";
+        singleOwnerErrorMessage.innerHTML = "Required field";
       } else {
         singleOwnerErrorMessage.innerHTML = "";
         singleOwnerErrorMessage.style.display = "none";
@@ -628,8 +648,75 @@ if (DEBUG_MODE !== "0") {
         field.required = field.originalRequired || false;
       }
     }
+    
+    function createCategories() {
+      const select = document.getElementById("product-category")
+      let options = ['Crushers', 'Breakers', 'Screeners', 'Pulverizers', 'Conveyors', 'Shears', 'Excavators', 'Grabs']
+
+      for (let o = 0; o < options.length; o++) {
+        let opt = options[o];
+        let optelement = document.createElement("option");
+        optelement.textContent = opt;
+        optelement.value = opt;
+        select.appendChild(optelement);
+      }
+    };
+
+    function createEquipments() {
+      const select = document.getElementById("product");
+      let array2 = allModels
+      console.log(array2)
+      // allModels.models[0].id
+      array2.forEach(item => {
+        const option = document.createElement("option");
+        option.setAttribute("id",item.id);
+        option.textContent = item.models["Product ID"];
+        select.appendChild(option);
+      })
+    };
 
     let creditAppState = [
+      {
+        button: submitButtonEquipment,
+        fields: {
+          category: {
+            value: "",
+            tag: "#product-category",
+            airtable: 'TBD',
+            state: false,
+            required: true,
+            // init: Need to create init to check if Cat already selected
+            validate: function () {
+              var e = document.getElementById("product-category")
+              var selectedCat = e.options[e.selectedIndex].value
+              if (selectedCat == 0 ) {
+                return { status: false, message: "Select a category"}
+              }
+              else {
+                return { status: true, message: "" }
+              }
+            }
+          },
+          product: {
+            value: "",
+            tag: "#product",
+            airtable: 'TBD',
+            state: false,
+            required: true,
+            // init: Need to create init to check if Prod already selected
+            validate: function () {
+              var e = document.getElementById("product")
+              var selectedProd = e.options[e.selectedIndex].value
+              if (selectedProd == 0 ) {
+                return { status: false, message: "Select a Product"}
+              }
+              else {
+                return { status: true, message: "" }
+              }
+            }
+          },
+        },
+      },
       {
         button: submitButtonBusinessAddress,
         fields: {
@@ -645,7 +732,7 @@ if (DEBUG_MODE !== "0") {
               } else if (_input && _input.length < 5) {
                 return { status: false, message: "Minimum characters 5" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           address: {
@@ -660,7 +747,7 @@ if (DEBUG_MODE !== "0") {
               } else if (_input && _input.length < 5) {
                 return { status: false, message: "Minimum characters 5" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           addressComplement: {
@@ -685,7 +772,7 @@ if (DEBUG_MODE !== "0") {
               } else if (_input && _input.length < 3) {
                 return { status: false, message: "Minimum characters 3" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           zipCode: {
@@ -704,7 +791,7 @@ if (DEBUG_MODE !== "0") {
                   message: "Please enter a 5 digit US Zip Code",
                 };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           state: {
@@ -719,7 +806,7 @@ if (DEBUG_MODE !== "0") {
               } else if (_input && _input.length < 5) {
                 return { status: false, message: "Minimum characters 5" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
         },
@@ -742,12 +829,12 @@ if (DEBUG_MODE !== "0") {
             tag: "#Founding-Date",
             airtable: "Business Founding Date",
             state: false,
-            required: false,
+            required: true,
             validate: function (_input) {
               return { status: true, message: "" };
             },
           },
-          noEmployees: {
+/*           noEmployees: {
             value: "",
             tag: "#Employees",
             airtable: "Business No. of Employees",
@@ -756,7 +843,7 @@ if (DEBUG_MODE !== "0") {
             validate: function (_input) {
               return { status: true, message: "" };
             },
-          },
+          }, */
           monthlyRevenue: {
             value: "",
             tag: "#Monthly-Revenue",
@@ -799,7 +886,7 @@ if (DEBUG_MODE !== "0") {
               } else if (_input && _input.length < 10) {
                 return { status: false, message: "Please enter a valid EIN" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
         },
@@ -807,7 +894,7 @@ if (DEBUG_MODE !== "0") {
       {
         button: submitButtonAmount,
         fields: {
-          amount: {
+          /* amount: {
             value: "",
             tag: "#Loan-Amount",
             airtable: "Loan Amount",
@@ -840,13 +927,13 @@ if (DEBUG_MODE !== "0") {
               }
               return { status: true, message: "" };
             },
-          },
+          }, */
           maxDownpayment: {
             value: "",
             tag: "#Max-Downpayment",
             airtable: "Max Downpayment",
             state: false,
-            required: false,
+            required: true,
             keyup: function (_this) {
               formatCurrency(_this, false);
             },
@@ -895,7 +982,7 @@ if (DEBUG_MODE !== "0") {
             tag: "#Full-name-4",
             airtable: "Majority Owner Name",
             state: false,
-            required: false,
+            required: true,
             originalRequired: true,
             validate: function (_input) {
               if (_input && _input.length >= 5) {
@@ -903,7 +990,7 @@ if (DEBUG_MODE !== "0") {
               } else if (_input && _input.length < 5) {
                 return { status: false, message: "Minimum characters 5" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           majorityEmail: {
@@ -911,7 +998,7 @@ if (DEBUG_MODE !== "0") {
             tag: "#Majority-Owner-Email",
             airtable: "Majority Owner Email",
             state: false,
-            required: false,
+            required: true,
             originalRequired: true,
             validate: function (_input) {
               if (!formatEmail(_input)) {
@@ -922,7 +1009,7 @@ if (DEBUG_MODE !== "0") {
               } else if (_input && _input.length < 5) {
                 return { status: false, message: "Minimum characters 5" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           majorityOwnership: {
@@ -930,7 +1017,7 @@ if (DEBUG_MODE !== "0") {
             tag: "#Ownership-3",
             airtable: "Majority Owner Ownership",
             state: false,
-            required: false,
+            required: true,
             originalRequired: true,
             focus: function () {
               let input = document.getElementById("Ownership-3");
@@ -954,7 +1041,7 @@ if (DEBUG_MODE !== "0") {
               } else if (_input && _input.length < 10) {
                 return { status: false, message: "Minimum Ownership: 10%" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           majorityBirth: {
@@ -962,7 +1049,7 @@ if (DEBUG_MODE !== "0") {
             tag: "#Birth-3",
             airtable: "Majority Owner Birth Date",
             state: false,
-            required: false,
+            required: true,
             originalRequired: true,
             init: function (_input) {
               _input.type = "date";
@@ -971,7 +1058,7 @@ if (DEBUG_MODE !== "0") {
               if (_input && _input != "") {
                 return { status: true, message: "" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           majoritySsn: {
@@ -979,7 +1066,7 @@ if (DEBUG_MODE !== "0") {
             tag: "#Security-3",
             airtable: "Majority Owner SSN",
             state: false,
-            required: false,
+            required: true,
             originalRequired: true,
             // focus: function () {
             //   showSSN($("#Security"), "majoritySsn");
@@ -1002,7 +1089,7 @@ if (DEBUG_MODE !== "0") {
             //   }
             //   return {
             //     status: false,
-            //     message: "Mandatory field",
+            //     message: "Required field",
             //     data: val,
             //   };
             // },
@@ -1010,10 +1097,89 @@ if (DEBUG_MODE !== "0") {
               if (_input && _input != "" && _input.length === 11) {
                 return { status: true, message: "" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
-          majorityAnotherBusinessList: {
+          majorityAddress: {
+            value: "",
+            tag: "#Majority-address",
+            airtable: "Majority Street Address",
+            state: false,
+            required: true,
+            originalRequired: true,
+            validate: function (_input) {
+              if (_input && _input.length >= 5) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 5) {
+                return { status: false, message: "Minimum characters 5" };
+              }
+              return { status: false, message: "Required field" };
+            },
+          },
+          majorityAddressComplement: {
+            value: "",
+            tag: "#Majority-AddressAlternative",
+            airtable: "Majority Street Complement",
+            state: false,
+            required: false,
+            originalRequired: true,
+            validate: function (_input) {
+              return { status: true, message: "" };
+            },
+          },
+          majorityCity: {
+            value: "",
+            tag: "#Majority-City",
+            airtable: "Majority City",
+            state: false,
+            required: true,
+            originalRequired: true,
+            validate: function (_input) {
+              if (_input && _input.length >= 3) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 3) {
+                return { status: false, message: "Minimum characters 3" };
+              }
+              return { status: false, message: "Required field" };
+            },
+          },
+          majorityZipCode: {
+            value: "",
+            tag: "#Majority-Zip-Code",
+            airtable: "Majority Zip-Code",
+            state: false,
+            required: true,
+            originalRequired: true,
+            validate: function (_input) {
+              var isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(_input);
+              if (isValidZip) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 11) {
+                return {
+                  status: false,
+                  message: "Please enter a 5 digit US Zip Code",
+                };
+              }
+              return { status: false, message: "Required field" };
+            },
+          },
+          majorityState: {
+            value: "",
+            tag: "#Majority-State",
+            airtable: "Majority State",
+            state: false,
+            required: true,
+            originalRequired: true,
+            validate: function (_input) {
+              if (_input && _input.length >= 5) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 5) {
+                return { status: false, message: "Minimum characters 5" };
+              }
+              return { status: false, message: "Required field" };
+            },
+          },
+/*           majorityAnotherBusinessList: {
             value: "",
             tag: "#Business-list-3",
             airtable: "Majority Owner Business List",
@@ -1024,15 +1190,15 @@ if (DEBUG_MODE !== "0") {
               if (_input && _input != "") {
                 return { status: true, message: "" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
-          },
+          }, */
           secOwner: {
             value: "",
             tag: "#Sec-Owner-Name-2",
             airtable: "Second Owner Name",
             state: false,
-            required: false,
+            required: true,
             originalRequired: true,
             validate: function (_input) {
               if (_input && _input.length >= 5) {
@@ -1040,7 +1206,7 @@ if (DEBUG_MODE !== "0") {
               } else if (_input && _input.length < 5) {
                 return { status: false, message: "Minimum characters 5" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           singleOwner: {
@@ -1076,6 +1242,10 @@ if (DEBUG_MODE !== "0") {
                 fields.secOwnership.value = "";
                 fields.secBirth.value = "";
                 fields.secSsn.value = "";
+                fields.secAddress.value = "";
+                fields.secCity.value = "";
+                fields.secZipCode.value = "";
+                fields.secState.value = "";
                 removeRequeriments(fields);
               } else {
                 // console.log("clicked singleOwner no");
@@ -1095,7 +1265,7 @@ if (DEBUG_MODE !== "0") {
               singleOwnerErrorMessage.style.display = "none";
             },
             init: function (_input, field) {
-              const fields = creditAppState[3].fields;
+              const fields = creditAppState[4].fields;
               if (field.value) {
                 singleOwner = true;
                 fields.singleOwner.state = true;
@@ -1147,7 +1317,7 @@ if (DEBUG_MODE !== "0") {
             tag: "#Sec-Owner-Email-2",
             airtable: "Second Owner Email",
             state: false,
-            required: false,
+            required: true,
             originalRequired: true,
             validate: function (_input) {
               if (!formatEmail(_input)) {
@@ -1158,7 +1328,7 @@ if (DEBUG_MODE !== "0") {
               } else if (_input && _input.length < 5) {
                 return { status: false, message: "Minimum characters 5" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           secOwnership: {
@@ -1166,7 +1336,7 @@ if (DEBUG_MODE !== "0") {
             tag: "#Ownership-2",
             airtable: "Second Owner Ownership",
             state: true,
-            required: false,
+            required: true,
             originalRequired: true,
             focus: function () {
               let input = document.getElementById("Ownership-2");
@@ -1190,7 +1360,7 @@ if (DEBUG_MODE !== "0") {
               } else if (_input && _input.length < 10) {
                 return { status: false, message: "Minimum Ownership: 10%" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           secBirth: {
@@ -1198,7 +1368,7 @@ if (DEBUG_MODE !== "0") {
             tag: "#Birth-2",
             airtable: "Second Owner Birth Date",
             state: false,
-            required: false,
+            required: true,
             originalRequired: true,
             init: function (_input) {
               _input.type = "date";
@@ -1207,7 +1377,7 @@ if (DEBUG_MODE !== "0") {
               if (_input && _input != "") {
                 return { status: true, message: "" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
           secSsn: {
@@ -1215,7 +1385,7 @@ if (DEBUG_MODE !== "0") {
             tag: "#Security-2",
             airtable: "Second Owner SSN",
             state: false,
-            required: false,
+            required: true,
             originalRequired: true,
             // focus: function () {
             //   showSSN($("#Security-2"), "secSsn");
@@ -1236,7 +1406,7 @@ if (DEBUG_MODE !== "0") {
             //   }
             //   return {
             //     status: false,
-            //     message: "Mandatory field",
+            //     message: "Required field",
             //     data: val,
             //   };
             // },
@@ -1244,10 +1414,89 @@ if (DEBUG_MODE !== "0") {
               if (_input && _input != "" && _input.length === 11) {
                 return { status: true, message: "" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
           },
-          secAnotherBusinessList: {
+          secAddress: {
+            value: "",
+            tag: "#Sec-Address",
+            airtable: "Secondary Street Address",
+            state: false,
+            required: true,
+            originalRequired: true,
+            validate: function (_input) {
+              if (_input && _input.length >= 5) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 5) {
+                return { status: false, message: "Minimum characters 5" };
+              }
+              return { status: false, message: "Required field" };
+            },
+          },
+          secAddressComplement: {
+            value: "",
+            tag: "#Sec-AddressAlternative",
+            airtable: "Secondary Street Complement",
+            state: false,
+            required: false,
+            originalRequired: true,
+            validate: function (_input) {
+              return { status: true, message: "" };
+            },
+          },
+          secCity: {
+            value: "",
+            tag: "#Sec-City",
+            airtable: "Secondary City",
+            state: false,
+            required: true,
+            originalRequired: true,
+            validate: function (_input) {
+              if (_input && _input.length >= 3) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 3) {
+                return { status: false, message: "Minimum characters 3" };
+              }
+              return { status: false, message: "Required field" };
+            },
+          },
+          secZipCode: {
+            value: "",
+            tag: "#Sec-Zip-Code",
+            airtable: "Secondary Zip-Code",
+            state: false,
+            required: true,
+            originalRequired: true,
+            validate: function (_input) {
+              var isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(_input);
+              if (isValidZip) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 11) {
+                return {
+                  status: false,
+                  message: "Please enter a 5 digit US Zip Code",
+                };
+              }
+              return { status: false, message: "Required field" };
+            },
+          },
+          secState: {
+            value: "",
+            tag: "#Sec-State",
+            airtable: "Secondary State",
+            state: false,
+            required: true,
+            originalRequired: true,
+            validate: function (_input) {
+              if (_input && _input.length >= 5) {
+                return { status: true, message: "" };
+              } else if (_input && _input.length < 5) {
+                return { status: false, message: "Minimum characters 5" };
+              }
+              return { status: false, message: "Required field" };
+            },
+          },
+          /* secAnotherBusinessList: {
             value: "",
             tag: "#Business-list-2",
             airtable: "Second Owner Business List",
@@ -1258,9 +1507,9 @@ if (DEBUG_MODE !== "0") {
               if (_input && _input != "") {
                 return { status: true, message: "" };
               }
-              return { status: false, message: "Mandatory field" };
+              return { status: false, message: "Required field" };
             },
-          },
+          }, */
         },
       },
     ];
@@ -1385,11 +1634,16 @@ if (DEBUG_MODE !== "0") {
           location.replace(response.data);
         } else {
           mockResponse = response.data;
+          getAllEquipment(function (response){
+            // console.log("getAllEquipment", response.data)
+          });
           loadForms();
+          createCategories();
+          createEquipments();
         }
       });
     }
-  });
+  });  
 } else {
   console.log(`DEBUG_MODE: ${DEBUG_MODE}`);
 }
