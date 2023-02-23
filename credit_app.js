@@ -10,8 +10,9 @@ if (DEBUG_MODE !== "0") {
         $("#Security-2").mask("999-99-9999");
         $("#Security-3").mask("999-99-9999");
         $("#tax-id-2").mask("99-9999999");
-        $("#Founding-Date").mask("9999");
         $("#Zip-Code").mask("99999-9999");
+        $("#Majority-Zip-Code").mask("99999-9999");
+        $("#Sec-Zip-Code").mask("99999-9999");
       }
     );
     let dataPayload = {};
@@ -198,7 +199,7 @@ if (DEBUG_MODE !== "0") {
       "Updated At": "2022-09-15T17:46:26.629Z",
       "Business No. of Employees": "1",
       "Business Main Activity": "Landscaping",
-      "Business Founding Date": "2022-09-30",
+      "Years in Business": "2022-09-30",
       "Business Monthly Revenue": "200k",
       "Business EIN": "70707070",
       "Max Downpayment": "10000",
@@ -876,7 +877,7 @@ if (DEBUG_MODE !== "0") {
           foundingDate: {
             value: "",
             tag: "#Founding-Date",
-            airtable: "Business Founding Date",
+            airtable: "Years in Business",
             state: false,
             required: true,
             validate: function (_input) {
@@ -1667,6 +1668,22 @@ if (DEBUG_MODE !== "0") {
             });
           }
         }
+
+        // FIX-IT For some reasons the creditAppState won't trigger the init for foudingDate
+        // Doing here it's working !
+        const inputValue = creditAppState[2].fields.foundingDate.value;
+        const foundingDateInput = $("#founding-date")[0];
+        const options = foundingDateInput.options;
+        for (const index in options) {
+          const opt = options[index];
+          if (opt.value === inputValue) {
+            foundingDateInput.selectedIndex = index;
+          }
+        }
+
+        $("#founding-date").on("change", function (event) {
+          creditAppState[2].fields.foundingDate.value = event.target.value;
+        });
       }
     }
 
