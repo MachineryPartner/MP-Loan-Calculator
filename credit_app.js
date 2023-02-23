@@ -651,7 +651,7 @@ $(document).ready(function () {
     
     function createCategories() {
       const select = document.getElementById("product-category")
-      let options = ['Crushers', 'Breakers', 'Screeners', 'Pulverizers', 'Conveyors', 'Shears', 'Excavators', 'Grabs']
+      let options = ['Crusher', 'Breaker', 'Screener', 'Pulverizer', 'Conveyor', 'Shear', 'Excavator', 'Grab']
 
       for (let o = 0; o < options.length; o++) {
         let opt = options[o];
@@ -661,6 +661,22 @@ $(document).ready(function () {
         select.appendChild(optelement);
       }
     };
+
+    let savedCategory = ''
+
+    function saveCategory() {
+      HTMLSelectElement = document.querySelector("product-category");
+      savedCategory = HTMLSelectElement.value
+
+
+    }
+
+    function filterEquipment() {
+        let equipmentOptions = document.getElementById("product").value;
+
+        let filteredOptions = allModels.filter(eq => eq.includes(saveCategory))
+
+    }
 
     function createEquipments() {
       const select = document.getElementById("product");
@@ -700,7 +716,7 @@ $(document).ready(function () {
           product: {
             value: "",
             tag: "#product",
-            airtable: 'TBD',
+            airtable: 'Equipment',
             state: false,
             required: true,
             // init: Need to create init to check if Prod already selected
