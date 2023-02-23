@@ -3,7 +3,7 @@ const params = new URLSearchParams(document.location.search);
 const token = params.get("token");
 const DEBUG_MODE = params.get("debug");
 if (DEBUG_MODE !== "0") {
-$(document).ready(function () {
+  $(document).ready(function () {
     $.getScript(
       "https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js",
       function () {
@@ -52,12 +52,14 @@ $(document).ready(function () {
     let formFormLoadingMessage = document.getElementById("loading-message");
     let formSubmitArea = document.getElementById("finance-form-submit");
     formFormLoading.style.display = "block";
-    let formSectionEquipment = document.getElementById("form_section_equipment");
+    let formSectionEquipment = document.getElementById(
+      "form_section_equipment"
+    );
     let formSectionBusiness = document.getElementById("form_section_business");
     let formSectionInfo = document.getElementById("form_section_info");
     let formSectionLoan = document.getElementById("form_section_loan");
     let formSectionMajority = document.getElementById("form_section_owner");
-    formSectionEquipment.style.display = "none"
+    formSectionEquipment.style.display = "none";
     formSectionBusiness.style.display = "none";
     formSectionInfo.style.display = "none";
     formSectionLoan.style.display = "none";
@@ -171,13 +173,12 @@ $(document).ready(function () {
         // }
       };
     }
-    let allModels = []
-    async function getAllEquipment() {
-      const Equrl = "https://mp-loan-application.vercel.app/api/models"
-
+    let allModels = [];
+    async function getAllEquipment(callback) {
+      const Equrl = "https://mp-loan-application.vercel.app/api/models";
       const response = await fetch(Equrl);
       allModels = await response.json();
-      console.log(allModels)
+      callback();
     }
 
     let mockResponse = {
@@ -216,6 +217,7 @@ $(document).ready(function () {
 
     function saveCreditApp(cb) {
       const payload = getData();
+      console.log("Saved Credit App: ", payload);
       var xhr = new XMLHttpRequest();
       xhr.open("POST", `${getAPIBasePath()}/api/loan/save`, true);
       xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
@@ -264,13 +266,11 @@ $(document).ready(function () {
           currentBlock.setAttribute("data-collapsed", "false");
           currentBlock.style.height = "auto";
           currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
-          $("html, body").animate(
-            {
-              /* scrollTop: financePageTop */
-              scrollTop: formHeaders[currentState - 1].offsetTop-20
-            },
-          );
-        },600);
+          $("html, body").animate({
+            /* scrollTop: financePageTop */
+            scrollTop: formHeaders[currentState - 1].offsetTop - 20,
+          });
+        }, 600);
       } else {
         lastBlock.setAttribute("data-collapsed", "true");
         lastBlock.style.height = "0px";
@@ -329,19 +329,17 @@ $(document).ready(function () {
       //   lastBlock.style.maxHeight
       // );
       if (isCollapsed) {
-          lastBlock.setAttribute("data-collapsed", "true");
-          lastBlock.style.maxHeight = "0px";
-          lastBlock.style.height = "auto";
-          currentBlock.style.height = "auto";
-          setTimeout(function () {
+        lastBlock.setAttribute("data-collapsed", "true");
+        lastBlock.style.maxHeight = "0px";
+        lastBlock.style.height = "auto";
+        currentBlock.style.height = "auto";
+        setTimeout(function () {
           currentBlock.setAttribute("data-collapsed", "false");
           currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
-          $("html, body").animate(
-            {
-              scrollTop: formHeaders[currentState].offsetTop-20,
-            },
-            )
-          },600);
+          $("html, body").animate({
+            scrollTop: formHeaders[currentState].offsetTop - 20,
+          });
+        }, 600);
       } else {
         lastBlock.setAttribute("data-collapsed", "true");
         const valueBefore = Number(lastBlock.style.maxHeight.split("px")[0]);
@@ -368,7 +366,6 @@ $(document).ready(function () {
     $("#save-button-equipment").on("click", function (event) {
       nextBlock(1);
       saveCreditApp(function () {});
-      
     });
 
     let submitButtonBusinessAddress = document.getElementById(
@@ -377,7 +374,6 @@ $(document).ready(function () {
     $("#save-button-business-address").on("click", function (event) {
       nextBlock(2);
       saveCreditApp(function () {});
-      
     });
 
     let submitButtonBusinessInfo = document.getElementById(
@@ -648,48 +644,80 @@ $(document).ready(function () {
         field.required = field.originalRequired || false;
       }
     }
-    
-    function createCategories() {
-      const select = document.getElementById("product-category")
-      let options = ['Crusher', 'Breaker', 'Screener', 'Pulverizer', 'Conveyor', 'Shear', 'Excavator', 'Grab']
 
+    let selectedCategory = localStorage.getItem("selectedCategory");
+    let selectedEquipment = localStorage.getItem("selectedEquipment");
+
+    function createCategories() {
+      const select = document.getElementById("product-category");
+      removeAll(select);
+      let options = [
+        "Crusher",
+        "Breaker",
+        "Screener",
+        "Pulverizer",
+        "Conveyor",
+        "Shear",
+        "Excavator",
+        "Grab",
+      ];
+      let selectedEquipmentIndex = 0;
       for (let o = 0; o < options.length; o++) {
         let opt = options[o];
         let optelement = document.createElement("option");
+        if (!selectedCategory && o === 0) {
+          selectedCategory = opt;
+          selectedEquipmentIndex = o;
+          createEquipments(selectedEquipment);
+        }
+        if (opt === selectedCategory) {
+          selectedEquipmentIndex = o;
+          createEquipments(selectedEquipment);
+        }
         optelement.textContent = opt;
         optelement.value = opt;
         select.appendChild(optelement);
       }
-    };
-
-    let savedCategory = ''
-
-    function saveCategory() {
-      HTMLSelectElement = document.querySelector("product-category");
-      savedCategory = HTMLSelectElement.value
-
-
+      select.selectedIndex = selectedEquipmentIndex;
+      $("#product-category").on("change", function (event) {
+        selectedCategory = event.target.value;
+        createEquipments();
+      });
     }
 
-    function filterEquipment() {
-        let equipmentOptions = document.getElementById("product").value;
-
-        let filteredOptions = allModels.filter(eq => eq.includes(saveCategory))
-
+    function removeAll(selectBox) {
+      while (selectBox.options.length > 0) {
+        selectBox.remove(0);
+      }
     }
 
-    function createEquipments() {
+    function createEquipments(overideSelectedEquipment) {
       const select = document.getElementById("product");
-      let array2 = allModels
-      console.log(array2)
-      // allModels.models[0].id
-      array2.forEach(item => {
+      removeAll(select);
+      if (overideSelectedEquipment) {
+        selectedEquipment = overideSelectedEquipment;
+      }
+      let filteredModels = [];
+      allModels.models.map(function (item) {
+        const model = item["Product ID"].includes(selectedCategory);
+        if (model) filteredModels.push(item);
+      });
+      let selectedEquipmentIndex = 0;
+      filteredModels.forEach((model, index) => {
         const option = document.createElement("option");
-        option.setAttribute("id",item.id);
-        option.textContent = item.models["Product ID"];
+        option.setAttribute("id", model.id);
+        option.textContent = model["Product ID"];
+        if (selectedEquipment === model["Product ID"]) {
+          selectedEquipmentIndex = index;
+        }
         select.appendChild(option);
-      })
-    };
+      });
+      select.selectedIndex = selectedEquipmentIndex;
+
+      $("#product").on("change", function (event) {
+        selectedEquipment = event.target.value;
+      });
+    }
 
     let creditAppState = [
       {
@@ -698,38 +726,43 @@ $(document).ready(function () {
           category: {
             value: "",
             tag: "#product-category",
-            airtable: 'TBD',
+            airtable: "Equipment Category",
             state: false,
             required: true,
-            // init: Need to create init to check if Cat already selected
             validate: function () {
-              var e = document.getElementById("product-category")
-              var selectedCat = e.options[e.selectedIndex].value
-              if (selectedCat == 0 ) {
-                return { status: false, message: "Select a category"}
+              var e = document.getElementById("product-category");
+              var selectedCat = e.options[e.selectedIndex].value;
+              if (selectedCat == 0) {
+                return { status: false, message: "Select a category" };
+              } else {
+                return { status: true, message: "" };
               }
-              else {
-                return { status: true, message: "" }
-              }
-            }
+            },
           },
           product: {
             value: "",
             tag: "#product",
-            airtable: 'Equipment',
+            airtable: "Equipment",
             state: false,
             required: true,
-            // init: Need to create init to check if Prod already selected
+            init: function () {
+              const categoryField = creditAppState[0].fields.category.value;
+              const productField = creditAppState[0].fields.product.value;
+              if (categoryField !== "" && productField !== "") {
+                selectedCategory = categoryField;
+                selectedEquipment = productField;
+              }
+              createCategories();
+            },
             validate: function () {
-              var e = document.getElementById("product")
-              var selectedProd = e.options[e.selectedIndex].value
-              if (selectedProd == 0 ) {
-                return { status: false, message: "Select a Product"}
+              var e = document.getElementById("product");
+              var selectedProd = e.options[e.selectedIndex].value;
+              if (selectedProd == 0) {
+                return { status: false, message: "Select a Product" };
+              } else {
+                return { status: true, message: "" };
               }
-              else {
-                return { status: true, message: "" }
-              }
-            }
+            },
           },
         },
       },
@@ -850,7 +883,7 @@ $(document).ready(function () {
               return { status: true, message: "" };
             },
           },
-/*           noEmployees: {
+          /*           noEmployees: {
             value: "",
             tag: "#Employees",
             airtable: "Business No. of Employees",
@@ -1195,7 +1228,7 @@ $(document).ready(function () {
               return { status: false, message: "Required field" };
             },
           },
-/*           majorityAnotherBusinessList: {
+          /*           majorityAnotherBusinessList: {
             value: "",
             tag: "#Business-list-3",
             airtable: "Majority Owner Business List",
@@ -1650,16 +1683,14 @@ $(document).ready(function () {
           location.replace(response.data);
         } else {
           mockResponse = response.data;
-          getAllEquipment(function (response){
+          getAllEquipment(function (response) {
             // console.log("getAllEquipment", response.data)
+            loadForms();
           });
-          loadForms();
-          createCategories();
-          createEquipments();
         }
       });
     }
-  });  
+  });
 } else {
   console.log(`DEBUG_MODE: ${DEBUG_MODE}`);
 }
