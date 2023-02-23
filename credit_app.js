@@ -176,7 +176,7 @@ if (DEBUG_MODE !== "0") {
     }
     let allModels = [];
     async function getAllEquipment(callback) {
-      const Equrl = "https://mp-loan-application.vercel.app/api/models";
+      const Equrl = `${getAPIBasePath()}/api/models`;
       const response = await fetch(Equrl);
       allModels = await response.json();
       callback();
@@ -648,7 +648,7 @@ if (DEBUG_MODE !== "0") {
 
     let selectedCategory = localStorage.getItem("selectedCategory");
     let selectedEquipment = localStorage.getItem("selectedEquipment");
-
+    let selectedPrice = localStorage.getItem("selectedPrice");
     function createCategories() {
       const select = document.getElementById("product-category");
       removeAll(select);
@@ -695,6 +695,7 @@ if (DEBUG_MODE !== "0") {
     function createEquipments(overideSelectedEquipment) {
       const select = document.getElementById("product");
       removeAll(select);
+
       if (overideSelectedEquipment) {
         selectedEquipment = overideSelectedEquipment;
       }
@@ -706,16 +707,42 @@ if (DEBUG_MODE !== "0") {
       let selectedEquipmentIndex = 0;
       filteredModels.forEach((model, index) => {
         const option = document.createElement("option");
-        option.setAttribute("id", model.id);
+        option.setAttribute("id", model["Product ID"]);
+        option.setAttribute("price", model["Public Customer Price"][0]);
         option.textContent = model["Product ID"];
         if (selectedEquipment === model["Product ID"]) {
           selectedEquipmentIndex = index;
+          selectedPrice = model["Public Customer Price"][0];
+          // creditAppState[3].fields.price.value = selectedPrice;
+          document.getElementById("Price").value =
+            currency(selectedPrice).value;
         }
+
         select.appendChild(option);
       });
+      formatCurrency($("#Price"), true);
       select.selectedIndex = selectedEquipmentIndex;
+      console.log({
+        selectedCategory,
+        selectedEquipment,
+        selectedPrice,
+      });
 
       $("#product").on("change", function (event) {
+        console.log("product changed: ", event);
+        const e = document.getElementById("product");
+        const options = e.options;
+        for (const index in options) {
+          if (index === event.target.value) {
+            // Get the price attribute and set globally
+            selectedPrice = options[index].getAttribute("price");
+            creditAppState[3].fields.price.value = selectedPrice;
+            document.getElementById("Price").value =
+              currency(selectedPrice).value;
+            console.log("Match", index, selectedPrice);
+          }
+          formatCurrency($("#Price"), true);
+        }
         selectedEquipment = event.target.value;
       });
     }
@@ -749,9 +776,16 @@ if (DEBUG_MODE !== "0") {
             init: function () {
               const categoryField = creditAppState[0].fields.category.value;
               const productField = creditAppState[0].fields.product.value;
+              const priceField = creditAppState[3].fields.price.value;
               if (categoryField !== "" && productField !== "") {
                 selectedCategory = categoryField;
                 selectedEquipment = productField;
+              }
+              if (priceField !== "") {
+                selectedPrice = priceField;
+                document.getElementById("Price").value =
+                  currency(selectedPrice).value;
+                formatCurrency($("#Price"), true);
               }
               createCategories();
             },
@@ -978,6 +1012,27 @@ if (DEBUG_MODE !== "0") {
               return { status: true, message: "" };
             },
           }, */
+          price: {
+            value: "",
+            tag: "#Price",
+            airtable: "Equipment Price",
+            state: false,
+            required: true,
+            init: function (_input) {
+              _input.disabled = true;
+              // document.getElementById("Price").disabled = true;
+              const input = $("#Price")[0];
+              if (input.value !== "") {
+                document.getElementById("Price").value = currency(
+                  input.value
+                ).value;
+              }
+              formatCurrency($("#Price"), true);
+            },
+            validate: function (_input) {
+              return { status: true, message: "" };
+            },
+          },
           maxDownpayment: {
             value: "",
             tag: "#Max-Downpayment",
