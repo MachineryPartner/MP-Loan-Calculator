@@ -10,6 +10,11 @@ if (DEBUG_MODE !== "0") {
     document.getElementById("full-price").value =
       document.getElementById("full-price").placeholder;
   } else if (!isNaN(price)) {
+    localStorage.setItem("selectedPrice", price);
+    localStorage.setItem(
+      "selectedEquipment",
+      document.getElementById("productid")
+    );
     document.getElementById("full-price").value = currency(price).format();
   }
   // formatCurrency($(this));
