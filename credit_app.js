@@ -9,7 +9,7 @@ if (DEBUG_MODE !== "0") {
       function () {
         $("#Security-2").mask("999-99-9999");
         $("#Security-3").mask("999-99-9999");
-        $("#tax-id-2").mask("99-9999999");
+        $("#tax-id").mask("99-9999999");
         $("#Zip-Code").mask("99999-9999");
         $("#Majority-Zip-Code").mask("99999-9999");
         $("#Sec-Zip-Code").mask("99999-9999");
@@ -898,21 +898,21 @@ if (DEBUG_MODE !== "0") {
       {
         button: submitButtonBusinessInfo,
         fields: {
-          businessActivity: {
-            value: "",
-            tag: "#Business-activity",
-            airtable: "Business Main Activity",
-            state: false,
-            required: false,
-            validate: function (_input) {
-              return { status: true, message: "" };
-            },
-          },
+          // businessActivity: {
+          //   value: "",
+          //   tag: "#Business-activity",
+          //   airtable: "Business Main Activity",
+          //   state: false,
+          //   required: false,
+          //   validate: function (_input) {
+          //     return { status: true, message: "" };
+          //   },
+          // },
           foundingDate: {
             value: "",
             tag: "#Founding-Date",
             airtable: "Years in Business",
-            state: false,
+            state: true,
             required: true,
             validate: function (_input) {
               return { status: true, message: "" };
@@ -960,7 +960,7 @@ if (DEBUG_MODE !== "0") {
           },
           ein: {
             value: "",
-            tag: "#tax-id-2",
+            tag: "#tax-id",
             airtable: "Business EIN",
             state: false,
             required: true,
@@ -1726,12 +1726,13 @@ if (DEBUG_MODE !== "0") {
 
         // FIX-IT For some reasons the creditAppState won't trigger the init for foudingDate
         // Doing here it's working !
-        const inputValue = creditAppState[2].fields.foundingDate.value;
+        const inputFoundingDateData = creditAppState[2].fields.foundingDate;
+        const inputFoundingDateValue = inputFoundingDateData.value;
         const foundingDateInput = $("#founding-date")[0];
         const options = foundingDateInput.options;
         for (const index in options) {
           const opt = options[index];
-          if (opt.value === inputValue) {
+          if (opt.value === inputFoundingDateValue) {
             foundingDateInput.selectedIndex = index;
           }
         }
