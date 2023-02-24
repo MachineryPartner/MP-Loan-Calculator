@@ -11,12 +11,16 @@ if (DEBUG_MODE !== "0") {
       document.getElementById("full-price").placeholder;
   } else if (!isNaN(price)) {
     localStorage.setItem("selectedPrice", price);
-    localStorage.setItem(
-      "selectedEquipment",
-      document.getElementById("productid").innerHTML
-    );
     document.getElementById("full-price").value = currency(price).format();
   }
+  localStorage.setItem(
+    "selectedEquipment",
+    document.getElementById("productid").innerHTML
+  );
+  localStorage.setItem(
+    "selectedCategory",
+    document.getElementById("category").innerHTML
+  );
   // formatCurrency($(this));
   $("#Term").change(function () {
     calculate_price();

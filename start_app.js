@@ -1,5 +1,11 @@
 /*  */
 $(document).ready(function () {
+  $.getScript(
+    "https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js",
+    function () {
+      // $("#phone-number").mask("");
+    }
+  );
   let dataPayload = {};
   let statusPossibles = {
     contact: "PERSONAL_INFORMATION",
