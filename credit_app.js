@@ -652,6 +652,11 @@ if (DEBUG_MODE !== "0") {
     function createCategories() {
       const select = document.getElementById("product-category");
       removeAll(select);
+      let chooseCategory = document.createElement("option");
+      chooseCategory.textContent = "Choose a category"
+      chooseCategory.value = "Placeholder"
+      chooseCategory.setAttribute('disabled', '');
+      select.appendChild(chooseCategory);
       let options = [
         "Crusher",
         "Breaker",
@@ -667,12 +672,12 @@ if (DEBUG_MODE !== "0") {
         let opt = options[o];
         let optelement = document.createElement("option");
         if (!selectedCategory && o === 0) {
-          selectedCategory = opt;
+          selectedCategory = chooseCategory;
           selectedEquipmentIndex = o;
-          createEquipments(selectedEquipment);
+          placeholderEquipment()
         }
         if (opt === selectedCategory) {
-          selectedEquipmentIndex = o;
+          selectedEquipmentIndex = o+1;
           createEquipments(selectedEquipment);
         }
         optelement.textContent = opt;
@@ -692,10 +697,22 @@ if (DEBUG_MODE !== "0") {
       }
     }
 
+    function placeholderEquipment() {
+      const select = document.getElementById("product");
+      let chooseEquipment= document.createElement("option");
+      chooseEquipment.textContent = "Choose a category first";
+      chooseEquipment.value = "Placeholder";
+      chooseEquipment.setAttribute('selected', '');
+      select.appendChild(chooseEquipment);
+    }
+
     function createEquipments(overideSelectedEquipment) {
       const select = document.getElementById("product");
       removeAll(select);
 
+/*       if (overideSelectedEquipment === 0) {
+        placeholderEquipment();
+      } */
       if (overideSelectedEquipment) {
         selectedEquipment = overideSelectedEquipment;
       }
@@ -760,7 +777,7 @@ if (DEBUG_MODE !== "0") {
             validate: function () {
               var e = document.getElementById("product-category");
               var selectedCat = e.options[e.selectedIndex].value;
-              if (selectedCat == 0) {
+              if (selectedCat === 0 || selectedCat === "Placeholder") {
                 return { status: false, message: "Select a category" };
               } else {
                 return { status: true, message: "" };
@@ -792,7 +809,7 @@ if (DEBUG_MODE !== "0") {
             validate: function () {
               var e = document.getElementById("product");
               var selectedProd = e.options[e.selectedIndex].value;
-              if (selectedProd == 0) {
+              if (selectedProd == 0 || selectedProd === "Placeholder" ) {
                 return { status: false, message: "Select a Product" };
               } else {
                 return { status: true, message: "" };
