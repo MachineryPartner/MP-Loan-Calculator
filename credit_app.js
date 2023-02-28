@@ -777,7 +777,7 @@ if (DEBUG_MODE !== "0") {
             validate: function () {
               var e = document.getElementById("product-category");
               var selectedCat = e.options[e.selectedIndex].value;
-              if (selectedCat == 0) {
+              if (selectedCat === 0 || selectedCat === "Placeholder") {
                 return { status: false, message: "Select a category" };
               } else {
                 return { status: true, message: "" };
@@ -809,7 +809,7 @@ if (DEBUG_MODE !== "0") {
             validate: function () {
               var e = document.getElementById("product");
               var selectedProd = e.options[e.selectedIndex].value;
-              if (selectedProd == 0) {
+              if (selectedProd == 0 || selectedProd === "Placeholder" ) {
                 return { status: false, message: "Select a Product" };
               } else {
                 return { status: true, message: "" };
