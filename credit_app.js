@@ -266,7 +266,7 @@ if (DEBUG_MODE !== "0") {
         setTimeout(function () {
           currentBlock.setAttribute("data-collapsed", "false");
           currentBlock.style.height = "auto";
-          currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
+          currentBlock.style.maxHeight = currentBlock.scrollHeight + 200 + "px";
           $("html, body").animate({
             /* scrollTop: financePageTop */
             scrollTop: formHeaders[currentState - 1].offsetTop - 20,
@@ -336,7 +336,7 @@ if (DEBUG_MODE !== "0") {
         currentBlock.style.height = "auto";
         setTimeout(function () {
           currentBlock.setAttribute("data-collapsed", "false");
-          currentBlock.style.maxHeight = currentBlock.scrollHeight + "px";
+          currentBlock.style.maxHeight = currentBlock.scrollHeight + 200 + "px";
           $("html, body").animate({
             scrollTop: formHeaders[currentState].offsetTop - 20,
           });
