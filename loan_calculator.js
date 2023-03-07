@@ -13,14 +13,15 @@ if (DEBUG_MODE !== "0") {
     localStorage.setItem("selectedPrice", price);
     document.getElementById("full-price").value = currency(price).format();
   }
-  localStorage.setItem(
-    "selectedEquipment",
-    document.getElementById("productid").innerHTML
-  );
-  localStorage.setItem(
-    "selectedCategory",
-    document.getElementById("category").innerHTML
-  );
+  const productInput = document.getElementById("productid");
+  const categoryInput = document.getElementById("category");
+  if (productInput) {
+    localStorage.setItem("selectedEquipment", productInput.innerHTML);
+  }
+  if (categoryInput) {
+    localStorage.setItem("selectedCategory", categoryInput.innerHTML);
+  }
+
   // formatCurrency($(this));
   $("#Term").change(function () {
     calculate_price();
