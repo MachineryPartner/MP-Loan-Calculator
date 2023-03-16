@@ -1270,7 +1270,7 @@ if (DEBUG_MODE !== "0") {
             tag: "#Majority-Zip-Code",
             airtable: "Majority Zip-Code",
             state: false,
-            required: true,
+            required: false,
             originalRequired: true,
             validate: function (_input) {
               var isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(_input);
