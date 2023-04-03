@@ -19,6 +19,7 @@ startPopUp.addEventListener("click", function() {
     section1.style.height = "auto";
     section2.style.display = "none";
     section3.style.display = "none";
+    
 });
 
 nextBtn1.addEventListener("click", function() {
@@ -27,6 +28,7 @@ nextBtn1.addEventListener("click", function() {
         section2.style.display = "block";
         section2.style.height = "auto";
     }
+    console.log("step1")
 });
 
 nextBtn2.addEventListener("click", function() {
@@ -35,18 +37,21 @@ nextBtn2.addEventListener("click", function() {
       section3.style.display = "block";
       section3.style.height = "auto";
     }
+    console.log("step2")
 });
 
 backBtn2.addEventListener("click", function() {
     section2.style.display = "block";
     section2.style.display = "auto";
     section3.style.display = "none";
+    console.log("backstep1")
 });
 
 backBtn3.addEventListener("click", function() {
     section3.style.display = "none";
     section2.style.display = "block";
     section2.style.height = "auto";
+    console.log("backstep2")
 });
 
 function validateSection(section) {
