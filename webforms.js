@@ -1,5 +1,5 @@
 
-
+const startPopUp = document.getElementById("contact-form-initiatior");
 const section1 = document.getElementById("contact-form-section-1");
 const section2 = document.getElementById("contact-form-section-2");
 const section3 = document.getElementById("contact-form-section-3");
@@ -12,6 +12,14 @@ const errorDiv = emailForm.parentElement.querySelector(
     '[data-form=error]')
 
 console.log('errorDiv', errorDiv)
+
+startPopUp.addEventListener("click", function() {
+    section1.style.display = "none";
+    section1.style.display = "block";
+    section1.style.height = "auto";
+    section2.style.display = "none";
+    section3.style.display = "none";
+});
 
 nextBtn1.addEventListener("click", function() {
         section1.style.display = "none";
