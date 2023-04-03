@@ -22,15 +22,19 @@ startPopUp.addEventListener("click", function() {
 });
 
 nextBtn1.addEventListener("click", function() {
+    if (validateSection(section1)) {
         section1.style.display = "none";
         section2.style.display = "block";
         section2.style.height = "auto";
+    }
 });
 
 nextBtn2.addEventListener("click", function() {
+    if (validateSection(section2)) {
       section2.style.display = "none";
       section3.style.display = "block";
       section3.style.height = "auto";
+    }
 });
 
 backBtn2.addEventListener("click", function() {
@@ -44,3 +48,14 @@ backBtn3.addEventListener("click", function() {
     section2.style.display = "block";
     section2.style.height = "auto";
 });
+
+function validateSection(section) {
+    const requiredFields = section.querySelectorAll("input[required]")
+    let isValid = true;
+    requiredFields.forEach(function(field) {
+        if (field.value.trim() === "") {
+            alert("Please fill out all fields");
+            isValid = false;
+        }
+    });
+};
