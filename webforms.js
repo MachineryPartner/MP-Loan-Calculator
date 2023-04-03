@@ -3,10 +3,10 @@ const startPopUp = document.getElementById("contact-form-initiatior");
 const section1 = document.getElementById("contact-form-section-1");
 const section2 = document.getElementById("contact-form-section-2");
 const section3 = document.getElementById("contact-form-section-3");
-const nextBtn1 = document.getElementById("next-btn-1");
-const nextBtn2 = document.getElementById("next-btn-2");
-const backBtn2 = document.getElementById("back-btn-2");
-const backBtn3 = document.getElementById("back-btn-3");
+const nextBtn1 = document.getElementById("contact-form-to-section-2");
+const nextBtn2 = document.getElementById("contact-form-to-section-3");
+const backBtn2 = document.getElementById("contact-form-back-to-section-1");
+const backBtn3 = document.getElementById("contact-form-back-to-section-2");
 
 const errorDiv = emailForm.parentElement.querySelector(
     '[data-form=error]')
