@@ -8,9 +8,9 @@ const nextBtn2 = document.getElementById("contact-form-to-section-3");
 const backBtn2 = document.getElementById("contact-form-back-to-section-1");
 const backBtn3 = document.getElementById("contact-form-back-to-section-2");
 
-const errorDiv = emailForm.parentElement.querySelector(
+/* const errorDiv = emailForm.parentElement.querySelector(
     '[data-form=error]')
-
+ */
 console.log('errorDiv', errorDiv)
 
 startPopUp.addEventListener("click", function() {
@@ -19,6 +19,7 @@ startPopUp.addEventListener("click", function() {
     section1.style.height = "auto";
     section2.style.display = "none";
     section3.style.display = "none";
+    console.log("starting")
     
 });
 
