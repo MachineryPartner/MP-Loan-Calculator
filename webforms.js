@@ -10,8 +10,8 @@ const backBtn3 = document.getElementById("contact-form-back-to-section-2");
 
 /* const errorDiv = emailForm.parentElement.querySelector(
     '[data-form=error]')
- */
-console.log('errorDiv', errorDiv)
+
+console.log('errorDiv', errorDiv) */
 
 startPopUp.addEventListener("click", function() {
     section1.style.display = "none";
