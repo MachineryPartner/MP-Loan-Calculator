@@ -43,8 +43,8 @@ nextBtn2.addEventListener("click", function() {
 
 backBtn2.addEventListener("click", function() {
     section2.style.display = "block";
-    section2.style.height = "auto";
     section3.style.display = "none";
+    section2.style.height = "auto";
     console.log("backstep1")
 });
 
