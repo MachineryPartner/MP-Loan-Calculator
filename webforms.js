@@ -25,11 +25,11 @@ startPopUp.addEventListener("click", function() {
 
 nextBtn1.addEventListener("click", function() {
     validateSection1(); 
-    {
+
         section1.style.display = "none";
         section2.style.display = "block";
         section2.style.height = "auto";
-    }
+        
     console.log("step1")
 });
 
@@ -69,7 +69,7 @@ function validateSection1() {
     const selectFields = document.querySelectorAll('select');
     let isValid = true
 
-    selectFields.forEach(select => {
+    selectFields.forEach(e => {
         var selectedCat = e.options[e.selectedIndex].value;
         if (selectedCat === 0) {
             isValid = false;
