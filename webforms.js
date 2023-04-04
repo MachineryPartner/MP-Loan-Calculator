@@ -46,6 +46,7 @@ backBtn2.addEventListener("click", function() {
     section2.style.display = "none";
     section1.style.display = "block";
     section1.style.height = "auto";
+    validateSection1();
     console.log("backstep1")
 });
 
@@ -75,8 +76,7 @@ function validateSection1() {
         var selectedOptionText = selectedOption.text;
         if (selectedOptionText === "Please select") {
             isValid = false;
-            console.log("NOT VALID")
-            
+            throw BreakException;
         }
         else {
             isValid = true;
