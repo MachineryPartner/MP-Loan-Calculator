@@ -26,11 +26,6 @@ startPopUp.addEventListener("click", function() {
 nextBtn1.addEventListener("click", function() {
     validateSection1(); 
 
-        section1.style.display = "none";
-        section2.style.display = "block";
-        section2.style.height = "auto";
-        
-    console.log("step1")
 });
 
 nextBtn2.addEventListener("click", function() {
@@ -41,7 +36,7 @@ nextBtn2.addEventListener("click", function() {
 });
 
 backBtn2.addEventListener("click", function() {
-    section3.style.display = "none";
+    section2.style.display = "none";
     section1.style.display = "block";
     section1.style.height = "auto";
     console.log("backstep1")
@@ -71,10 +66,15 @@ function validateSection1() {
 
     selectFields.forEach(e => {
         var selectedCat = e.options[e.selectedIndex].value;
-        if (selectedCat === 0) {
+        if (selectedCat === 0 || selectedCat === "Please select") {
             isValid = false;
             alert("Please select something")
         }
+        else {
+            section1.style.display = "none";
+            section2.style.display = "block";
+            section2.style.height = "auto";
+            console.log("step1")
+        }
       });
-      console.log(isValid)
 }
