@@ -75,6 +75,9 @@ function validateSection1() {
         var selectedOption = e.options[e.selectedIndex]
         var selectedOptionText = selectedOption.text;
         if (selectedOptionText === "Please select") {
+            selectedOption.setAttribute('disabled', '');
+        }
+        if (selectedOptionText === "Please select") {
             isValid = false;
             throw BreakException;
         }
