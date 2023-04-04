@@ -24,7 +24,7 @@ startPopUp.addEventListener("click", function() {
 });
 
 nextBtn1.addEventListener("click", function() {
-    if (validateSection(section1)) {
+    if (validateSection1() {
         section1.style.display = "none";
         section2.style.display = "block";
         section2.style.height = "auto";
@@ -33,18 +33,16 @@ nextBtn1.addEventListener("click", function() {
 });
 
 nextBtn2.addEventListener("click", function() {
-    if (validateSection(section2)) {
       section2.style.display = "none";
       section3.style.display = "block";
       section3.style.height = "auto";
-    }
     console.log("step2")
 });
 
 backBtn2.addEventListener("click", function() {
-    section2.style.display = "block";
     section3.style.display = "none";
-    section2.style.height = "auto";
+    section1.style.display = "block";
+    section1.style.height = "auto";
     console.log("backstep1")
 });
 
@@ -55,7 +53,7 @@ backBtn3.addEventListener("click", function() {
     console.log("backstep2")
 });
 
-function validateSection(section) {
+/* function validateSection(section) {
     const requiredFields = section.querySelectorAll("input[required]")
     let isValid = true;
     requiredFields.forEach(function(field) {
@@ -64,4 +62,17 @@ function validateSection(section) {
             isValid = false;
         }
     });
-};
+}; */
+
+function validateSection1() {
+    const selectFields = document.querySelectorAll('select');
+    let isValid = true
+
+    selectFields.forEach(select => {
+        var selectedCat = e.options[e.selectedIndex].value;
+        if (selectedCat === 0) {
+            isValid = false;
+            alert("Please select something")
+        }
+      });
+}
