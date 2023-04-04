@@ -25,7 +25,8 @@ startPopUp.addEventListener("click", function() {
 });
 
 nextBtn1.addEventListener("click", function() {
-    if (validateSection1(isValid)) {
+    validateSection1();
+    if (isValid === true) {
         section1.style.display = "none";
         section2.style.display = "block";
         section2.style.height = "auto";
