@@ -77,18 +77,19 @@ function validateSection1() {
 }
 
 function validateSection2() {
-    const selectFields = section2.querySelectorAll('input');
+    const inputFields = section2.querySelectorAll('input[type="text"]');
     const emailInput = document.getElementById("contact-form-email");
     
-    selectFields.forEach(e => {
-        console.log(selectFields.value)
-        if (selectFields.value === '') {
+    inputFields.forEach(function(inputFields) {
+        const inputValue = inputFields.value.trim();
+        if (inputValue === '') {
             section2IsValid = false;
             throw BreakException;
         }
         else {
             section2IsValid = true;
         }
+        console.log(inputValue)
       });
 
 }
