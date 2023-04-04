@@ -24,7 +24,8 @@ startPopUp.addEventListener("click", function() {
 });
 
 nextBtn1.addEventListener("click", function() {
-    if (validateSection1() {
+    validateSection1(); 
+    {
         section1.style.display = "none";
         section2.style.display = "block";
         section2.style.height = "auto";
@@ -75,4 +76,5 @@ function validateSection1() {
             alert("Please select something")
         }
       });
+      console.log(isValid)
 }
