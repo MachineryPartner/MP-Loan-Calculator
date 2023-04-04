@@ -47,7 +47,12 @@ nextBtn2.addEventListener("click", function() {
     }
 });
 
+submitButton.addEventListener("submit", function(event) {
+    event.preventDefault();
+});
+
 submitButton.addEventListener("click", function() {
+    
     validateSection3()
     if (section3IsValid === true) {
             window.pagesense = window.pagesense || [];
