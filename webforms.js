@@ -47,7 +47,7 @@ nextBtn2.addEventListener("click", function() {
     }
 });
 
-submitButton.addEventListener("submit", function(event) {
+/* submitButton.addEventListener("submit", function(event) {
     Webflow.push(function() {
         $('form').submit(function() {
           alert('Form submissions have been disabled during development.');
@@ -63,7 +63,7 @@ submitButton.addEventListener("click", function() {
             window.pagesense = window.pagesense || [];
             window.pagesense.push(['trackEvent', 'submit_success']);
             }
-});
+}); */
 
 backBtn2.addEventListener("click", function() {
     section2.style.display = "none";
@@ -113,7 +113,7 @@ function validateSection2() {
 
 }
 
-function validateSection3() {
+/* function validateSection3() {
     const inputFields = section3.querySelectorAll('input[type="text"]');
     const selectFields = section3.querySelectorAll('select');
 
@@ -138,4 +138,4 @@ function validateSection3() {
         else {
             section3IsValid = true;
     }
-}
+} */
