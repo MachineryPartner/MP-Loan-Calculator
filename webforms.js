@@ -20,7 +20,7 @@ let section3IsValid = true
 
 startPopUp.addEventListener("click", function() {
     section1.style.display = "none";
-    section1.style.display = "block";
+    section1.style.display = "flex";
     section1.style.height = "auto";
     section2.style.display = "none";
     section3.style.display = "none";
@@ -32,7 +32,7 @@ nextBtn1.addEventListener("click", function() {
     validateSection1();
     if (section1IsValid === true) {
         section1.style.display = "none";
-        section2.style.display = "block";
+        section2.style.display = "flex";
         section2.style.height = "auto";
     }
 
@@ -42,7 +42,7 @@ nextBtn2.addEventListener("click", function() {
     validateSection2()
     if (section2IsValid === true) {
       section2.style.display = "none";
-      section3.style.display = "block";
+      section3.style.display = "flex";
       section3.style.height = "auto";
     }
 });
@@ -67,13 +67,13 @@ submitButton.addEventListener("click", function() {
 
 backBtn2.addEventListener("click", function() {
     section2.style.display = "none";
-    section1.style.display = "block";
+    section1.style.display = "flex";
     section1.style.height = "auto";
 });
 
 backBtn3.addEventListener("click", function() {
     section3.style.display = "none";
-    section2.style.display = "block";
+    section2.style.display = "flex";
     section2.style.height = "auto";
 });
 
@@ -100,6 +100,7 @@ function validateSection1() {
 function validateSection2() {
     const inputFields = section2.querySelectorAll('input[type="text"]');
     inputFields.required = true;
+
     const emailInput = document.getElementById("contact-form-email");
     
     inputFields.forEach(function(inputFields) {
