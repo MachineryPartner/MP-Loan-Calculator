@@ -12,6 +12,7 @@ const backBtn3 = document.getElementById("contact-form-back-to-section-2");
     '[data-form=error]')
 
 console.log('errorDiv', errorDiv) */
+let isValid = true
 
 startPopUp.addEventListener("click", function() {
     section1.style.display = "none";
@@ -67,7 +68,6 @@ backBtn3.addEventListener("click", function() {
 
 function validateSection1() {
     const selectFields = section1.querySelectorAll('select');
-    let isValid = true
 
     selectFields.forEach(e => {
         var selectedOption = e.options[e.selectedIndex]
