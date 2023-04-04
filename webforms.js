@@ -79,6 +79,7 @@ backBtn3.addEventListener("click", function() {
 
 function validateSection1() {
     const selectFields = section1.querySelectorAll('select');
+    selectFields.required = true;
 
     selectFields.forEach(e => {
         var selectedOption = e.options[e.selectedIndex]
@@ -98,6 +99,7 @@ function validateSection1() {
 
 function validateSection2() {
     const inputFields = section2.querySelectorAll('input[type="text"]');
+    inputFields.required = true;
     const emailInput = document.getElementById("contact-form-email");
     
     inputFields.forEach(function(inputFields) {
