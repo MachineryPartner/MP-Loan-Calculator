@@ -77,6 +77,9 @@ function validateSection1() {
             console.log("NOT VALID")
             
         }
+        else {
+            isValid = true;
+        }
         console.log(selectedOptionText)
       });
       console.log(isValid)
