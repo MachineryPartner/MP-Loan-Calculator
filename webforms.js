@@ -66,17 +66,19 @@ function validateSection1() {
 
     selectFields.forEach(e => {
         var selectedOption = e.options[e.selectedIndex].value;
-        if (selectedOption === "Another option" || selectedOption === "Please select") {
+        var selectedOptionText = selectedOption.text;
+        if (selectedOptionText === "Please select") {
             isValid = false;
-            alert("Please select something")
+            console.log("NOT VALID")
+            
         }
         else {
             section1.style.display = "none";
             section2.style.display = "block";
             section2.style.height = "auto";
             console.log("step1")
-            console.log(selectedOption)
         }
+        console.log(selectedOptionText)
       });
       console.log(isValid)
 }
