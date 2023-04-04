@@ -104,10 +104,12 @@ function validateSection2() {
         const inputValue = inputFields.value.trim();
         if (inputValue === '') {
             section2IsValid = false;
+            inputFields.setCustomValidity('This field is required.');
             throw BreakException;
         }
         else {
             section2IsValid = true;
+            inputFields.setCustomValidity('');
         }
       });
 
