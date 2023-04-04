@@ -48,7 +48,12 @@ nextBtn2.addEventListener("click", function() {
 });
 
 submitButton.addEventListener("submit", function(event) {
-    event.preventDefault();
+    Webflow.push(function() {
+        $('form').submit(function() {
+          alert('Form submissions have been disabled during development.');
+          return false;
+        });
+      });
 });
 
 submitButton.addEventListener("click", function() {
