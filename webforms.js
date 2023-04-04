@@ -65,8 +65,8 @@ function validateSection1() {
     let isValid = true
 
     selectFields.forEach(e => {
-        var selectedCat = e.options[e.selectedIndex].value;
-        if (selectedCat === 0 || selectedCat === "Please select") {
+        var selectedOption = e.options[e.selectedIndex];
+        if (selectedOption.value === '' || selectedOption.value === "Please select") {
             isValid = false;
             alert("Please select something")
         }
@@ -77,4 +77,5 @@ function validateSection1() {
             console.log("step1")
         }
       });
+      console.log(isValid)
 }
