@@ -75,6 +75,7 @@ function validateSection1() {
             section2.style.display = "block";
             section2.style.height = "auto";
             console.log("step1")
+            console.log(selectedOption)
         }
       });
       console.log(isValid)
