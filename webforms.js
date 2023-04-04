@@ -24,7 +24,12 @@ startPopUp.addEventListener("click", function() {
 });
 
 nextBtn1.addEventListener("click", function() {
-    validateSection1(); 
+    if (validateSection1(isValid)) {
+        section1.style.display = "none";
+        section2.style.display = "block";
+        section2.style.height = "auto";
+        console.log("step1")
+    }
 
 });
 
@@ -61,7 +66,7 @@ backBtn3.addEventListener("click", function() {
 }; */
 
 function validateSection1() {
-    const selectFields = document.querySelectorAll('select');
+    const selectFields = section1.querySelectorAll('select');
     let isValid = true
 
     selectFields.forEach(e => {
@@ -71,12 +76,6 @@ function validateSection1() {
             isValid = false;
             console.log("NOT VALID")
             
-        }
-        else {
-            section1.style.display = "none";
-            section2.style.display = "block";
-            section2.style.height = "auto";
-            console.log("step1")
         }
         console.log(selectedOptionText)
       });
