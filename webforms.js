@@ -103,7 +103,7 @@ function validateSection2() {
 
 }
 
-function validateSection2() {
+function validateSection3() {
     const inputFields = section3.querySelectorAll('input[type="text"]');
     const selectFields = section3.querySelectorAll('select');
 
