@@ -65,7 +65,7 @@ function validateSection1() {
     let isValid = true
 
     selectFields.forEach(e => {
-        var selectedOption = e.options[e.selectedIndex].value;
+        var selectedOption = e.options[e.selectedIndex]
         var selectedOptionText = selectedOption.text;
         if (selectedOptionText === "Please select") {
             isValid = false;
