@@ -12,7 +12,8 @@ const backBtn3 = document.getElementById("contact-form-back-to-section-2");
     '[data-form=error]')
 
 console.log('errorDiv', errorDiv) */
-let isValid = true
+let section1IsValid = true
+let section2IsValid = true
 
 startPopUp.addEventListener("click", function() {
     section1.style.display = "none";
@@ -26,20 +27,21 @@ startPopUp.addEventListener("click", function() {
 
 nextBtn1.addEventListener("click", function() {
     validateSection1();
-    if (isValid === true) {
+    if (section1IsValid === true) {
         section1.style.display = "none";
         section2.style.display = "block";
         section2.style.height = "auto";
-        console.log("step1")
     }
 
 });
 
 nextBtn2.addEventListener("click", function() {
+    validateSection2()
+    if (section2IsValid === true) {
       section2.style.display = "none";
       section3.style.display = "block";
       section3.style.height = "auto";
-    console.log("step2")
+    }
 });
 
 backBtn2.addEventListener("click", function() {
@@ -47,26 +49,13 @@ backBtn2.addEventListener("click", function() {
     section1.style.display = "block";
     section1.style.height = "auto";
     validateSection1();
-    console.log("backstep1")
 });
 
 backBtn3.addEventListener("click", function() {
     section3.style.display = "none";
     section2.style.display = "block";
     section2.style.height = "auto";
-    console.log("backstep2")
 });
-
-/* function validateSection(section) {
-    const requiredFields = section.querySelectorAll("input[required]")
-    let isValid = true;
-    requiredFields.forEach(function(field) {
-        if (field.value.trim() === "") {
-            alert("Please fill out all fields");
-            isValid = false;
-        }
-    });
-}; */
 
 function validateSection1() {
     const selectFields = section1.querySelectorAll('select');
@@ -78,13 +67,28 @@ function validateSection1() {
             selectedOption.setAttribute('disabled', '');
         }
         if (selectedOptionText === "Please select") {
-            isValid = false;
+            section1IsValid = false;
             throw BreakException;
         }
         else {
-            isValid = true;
+            section1IsValid = true;
         }
-        console.log(selectedOptionText)
       });
-      console.log(isValid)
+}
+
+function validateSection2() {
+    const selectFields = section2.querySelectorAll('input');
+    const emailInput = document.getElementById("contact-form-email");
+    
+    selectFields.forEach(e => {
+        console.log(selectFields.value)
+        if (selectFields.value === '') {
+            section2IsValid = false;
+            throw BreakException;
+        }
+        else {
+            section2IsValid = true;
+        }
+      });
+
 }
