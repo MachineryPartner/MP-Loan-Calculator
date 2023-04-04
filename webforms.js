@@ -7,6 +7,8 @@ const nextBtn1 = document.getElementById("contact-form-to-section-2");
 const nextBtn2 = document.getElementById("contact-form-to-section-3");
 const backBtn2 = document.getElementById("contact-form-back-to-section-1");
 const backBtn3 = document.getElementById("contact-form-back-to-section-2");
+const submitButton = document.getElementById("contact-form-submitter");
+
 
 /* const errorDiv = emailForm.parentElement.querySelector(
     '[data-form=error]')
@@ -14,6 +16,7 @@ const backBtn3 = document.getElementById("contact-form-back-to-section-2");
 console.log('errorDiv', errorDiv) */
 let section1IsValid = true
 let section2IsValid = true
+let section3IsValid = true
 
 startPopUp.addEventListener("click", function() {
     section1.style.display = "none";
@@ -44,11 +47,18 @@ nextBtn2.addEventListener("click", function() {
     }
 });
 
+submitButton.addEventListener("click", function() {
+    validateSection3()
+    if (section3IsValid === true) {
+            window.pagesense = window.pagesense || [];
+            window.pagesense.push(['trackEvent', 'submit_success']);
+            }
+});
+
 backBtn2.addEventListener("click", function() {
     section2.style.display = "none";
     section1.style.display = "block";
     section1.style.height = "auto";
-    validateSection1();
 });
 
 backBtn3.addEventListener("click", function() {
@@ -89,7 +99,33 @@ function validateSection2() {
         else {
             section2IsValid = true;
         }
-        console.log(inputValue)
       });
 
+}
+
+function validateSection2() {
+    const inputFields = section3.querySelectorAll('input[type="text"]');
+    const selectFields = section3.querySelectorAll('select');
+
+    
+    inputFields.forEach(function(inputFields) {
+        const inputValue = inputFields.value.trim();
+        if (inputValue === '') {
+            section3IsValid = false;
+            throw BreakException;
+        }
+        else {
+            section3IsValid = true;
+        }
+      });
+    
+    let stateSelect = selectFields.options[selectFields.selectedIndex]
+    var stateText = stateSelect.text;
+        if (stateText === "Please select") {
+            section3IsValid = false;
+            throw BreakException;
+        }
+        else {
+            section3IsValid = true;
+    }
 }
