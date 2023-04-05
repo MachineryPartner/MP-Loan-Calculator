@@ -51,7 +51,7 @@ nextBtn2.addEventListener("click", function() {
 submitButton.addEventListener("click", function(event) {
     event.preventDefault();
     validateSection3Part1()
-    validateSection3Part2()
+    /* validateSection3Part2() */
     if (section3IsValid === true) {
 /*         const form = document.getElementById('form');
         form.addEventListener('submit', logSubmit); */
@@ -179,10 +179,7 @@ function validateSection3Part1() {
             section3IsValid = true;
         }
     });
-    console.log(section3IsValid)
-};
-
-function validateSection3Part2() {
+    
 
     const selectFields = section3.querySelectorAll('select');
 
@@ -190,9 +187,6 @@ function validateSection3Part2() {
         var stateInput = e.options[e.selectedIndex]
         var stateText = stateInput.text;
         if (stateText === "Please select") {
-            console.log("in the statetext error")
-            console.log(stateInput)
-            console.log(stateText)
             if (stateInput.parentElement.nextSibling.className === "form_error-message") {
                 stateInput.parentElement.nextSibling.innerHTML = "Required field";
             }
@@ -204,5 +198,27 @@ function validateSection3Part2() {
             section3IsValid = true;
         }
     });
+
     console.log(section3IsValid)
-}
+};
+
+/* function validateSection3Part2() {
+
+    const selectFields = section3.querySelectorAll('select');
+
+    selectFields.forEach(e => {
+        var stateInput = e.options[e.selectedIndex]
+        var stateText = stateInput.text;
+        if (stateText === "Please select") {
+            if (stateInput.parentElement.nextSibling.className === "form_error-message") {
+                stateInput.parentElement.nextSibling.innerHTML = "Required field";
+            }
+            section3IsValid = false;
+            throw BreakException;
+        }
+        else {
+            stateInput.parentElement.nextSibling.innerHTML = "";
+            section3IsValid = true;
+        }
+    });
+} */
