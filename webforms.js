@@ -47,16 +47,17 @@ nextBtn2.addEventListener("click", function() {
     }
 });
 
-submitButton.addEventListener("submit", function(event) {
+/* submitButton.addEventListener("submit", function(event) {
     event.preventDefault();
-});
+}); */
 
 submitButton.addEventListener("click", function(event) {
     event.preventDefault();
     validateSection3Part1()
     validateSection3Part2()
     if (section3IsValid === true) {
-        submitButton.submit()
+        const form = $(this);
+        form.submit()
             }
 });
 
