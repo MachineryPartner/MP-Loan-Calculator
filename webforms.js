@@ -157,23 +157,23 @@ function validateSection3Part1() {
             if (inputFields.nextSibling.className === "form_error-message") {
                 inputFields.nextSibling.innerHTML = "Required field";
             }
-        selectFields.forEach(e => {
-            var stateInput = e.options[e.selectedIndex]
-            var stateText = stateInput.text;
-            if (stateText === "Please select") {
-                stateInput.setAttribute('disabled', '')}
-            if (stateText === "Please select") {
-                    if (stateInput.parentElement.nextSibling.className === "form_error-message") {
-                        stateInput.parentElement.nextSibling.innerHTML = "Required field";
-                    }
-                    else {
-                        stateInput.parentElement.nextSibling.innerHTML = "";
-                    }};
-                })
         }
         else {
             inputFields.nextSibling.innerHTML = "";
         }
+    selectFields.forEach(e => {
+        var stateInput = e.options[e.selectedIndex]
+        var stateText = stateInput.text;
+        if (stateText === "Please select") {
+            stateInput.setAttribute('disabled', '')}
+        if (stateText === "Please select") {
+                if (stateInput.parentElement.nextSibling.className === "form_error-message") {
+                    stateInput.parentElement.nextSibling.innerHTML = "Required field";
+                    }
+                else {
+                        stateInput.parentElement.nextSibling.innerHTML = "";
+                    }};
+                })
     });
     
     inputFields.forEach(function(inputFields) {
@@ -182,8 +182,6 @@ function validateSection3Part1() {
             if (inputFields.nextSibling.className === "form_error-message") {
                 inputFields.nextSibling.innerHTML = "Required field";
             }
-            if (stateText ===! 'Please select') {
-                stateInput.parentElement.nextSibling.innerHTML = ""}
             section3IsValid = false;
             throw BreakException;
         }
