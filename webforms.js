@@ -47,7 +47,7 @@ nextBtn2.addEventListener("click", function() {
     }
 });
 
-/* submitButton.addEventListener("submit", function(event) {
+submitButton.addEventListener("submit", function(event) {
     Webflow.push(function() {
         $('form').submit(function() {
           alert('Form submissions have been disabled during development.');
@@ -63,7 +63,7 @@ submitButton.addEventListener("click", function() {
             window.pagesense = window.pagesense || [];
             window.pagesense.push(['trackEvent', 'submit_success']);
             }
-}); */
+});
 
 backBtn2.addEventListener("click", function() {
     section2.style.display = "none";
@@ -97,9 +97,6 @@ function validateSection1() {
             selectedOption.parentElement.nextSibling.innerHTML = ""
             section1IsValid = true;
         }
-/*         if (selectedOption.nextSibling.className === "form_error-message") {
-            selectedOption.nextSibling.innerHTML = "Required field"
-        } */
       });
 }
 
@@ -113,7 +110,6 @@ function validateSection2() {
         if (inputValue === '') {
             if (inputFields.nextSibling.className === "form_error-message") {
                 inputFields.nextSibling.innerHTML = "Required field";
-                throw BreakException;
             }
             section2IsValid = false;
             throw BreakException;
@@ -126,7 +122,7 @@ function validateSection2() {
 
 }
 
-/* function validateSection3() {
+function validateSection3() {
     const inputFields = section3.querySelectorAll('input[type="text"]');
     const selectFields = section3.querySelectorAll('select');
 
@@ -134,10 +130,14 @@ function validateSection2() {
     inputFields.forEach(function(inputFields) {
         const inputValue = inputFields.value.trim();
         if (inputValue === '') {
+            if (inputFields.nextSibling.className === "form_error-message") {
+                inputFields.nextSibling.innerHTML = "Required field";
+            }
             section3IsValid = false;
             throw BreakException;
         }
         else {
+            inputFields.nextSibling.innerHTML = "";
             section3IsValid = true;
         }
       });
@@ -145,10 +145,14 @@ function validateSection2() {
     let stateSelect = selectFields.options[selectFields.selectedIndex]
     var stateText = stateSelect.text;
         if (stateText === "Please select") {
+            if (stateSelect.parentElement.nextSibling.className === "form_error-message") {
+                stateSelect.parentElement.nextSibling.innerHTML = "Required field"
+            }
             section3IsValid = false;
             throw BreakException;
         }
         else {
+            stateSelect.parentElement.nextSibling.innerHTML = ""
             section3IsValid = true;
     }
-} */
+}
