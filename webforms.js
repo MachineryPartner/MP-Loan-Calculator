@@ -82,15 +82,24 @@ function validateSection1() {
             selectedOption.setAttribute('disabled', '');
         }
         if (selectedOptionText === "Please select") {
+            section1IsValid = false;
+            throw BreakException;
+        }
+        else {
+            section1IsValid = true;
+        }
+      });
+      selectFields.forEach(e => {
+        var selectedOption = e.options[e.selectedIndex]
+        var selectedOptionText = selectedOption.text;
+
+        if (selectedOptionText === "Please select") {
             if (selectedOption.parentElement.nextSibling.className === "form_error-message") {
                 selectedOption.parentElement.nextSibling.innerHTML = "Required field"
             }
-            section1IsValid = false;
-            /* throw BreakException;    */ 
         }
         else {
             selectedOption.parentElement.nextSibling.innerHTML = ""
-            section1IsValid = true;
         }
       });
 }
