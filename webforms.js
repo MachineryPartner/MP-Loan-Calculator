@@ -48,16 +48,11 @@ nextBtn2.addEventListener("click", function() {
 });
 
 submitButton.addEventListener("submit", function(event) {
-    Webflow.push(function() {
-        $('form').submit(function() {
-          alert('Form submissions have been disabled during development.');
-          return false;
-        });
-      });
+    event.preventDefault();
 });
 
-submitButton.addEventListener("click", function() {
-    
+submitButton.addEventListener("click", function(event) {
+    event.preventDefault();
     validateSection3()
     if (section3IsValid === true) {
             window.pagesense = window.pagesense || [];
