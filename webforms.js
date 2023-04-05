@@ -166,7 +166,6 @@ function validateSection3Part1() {
                     }
                     else {
                         stateInput.parentElement.nextSibling.innerHTML = "";
-                        section3IsValid = true;
            
                     }};
                 })
