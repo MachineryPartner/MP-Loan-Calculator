@@ -91,7 +91,7 @@ function validateSection1() {
                 selectedOption.parentElement.nextSibling.innerHTML = "Required field"
             }
             section1IsValid = false;
-            throw BreakException;    
+            /* throw BreakException;    */ 
         }
         else {
             selectedOption.parentElement.nextSibling.innerHTML = ""
@@ -112,7 +112,7 @@ function validateSection2() {
                 inputFields.nextSibling.innerHTML = "Required field";
             }
             section2IsValid = false;
-            throw BreakException;
+            /* throw BreakException; */
         }
         else {
             inputFields.nextSibling.innerHTML = "";
@@ -134,7 +134,7 @@ function validateSection3() {
                 inputFields.nextSibling.innerHTML = "Required field";
             }
             section3IsValid = false;
-            throw BreakException;
+            /* throw BreakException; */
         }
         else {
             inputFields.nextSibling.innerHTML = "";
