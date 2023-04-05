@@ -55,8 +55,7 @@ submitButton.addEventListener("click", function(event) {
     event.preventDefault();
     validateSection3()
     if (section3IsValid === true) {
-            window.pagesense = window.pagesense || [];
-            window.pagesense.push(['trackEvent', 'submit_success']);
+        submitButton.submit()
             }
 });
 
@@ -123,6 +122,19 @@ function validateSection2() {
             if (inputFields.nextSibling.className === "form_error-message") {
                 inputFields.nextSibling.innerHTML = "Required field";
             }
+        }
+        else {
+            inputFields.nextSibling.innerHTML = "";
+        }
+      });
+
+
+    inputFields.forEach(function(inputFields) {
+        const inputValue = inputFields.value.trim();
+        if (inputValue === '') {
+            if (inputFields.nextSibling.className === "form_error-message") {
+                inputFields.nextSibling.innerHTML = "Required field";
+            }
             section2IsValid = false;
             throw BreakException;
         }
@@ -136,7 +148,7 @@ function validateSection2() {
 
 function validateSection3() {
     const inputFields = section3.querySelectorAll('input[type="text"]');
-    const selectFields = section3.querySelectorAll('select');
+    const stateSelect = document.getElementById("cf-state");
 
     
     inputFields.forEach(function(inputFields) {
@@ -145,17 +157,29 @@ function validateSection3() {
             if (inputFields.nextSibling.className === "form_error-message") {
                 inputFields.nextSibling.innerHTML = "Required field";
             }
+        }
+        else {
+            inputFields.nextSibling.innerHTML = "";
+        }
+    });
+    
+    inputFields.forEach(function(inputFields) {
+        const inputValue = inputFields.value.trim();
+        if (inputValue === '') {
+            if (inputFields.nextSibling.className === "form_error-message") {
+                inputFields.nextSibling.innerHTML = "Required field";
+            }
             section3IsValid = false;
-            /* throw BreakException; */
+            throw BreakException;
         }
         else {
             inputFields.nextSibling.innerHTML = "";
             section3IsValid = true;
         }
-      });
+    });
     
-    let stateSelect = selectFields.options[selectFields.selectedIndex]
-    var stateText = stateSelect.text;
+    var stateInput = stateSelect.options[stateSelect.selectedIndex]
+    var stateText = stateInput.text;
         if (stateText === "Please select") {
             if (stateSelect.parentElement.nextSibling.className === "form_error-message") {
                 stateSelect.parentElement.nextSibling.innerHTML = "Required field"
