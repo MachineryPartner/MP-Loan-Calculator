@@ -47,19 +47,16 @@ nextBtn2.addEventListener("click", function() {
     }
 });
 
-/* submitButton.addEventListener("submit", function(event) {
-    event.preventDefault();
-}); */
 
 submitButton.addEventListener("click", function(event) {
+    event.preventDefault();
     validateSection3Part1()
     validateSection3Part2()
     if (section3IsValid === true) {
         const form = $(this);
-        form.submit()
-            }
-    else 
-        event.preventDefault();
+        form.submit();
+        }
+
 });
 
 backBtn2.addEventListener("click", function() {
@@ -178,6 +175,7 @@ function validateSection3Part1() {
             section3IsValid = true;
         }
     });
+    console.log(section3IsValid)
 };
 
 function validateSection3Part2() {
@@ -201,4 +199,5 @@ function validateSection3Part2() {
             section3IsValid = true;
         }
     });
+    console.log(section3IsValid)
 }
