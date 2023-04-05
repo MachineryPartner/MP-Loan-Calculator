@@ -193,15 +193,14 @@ function validateSection3Part2() {
             console.log("in the statetext error")
             console.log(stateInput)
             console.log(stateText)
-            stateText.setAttribute('disabled', '');
-            if (stateSelect.parentElement.nextSibling.className === "form_error-message") {
-                stateSelect.parentElement.nextSibling.innerHTML = "Required field";
+            if (stateInput.parentElement.nextSibling.className === "form_error-message") {
+                stateInput.parentElement.nextSibling.innerHTML = "Required field";
             }
             section3IsValid = false;
             throw BreakException;
         }
         else {
-            stateSelect.parentElement.nextSibling.innerHTML = "";
+            stateInput.parentElement.nextSibling.innerHTML = "";
             section3IsValid = true;
         }
     });
