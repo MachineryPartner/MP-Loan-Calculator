@@ -51,10 +51,7 @@ nextBtn2.addEventListener("click", function() {
 submitButton.addEventListener("click", function(event) {
     event.preventDefault();
     validateSection3Part1()
-    /* validateSection3Part2() */
     if (section3IsValid === true) {
-/*         const form = document.getElementById('form');
-        form.addEventListener('submit', logSubmit); */
         const form = $(this);
         form.submit();
         }
@@ -152,13 +149,27 @@ function validateSection2() {
 
 function validateSection3Part1() {
     const inputFields = section3.querySelectorAll('input[type="text"]');
-    
+    const selectFields = section3.querySelectorAll('select');
+
     inputFields.forEach(function(inputFields) {
         const inputValue = inputFields.value.trim();
         if (inputValue === '') {
             if (inputFields.nextSibling.className === "form_error-message") {
                 inputFields.nextSibling.innerHTML = "Required field";
             }
+        selectFields.forEach(e => {
+            var stateInput = e.options[e.selectedIndex]
+            var stateText = stateInput.text;
+            if (stateText === "Please select") {
+                    if (stateInput.parentElement.nextSibling.className === "form_error-message") {
+                        stateInput.parentElement.nextSibling.innerHTML = "Required field";
+                    }
+                    else {
+                        stateInput.parentElement.nextSibling.innerHTML = "";
+                        section3IsValid = true;
+           
+                    }};
+                })
         }
         else {
             inputFields.nextSibling.innerHTML = "";
@@ -180,8 +191,6 @@ function validateSection3Part1() {
         }
     });
     
-
-    const selectFields = section3.querySelectorAll('select');
 
     selectFields.forEach(e => {
         var stateInput = e.options[e.selectedIndex]
@@ -201,24 +210,3 @@ function validateSection3Part1() {
 
     console.log(section3IsValid)
 };
-
-/* function validateSection3Part2() {
-
-    const selectFields = section3.querySelectorAll('select');
-
-    selectFields.forEach(e => {
-        var stateInput = e.options[e.selectedIndex]
-        var stateText = stateInput.text;
-        if (stateText === "Please select") {
-            if (stateInput.parentElement.nextSibling.className === "form_error-message") {
-                stateInput.parentElement.nextSibling.innerHTML = "Required field";
-            }
-            section3IsValid = false;
-            throw BreakException;
-        }
-        else {
-            stateInput.parentElement.nextSibling.innerHTML = "";
-            section3IsValid = true;
-        }
-    });
-} */
