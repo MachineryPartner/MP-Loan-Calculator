@@ -79,7 +79,6 @@ backBtn3.addEventListener("click", function() {
 
 function validateSection1() {
     const selectFields = section1.querySelectorAll('select');
-    selectFields.required = true;
 
     selectFields.forEach(e => {
         var selectedOption = e.options[e.selectedIndex]
@@ -95,7 +94,7 @@ function validateSection1() {
             throw BreakException;    
         }
         else {
-            selectedOption.classList.remove("is-error");
+            selectedOption.parentElement.nextSibling.innerHTML = ""
             section1IsValid = true;
         }
 /*         if (selectedOption.nextSibling.className === "form_error-message") {
@@ -106,20 +105,21 @@ function validateSection1() {
 
 function validateSection2() {
     const inputFields = section2.querySelectorAll('input[type="text"]');
-    inputFields.required = true;
 
     const emailInput = document.getElementById("contact-form-email");
     
     inputFields.forEach(function(inputFields) {
         const inputValue = inputFields.value.trim();
         if (inputValue === '') {
+            if (inputFields.nextSibling.className === "form_error-message") {
+                inputFields.nextSibling.innerHTML = "Required field";
+                throw BreakException;
+            }
             section2IsValid = false;
-            inputFields.setCustomValidity('This field is required.');
             throw BreakException;
         }
         else {
             section2IsValid = true;
-            inputFields.setCustomValidity('');
         }
       });
 
