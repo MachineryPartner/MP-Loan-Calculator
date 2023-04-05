@@ -96,7 +96,7 @@ function validateSection1() {
             throw BreakException;    
         }
         else {
-            input.classList.remove("is-error");
+            selectedOption.classList.remove("is-error");
             section1IsValid = true;
         }
 /*         if (selectedOption.nextSibling.className === "form_error-message") {
