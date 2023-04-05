@@ -182,7 +182,7 @@ function validateSection3Part1() {
             if (inputFields.nextSibling.className === "form_error-message") {
                 inputFields.nextSibling.innerHTML = "Required field";
             }
-            if (inputValue ===! 'Please select') {
+            if (stateText ===! 'Please select') {
                 stateInput.parentElement.nextSibling.innerHTML = ""}
             section3IsValid = false;
             throw BreakException;
