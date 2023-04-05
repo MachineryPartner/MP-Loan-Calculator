@@ -88,9 +88,8 @@ function validateSection1() {
             selectedOption.setAttribute('disabled', '');
         }
         if (selectedOptionText === "Please select") {
-            selectedOption.classList.add("is-error");
-            if (selectedOption.nextSibling.className === "form_error-message") {
-                selectedOption.nextSibling.innerHTML = "Required field"
+            if (selectedOption.parentElement.nextSibling.className === "form_error-message") {
+                selectedOption.parentElement.nextSibling.innerHTML = "Required field"
             }
             section1IsValid = false;
             throw BreakException;    
