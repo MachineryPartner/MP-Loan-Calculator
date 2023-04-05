@@ -151,6 +151,24 @@ function validateSection3() {
     const selectFields = section3.querySelectorAll('select');
 
     
+    selectFields.forEach(e => {
+        var stateInput = e.options[e.selectedIndex]
+        var stateText = stateInput.text;
+            if (stateText === "Please select") {
+                console.log("in the statetext error")
+                stateText.setAttribute('disabled', '');
+                if (stateSelect.parentElement.nextSibling.className === "form_error-message") {
+                    stateSelect.parentElement.nextSibling.innerHTML = "Required field";
+                }
+                section3IsValid = false;
+                throw BreakException;
+            }
+            else {
+                stateSelect.parentElement.nextSibling.innerHTML = "";
+                section3IsValid = true;
+            }
+        });
+
     inputFields.forEach(function(inputFields) {
         const inputValue = inputFields.value.trim();
         if (inputValue === '') {
@@ -178,21 +196,5 @@ function validateSection3() {
         }
     });
 
-    selectFields.forEach(e => {
-    var stateInput = e.options[e.selectedIndex]
-    var stateText = stateInput.text;
-        if (stateText === "Please select") {
-            console.log("in the statetext error")
-            stateText.setAttribute('disabled', '');
-            if (stateSelect.parentElement.nextSibling.className === "form_error-message") {
-                stateSelect.parentElement.nextSibling.innerHTML = "Required field";
-            }
-            section3IsValid = false;
-            throw BreakException;
-        }
-        else {
-            stateSelect.parentElement.nextSibling.innerHTML = "";
-            section3IsValid = true;
-        }
-    });
+
 }
