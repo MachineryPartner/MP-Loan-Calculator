@@ -178,6 +178,7 @@ function validateSection3() {
         }
     });
     
+    function stateCheck() {
     var stateInput = stateSelect.options[stateSelect.selectedIndex]
     var stateText = stateInput.text;
         if (stateText === "Please select") {
@@ -192,5 +193,7 @@ function validateSection3() {
         else {
             stateSelect.parentElement.nextSibling.innerHTML = ""
             section3IsValid = true;
+        }
     }
+    stateCheck();
 }
