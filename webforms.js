@@ -148,7 +148,7 @@ function validateSection2() {
 
 function validateSection3() {
     const inputFields = section3.querySelectorAll('input[type="text"]');
-    const stateSelect = section3.getElementById("cf-state");
+    const stateSelect = document.getElementById("cf-state");
 
     
     inputFields.forEach(function(inputFields) {
