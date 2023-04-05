@@ -119,6 +119,7 @@ function validateSection2() {
             throw BreakException;
         }
         else {
+            inputFields.nextSibling.innerHTML = "";
             section2IsValid = true;
         }
       });
