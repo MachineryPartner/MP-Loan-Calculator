@@ -166,7 +166,6 @@ function validateSection3Part1() {
                     }
                     else {
                         stateInput.parentElement.nextSibling.innerHTML = "";
-           
                     }};
                 })
         }
@@ -194,6 +193,8 @@ function validateSection3Part1() {
     selectFields.forEach(e => {
         var stateInput = e.options[e.selectedIndex]
         var stateText = stateInput.text;
+        if (stateText === "Please select") {
+            stateInput.setAttribute('disabled', '')}
         if (stateText === "Please select") {
             if (stateInput.parentElement.nextSibling.className === "form_error-message") {
                 stateInput.parentElement.nextSibling.innerHTML = "Required field";
