@@ -53,7 +53,8 @@ submitButton.addEventListener("submit", function(event) {
 
 submitButton.addEventListener("click", function(event) {
     event.preventDefault();
-    validateSection3()
+    validateSection3Part1()
+    validateSection3Part2()
     if (section3IsValid === true) {
         submitButton.submit()
             }
@@ -146,29 +147,9 @@ function validateSection2() {
 
 }
 
-function validateSection3() {
+function validateSection3Part1() {
     const inputFields = section3.querySelectorAll('input[type="text"]');
-    const selectFields = section3.querySelectorAll('select');
-
     
-    selectFields.forEach(e => {
-        var stateInput = e.options[e.selectedIndex]
-        var stateText = stateInput.text;
-            if (stateText === "Please select") {
-                console.log("in the statetext error")
-                stateText.setAttribute('disabled', '');
-                if (stateSelect.parentElement.nextSibling.className === "form_error-message") {
-                    stateSelect.parentElement.nextSibling.innerHTML = "Required field";
-                }
-                section3IsValid = false;
-                throw BreakException;
-            }
-            else {
-                stateSelect.parentElement.nextSibling.innerHTML = "";
-                section3IsValid = true;
-            }
-        });
-
     inputFields.forEach(function(inputFields) {
         const inputValue = inputFields.value.trim();
         if (inputValue === '') {
@@ -195,6 +176,27 @@ function validateSection3() {
             section3IsValid = true;
         }
     });
+};
 
+function validateSection3Part2() {
 
+    const selectFields = section3.querySelectorAll('select');
+
+    selectFields.forEach(e => {
+    var stateInput = e.options[e.selectedIndex]
+    var stateText = stateInput.text;
+        if (stateText === "Please select") {
+            console.log("in the statetext error")
+            stateText.setAttribute('disabled', '');
+            if (stateSelect.parentElement.nextSibling.className === "form_error-message") {
+                stateSelect.parentElement.nextSibling.innerHTML = "Required field";
+            }
+            section3IsValid = false;
+            throw BreakException;
+        }
+        else {
+            stateSelect.parentElement.nextSibling.innerHTML = "";
+            section3IsValid = true;
+        }
+    });
 }
