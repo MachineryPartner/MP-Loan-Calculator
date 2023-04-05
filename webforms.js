@@ -53,11 +53,15 @@ submitButton.addEventListener("click", function(event) {
     validateSection3Part1()
     validateSection3Part2()
     if (section3IsValid === true) {
+/*         const form = document.getElementById('form');
+        form.addEventListener('submit', logSubmit); */
         const form = $(this);
         form.submit();
         }
 
 });
+
+
 
 backBtn2.addEventListener("click", function() {
     section2.style.display = "none";
@@ -183,10 +187,12 @@ function validateSection3Part2() {
     const selectFields = section3.querySelectorAll('select');
 
     selectFields.forEach(e => {
-    var stateInput = e.options[e.selectedIndex]
-    var stateText = stateInput.text;
+        var stateInput = e.options[e.selectedIndex]
+        var stateText = stateInput.text;
         if (stateText === "Please select") {
             console.log("in the statetext error")
+            console.log(stateInput)
+            console.log(stateText)
             stateText.setAttribute('disabled', '');
             if (stateSelect.parentElement.nextSibling.className === "form_error-message") {
                 stateSelect.parentElement.nextSibling.innerHTML = "Required field";
