@@ -17,15 +17,14 @@ let section1IsValid = true
 let section2IsValid = true
 let section3IsValid = true
 
-startPopUp.addEventListener("click", function() {
-    section1.style.display = "none";
-    section1.style.display = "flex";
-    section1.style.height = "auto";
-    section2.style.display = "none";
-    section3.style.display = "none";
-    console.log("starting")
+
+section1.style.display = "none";
+section1.style.display = "flex";
+section1.style.height = "auto";
+section2.style.display = "none";
+section3.style.display = "none";
+console.log("starting")
     
-});
 
 nextBtn1.addEventListener("click", function() {
     validateSection1();
