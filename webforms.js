@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-const section1 = document.getElementById("contact-form-section-1");
-const section2 = document.getElementById("contact-form-section-2");
-const section3 = document.getElementById("contact-form-section-3");
-const nextBtn1 = document.getElementById("contact-form-to-section-2");
-const nextBtn2 = document.getElementById("contact-form-to-section-3");
-const backBtn2 = document.getElementById("contact-form-back-to-section-1");
-const backBtn3 = document.getElementById("contact-form-back-to-section-2");
-const submitButton = document.getElementById("contact-form-submitter");
+const section1 = document.querySelectorAll("#contact-form-section-1");
+const section2 = document.querySelectorAll("#contact-form-section-2");
+const section3 = document.querySelectorAll("#contact-form-section-3");
+const nextBtn1 = document.querySelectorAll("#contact-form-to-section-2");
+const nextBtn2 = document.querySelectorAll("#contact-form-to-section-3");
+const backBtn2 = document.querySelectorAll("#contact-form-back-to-section-1");
+const backBtn3 = document.querySelectorAll("#contact-form-back-to-section-2");
+const submitButton = document.querySelectorAll("#contact-form-submitter");
 
 
 /* const errorDiv = emailForm.parentElement.querySelector(
@@ -113,7 +113,7 @@ function validateSection1() {
 function validateSection2() {
     const inputFields = section2.querySelectorAll('input[type="text"]');
 
-    const emailInput = document.getElementById("contact-form-email");
+    const emailInput = document.querySelectorAll("contact-form-email");
     
     inputFields.forEach(function(inputFields) {
         const inputValue = inputFields.value.trim();
