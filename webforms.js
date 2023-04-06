@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(event) {
+
 const section1 = document.querySelector("#contact-form-section-1");
 const section2 = document.querySelector("#contact-form-section-2");
 const section3 = document.querySelector("#contact-form-section-3");
@@ -111,7 +112,7 @@ function validateSection1() {
 }
 
 function validateSection2() {
-    const inputFields = section2.querySelectorAll('input[type="text"]');
+    const inputFields = section2.querySelectorAll('input');
 
     const emailInput = document.querySelectorAll("contact-form-email");
     
@@ -146,7 +147,7 @@ function validateSection2() {
 }
 
 function validateSection3Part1() {
-    const inputFields = section3.querySelectorAll('input[type="text"]');
+    const inputFields = section3.querySelectorAll('input');
     const selectFields = section3.querySelectorAll('select');
 
     inputFields.forEach(function(inputFields) {
