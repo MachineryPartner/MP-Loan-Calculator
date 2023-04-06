@@ -1,5 +1,4 @@
-
-const startPopUp = document.getElementById("contact-form-initiatior");
+$(document).ready(function () {
 const section1 = document.getElementById("contact-form-section-1");
 const section2 = document.getElementById("contact-form-section-2");
 const section3 = document.getElementById("contact-form-section-3");
@@ -210,4 +209,5 @@ function validateSection3Part1() {
     });
 
     console.log(section3IsValid)
-};
+    };
+});
