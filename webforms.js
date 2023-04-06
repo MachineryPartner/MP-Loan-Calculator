@@ -1,4 +1,4 @@
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", function(event) {
 const section1 = document.getElementById("contact-form-section-1");
 const section2 = document.getElementById("contact-form-section-2");
 const section3 = document.getElementById("contact-form-section-3");
