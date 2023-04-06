@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-const section1 = document.querySelectorAll("#contact-form-section-1");
-const section2 = document.querySelectorAll("#contact-form-section-2");
-const section3 = document.querySelectorAll("#contact-form-section-3");
-const nextBtn1 = document.querySelectorAll("#contact-form-to-section-2");
-const nextBtn2 = document.querySelectorAll("#contact-form-to-section-3");
-const backBtn2 = document.querySelectorAll("#contact-form-back-to-section-1");
-const backBtn3 = document.querySelectorAll("#contact-form-back-to-section-2");
-const submitButton = document.querySelectorAll("#contact-form-submitter");
+const section1 = document.querySelector("#contact-form-section-1");
+const section2 = document.querySelector("#contact-form-section-2");
+const section3 = document.querySelector("#contact-form-section-3");
+const nextBtn1 = document.querySelector("#contact-form-to-section-2");
+const nextBtn2 = document.querySelector("#contact-form-to-section-3");
+const backBtn2 = document.querySelector("#contact-form-back-to-section-1");
+const backBtn3 = document.querySelector("#contact-form-back-to-section-2");
+const submitButton = document.querySelector("#contact-form-submitter");
 
 
 /* const errorDiv = emailForm.parentElement.querySelector(
