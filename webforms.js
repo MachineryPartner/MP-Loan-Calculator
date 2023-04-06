@@ -147,7 +147,7 @@ function validateSection2() {
 }
 
 function validateSection3Part1() {
-    const inputFields = section3.querySelectorAll('input');
+    const inputFields = section3.querySelectorAll('input[type="text"]');
     const selectFields = section3.querySelectorAll('select');
 
     inputFields.forEach(function(inputFields) {
