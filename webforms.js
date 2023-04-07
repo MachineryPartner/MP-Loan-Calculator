@@ -24,7 +24,7 @@ section1.style.display = "flex";
 section1.style.height = "auto";
 section2.style.display = "none";
 section3.style.display = "none";
-submitButton.disabled
+/* submitButton.disabled */
 console.log("starting")
     
 
@@ -49,17 +49,13 @@ nextBtn2.addEventListener("click", function() {
 
 
 submitButton.addEventListener("click", function(event) {
-    /* event.preventDefault(); */
+    event.preventDefault();
     validateSection3Part1()
     if (section3IsValid === true) {
-/*         const form = $(this);
-        form.submit(); */
-        submitBtn.disabled = false;
-        }
-    else {
-        submitBtn.disabled = true; 
+        const form = $(this);
+        form.submit()
     }
-});
+})
 
 
 
