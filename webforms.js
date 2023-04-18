@@ -8,7 +8,8 @@ const nextBtn2 = document.querySelector("#contact-form-to-section-3");
 const backBtn2 = document.querySelector("#contact-form-back-to-section-1");
 const backBtn3 = document.querySelector("#contact-form-back-to-section-2");
 const submitButton = document.querySelector("#contact-form-submitter");
-
+const formQuestion1 = document.querySelector("#cf-intent");
+const formQuestion2 = document.querySelector("#cf-material");
 
 /* const errorDiv = emailForm.parentElement.querySelector(
     '[data-form=error]')
@@ -17,6 +18,18 @@ console.log('errorDiv', errorDiv) */
 let section1IsValid = true
 let section2IsValid = true
 let section3IsValid = true
+
+function addMissingString() {
+   {  
+    if (formQuestion1) {
+    var formQuestion1 = formQuestion1.getAttribute('name');
+    formQuestion1.setAttribute('name', formQuestion1 + '_');
+  }
+  if (formQuestion2) {
+    var formQuestion2 = formQuestion2.getAttribute('name');
+    formQuestion2.setAttribute('name', formQuestion2 + '_');
+  }
+}
 
 
 section1.style.display = "none";
@@ -50,8 +63,6 @@ nextBtn2.addEventListener("click", function() {
 
 submitButton.addEventListener("click", function(event) {
     event.preventDefault();
-    console.log(form.inputValue)
-    console.log(form.inputFields)
     validateSection3Part1()
     if (section3IsValid === true) {
         const form = $(this);
