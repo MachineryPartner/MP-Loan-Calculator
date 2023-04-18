@@ -50,7 +50,8 @@ nextBtn2.addEventListener("click", function() {
 
 submitButton.addEventListener("click", function(event) {
     /* event.preventDefault(); */
-    console.log(form.value)
+    console.log(form.inputValue)
+    console.log(form.inputFields)
     validateSection3Part1()
     if (section3IsValid === true) {
         const form = $(this);
