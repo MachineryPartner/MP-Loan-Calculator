@@ -49,7 +49,7 @@ nextBtn2.addEventListener("click", function() {
 
 
 submitButton.addEventListener("click", function(event) {
-    /* event.preventDefault(); */
+    event.preventDefault();
     console.log(form.inputValue)
     console.log(form.inputFields)
     validateSection3Part1()
