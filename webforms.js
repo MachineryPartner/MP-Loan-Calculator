@@ -57,7 +57,7 @@ nextBtn2.addEventListener("click", function() {
 
 
 submitButton.addEventListener("click", function(event) {
-    event.preventDefault();
+    /* event.preventDefault(); */
     validateSection3Part1()
     if (section3IsValid === true) {
         const form = $(this);
