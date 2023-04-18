@@ -20,7 +20,6 @@ let section2IsValid = true
 let section3IsValid = true
 
 function addMissingString() {
-   {  
     if (formQuestion1) {
     var formQuestion1 = formQuestion1.getAttribute('name');
     formQuestion1.setAttribute('name', formQuestion1 + '_');
@@ -30,7 +29,7 @@ function addMissingString() {
     formQuestion2.setAttribute('name', formQuestion2 + '_');
   }
 }
-
+addMissingString();
 
 section1.style.display = "none";
 section1.style.display = "flex";
