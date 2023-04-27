@@ -3,7 +3,7 @@ $(document).ready(function () {
   $.getScript(
     "https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js",
     function () {
-      // $("#phone-number").mask("");
+      // $("#fa-phone-number").mask("");
     }
   );
   let dataPayload = {};
@@ -12,7 +12,7 @@ $(document).ready(function () {
   };
   let currentStatus = statusPossibles.contact;
 
-  const phoneInputField = document.getElementById("phone-number");
+  const phoneInputField = document.getElementById("fa-phone-number");
   const phoneInput = window.intlTelInput(phoneInputField, {
     separateDialCode: true,
     utilsScript:
@@ -91,9 +91,23 @@ $(document).ready(function () {
     {
       button: submitButton,
       fields: {
-        fullName: {
+        firstName: {
           value: "",
-          tag: "Name",
+          tag: "fa-firstname",
+          state: false,
+          required: true,
+          validate: function (_input) {
+            if (_input && _input.length >= 5) {
+              return { status: true, message: "" };
+            } else if (_input && _input.length < 5) {
+              return { status: false, message: "Minimum characters 5" };
+            }
+            return { status: false, message: "Mandatory field" };
+          },
+        },
+        lastName: {
+          value: "",
+          tag: "fa-lastname",
           state: false,
           required: true,
           validate: function (_input) {
@@ -107,7 +121,7 @@ $(document).ready(function () {
         },
         email: {
           value: "",
-          tag: "Email-3",
+          tag: "fa-email",
           state: false,
           required: true,
           validate: function (_input) {
@@ -124,12 +138,12 @@ $(document).ready(function () {
         },
         phone: {
           value: "",
-          tag: "phone-number",
+          tag: "fa-phone-number",
           state: false,
           required: true,
           keyup: function () {
-            document.getElementById("phone-number").value = formatPhone(
-              document.getElementById("phone-number").value
+            document.getElementById("fa-phone-number").value = formatPhone(
+              document.getElementById("fa-phone-number").value
             );
           },
           validate: function (_input) {
@@ -245,6 +259,9 @@ $(document).ready(function () {
       }
     });
     dataPayload["status"] = currentStatus;
+    dataPayload[
+      "fullName"
+    ] = `${creditAppState[0].fields.firstName.value} ${creditAppState[0].fields.lastName.value}`;
     return dataPayload;
   }
 });
