@@ -68,7 +68,7 @@ $(document).ready(function () {
     currentStatus = statusPossibles.submited;
     const form = $(this);
     saveCreditApp(function () {
-      form.submit();
+      // form.submit();
       location.replace(
         "https://www.machinerypartner.com/get-qualified-for-finance/thank-you"
       );
