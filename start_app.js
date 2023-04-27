@@ -69,7 +69,11 @@ $(document).ready(function () {
     const form = $(this);
     saveCreditApp(function () {
       form.submit();
+      location.replace(
+        "https://www.machinerypartner.com/get-qualified-for-finance/thank-you"
+      );
       console.log("Form Submited...");
+      // redirect to: /get-qualified-for-finance/thank-you
     });
   });
 
