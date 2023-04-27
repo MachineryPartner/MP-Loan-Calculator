@@ -44,13 +44,19 @@ $(document).ready(function () {
 
   function saveCreditApp(cb) {
     const payload = getData();
+    console.log("saveCreditApp: payload: ", payload);
     var xhr = new XMLHttpRequest();
     xhr.open("POST", `${getAPIBasePath()}/api/loan/start`, true);
     xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(payload));
     xhr.onload = function () {
+      console.log("saveCreditApp: ", this.message, this.status);
       cb(this.status);
+    };
+    xhr.onerror = function () {
+      console.log("saveCreditApp->Error: ", this.message, this.status);
+      cb(false);
     };
   }
 
