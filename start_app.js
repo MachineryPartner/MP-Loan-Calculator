@@ -255,7 +255,13 @@ $(document).ready(function () {
   function getData() {
     creditAppState.forEach(function (row) {
       for (const property in row.fields) {
-        dataPayload[property] = row.fields[property].value;
+        if (property === "phone") {
+          dataPayload[property] =
+            document.getElementsByClassName("iti__selected-dial-code")[0]
+              .innerHTML + row.fields[property].value;
+        } else {
+          dataPayload[property] = row.fields[property].value;
+        }
       }
     });
     dataPayload["status"] = currentStatus;
