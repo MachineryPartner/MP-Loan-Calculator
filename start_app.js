@@ -68,6 +68,7 @@ $(document).ready(function () {
     const form = $(this);
     saveCreditApp(function () {
       form.submit();
+      console.log("Form Submited...");
     });
   });
 
