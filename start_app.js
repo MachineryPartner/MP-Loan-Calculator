@@ -63,7 +63,7 @@ $(document).ready(function () {
   let submitButton = document.getElementById("credit-app-start");
   submitButton.style.pointerEvents = "none";
   $("#credit-app-start").on("click", function (event) {
-    event.preventDefault();
+    // event.preventDefault();
     currentStatus = statusPossibles.submited;
     const form = $(this);
     saveCreditApp(function () {
