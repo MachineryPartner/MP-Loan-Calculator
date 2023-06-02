@@ -46,7 +46,7 @@ $(document).ready(function () {
     const payload = getData();
     console.log("saveCreditApp: payload: ", payload);
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", `${getAPIBasePath()}/api/loan/start`, true);
+    xhr.open("POST", `${getAPIBasePath()}/api/loan/start-finance`, true);
     xhr.setRequestHeader("Authorization", "Basic d2Vic2l0ZTpmb3Jt");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(payload));
