@@ -162,6 +162,12 @@ $(document).ready(function () {
             return { status: false, message: "Mandatory field" };
           },
         },
+        url: {
+          value: "",
+          tag: "fa-url",
+          state: false,
+          required: false,
+        },
       },
     },
   ];
