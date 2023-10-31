@@ -23,9 +23,7 @@ const CookieService = {
         return null;
     }
 };
-</script>
 
-<script>
 const exit = e => {
     const shouldExit =
         [...e.target.classList].includes('exit-intent-popup') || // user clicks on mask
