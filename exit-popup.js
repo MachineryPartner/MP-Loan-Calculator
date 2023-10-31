@@ -45,7 +45,7 @@ const mouseEvent = e => {
         document.removeEventListener('mouseout', mouseEvent);
         document.querySelector('.exit-intent-popup').classList.add('visible');
 
-        CookieService.setCookie('exitIntentShown', true, 30);
+        CookieService.setCookie('exitIntentShown', true, 1); // Set expire date to 1 day
     }
 };
 
