@@ -1,7 +1,6 @@
-// Function to start the countdown timer
-function startCountdown() {
-    // Set the countdown date
-    var countdownDate = new Date("December 31, 2023 23:59:59").getTime();
+// Function to start the countdown timer for a specific element
+function startCountdown(elementId, countdownDate) {
+    var countdownElement = document.getElementById(elementId);
 
     // Update the countdown every second
     var countdownTimer = setInterval(function() {
@@ -15,18 +14,20 @@ function startCountdown() {
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         // Display the countdown
-        document.getElementById("countdown").innerHTML =
+        countdownElement.innerHTML =
             days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
 
         // If the countdown is finished, display a message
         if (distance < 0) {
             clearInterval(countdownTimer);
-            document.getElementById("countdown").innerHTML = "EXPIRED";
+            countdownElement.innerHTML = "EXPIRED";
         }
     }, 1000);
 }
 
 // Check if the DOM has fully loaded
 document.addEventListener("DOMContentLoaded", function() {
-    startCountdown();
+    // Start countdown timers for multiple elements
+    startCountdown("countdown1", new Date("December 31, 2023 23:59:59").getTime());
+    startCountdown("countdown2", new Date("December 31, 2023 23:59:59").getTime());
 });
