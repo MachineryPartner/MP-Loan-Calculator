@@ -13,7 +13,7 @@ if (DEBUG_MODE !== "0") {
     localStorage.setItem("selectedPrice", price);
     document.getElementById("full-price").value = currency(price).format();
   }
-  const productInput = document.getElementById("productid");
+  const productInput = document.getElementById("modelId");
   const categoryInput = document.getElementById("category");
   if (productInput) {
     localStorage.setItem("selectedEquipment", productInput.innerHTML);

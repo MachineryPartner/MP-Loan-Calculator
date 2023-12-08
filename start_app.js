@@ -265,6 +265,9 @@ $(document).ready(function () {
   checkInfos();
 
   function getData() {
+    let selectedCategory = localStorage.getItem("selectedCategory");
+    let selectedEquipment = localStorage.getItem("selectedEquipment");
+    let selectedPrice = localStorage.getItem("selectedPrice");
     creditAppState.forEach(function (row) {
       for (const property in row.fields) {
         if (property === "phone") {
@@ -277,6 +280,8 @@ $(document).ready(function () {
       }
     });
     dataPayload["status"] = currentStatus;
+    dataPayload["selectedCategory"] = selectedCategory;
+    dataPayload["selectedEquipment"] = selectedEquipment;
     dataPayload[
       "fullName"
     ] = `${creditAppState[0].fields.firstName.value} ${creditAppState[0].fields.lastName.value}`;
