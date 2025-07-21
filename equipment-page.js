@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             parentElement.parentNode.removeChild(parentElement);
           }
         } else {
-          targetElement.innerHTML = sourceElement.innerHTML;
+          targetElement.textContent = textContent;
           if (parentElement) {
             parentElement.style.display = "flex";
           }
