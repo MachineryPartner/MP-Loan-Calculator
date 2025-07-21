@@ -17,19 +17,21 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     sourceElements.forEach((sourceElement) => {
       const sourceValue = sourceElement.getAttribute(DATA_SOURCE_ATTR);
-      const textContent = sourceElement.textContent.trim();
+      const sourceHTML = sourceElement.innerHTML.trim(); // MAIN FIX
+
       const targetElements = wrapperElement.querySelectorAll(
         `[${DATA_TARGET_ATTR}=${sourceValue}]`
       );
 
       targetElements.forEach((targetElement) => {
         const parentElement = targetElement.closest(`[${TARGET_PARENT_ATTR}]`);
-        if (textContent === "") {
+        if (sourceHTML === "") {
           if (parentElement) {
             parentElement.parentNode.removeChild(parentElement);
           }
         } else {
-          targetElement.innerHTML = sourceElement.innerHTML;
+          // MAIN FIX: Use innerHTML to preserve all HTML formatting!
+          targetElement.innerHTML = sourceHTML;
           if (parentElement) {
             parentElement.style.display = "flex";
           }
@@ -50,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (
         !correspondingSourceElement ||
-        correspondingSourceElement.textContent.trim() === ""
+        correspondingSourceElement.innerHTML.trim() === ""
       ) {
         const parentElement = targetElement.closest(`[${TARGET_PARENT_ATTR}]`);
         if (parentElement) {
@@ -94,8 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // The `renderitems` event runs whenever the list renders items after switching pages.
       listInstance.on("renderitems", (renderedItems) => {
-        // console.log(renderedItems);
-
         // Fetching rich-gen wrappers again within the callback to make sure we have the latest elements.
         const updatedRichGenWrapperElements = document.querySelectorAll(
           `[${RICH_GEN_WRAPPER_ATTR}]`
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ]);
 });
 
-/* Download Buttons Generator*/
+/* Download Buttons Generator */
 document.addEventListener("DOMContentLoaded", () => {
   initDownloadButtons();
 });
